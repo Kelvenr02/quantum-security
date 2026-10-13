@@ -115,12 +115,18 @@ test('Celular mantém tempos de reação proporcionais e entidades dentro da tel
 test('Primeiras ondas apresentam um par entrelaçado e depois a blindagem',()=>{
   const g=makeGame();g.run('score=340;enterPhase(4);continuePhase();gameTime=nextAsteroidAt;spawnAsteroids()');
   assert.equal(g.run('asteroids.length'),2);assert.equal(g.run('asteroids[0].group===asteroids[1].group && asteroids[0].group!==null'),true);
+  // Select a single wave: a random entangled wave intentionally has no armor.
+  g.sandbox.Math.random=()=>.99;
   g.run('asteroids=[];gameTime=nextAsteroidAt;spawnAsteroids()');assert.equal(g.run('asteroids.every(a=>a.armored && a.hp===2)'),true);
 });
 test('Redimensionar mantém trilhas, posição relativa e escala das ameaças',()=>{
   const g=makeGame();g.run('asteroids=[{id:1,x:550,y:400,radius:32,speed:4,hp:1,group:null}];clouds=[makeCloud(2,200)];pickups=[{x:550,y:300,radius:17,speed:2.8}];window.innerWidth=390;window.innerHeight=700;resizeCanvas()');
   assert.equal(g.run('asteroids[0].x'),195);assert.equal(g.run('asteroids[0].y'),350);assert.equal(g.run('asteroids[0].speed'),3.5);
   assert.equal(g.run('pickups[0].x'),195);assert.equal(g.run('Math.floor(clouds[0].baseX/laneWidth)'),2);
+});
+test('Redimensionamento transitório de 1×1 preserva a superfície e as entidades',()=>{
+  const g=makeGame();g.run('asteroids=[{id:1,x:550,y:400,radius:32,speed:4,hp:1,group:null}];window.innerWidth=1;window.innerHeight=1;resizeCanvas()');
+  assert.equal(g.run('width'),1100);assert.equal(g.run('height'),800);assert.equal(g.run('asteroids[0].x'),550);assert.equal(g.run('asteroids[0].y'),400);
 });
 test('Campanha completa por intercepções reais atravessa os oito checkpoints',()=>{
   const g=makeGame();const visited=new Set([1]);let iterations=0;

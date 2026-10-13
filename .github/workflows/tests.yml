@@ -2,7 +2,7 @@ name: Testes do jogo
 
 on:
   push:
-    branches: [main]
+    branches: ['**']
   pull_request:
   workflow_dispatch:
 
@@ -22,8 +22,10 @@ jobs:
           node-version: '24'
       - name: Verificar a sintaxe dos scripts
         run: |
-          for file in story.js graphics.js phases.js script.js quantum.js presentation.js tests/gameplay.cjs; do
+          for file in training.js story.js graphics.js phases.js script.js quantum.js presentation.js tests/gameplay.cjs tests/training.cjs; do
             node --check "$file"
           done
       - name: Verificar as mecânicas e a campanha
         run: node tests/gameplay.cjs
+      - name: Verificar o treinamento interativo
+        run: node tests/training.cjs

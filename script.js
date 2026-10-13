@@ -38,6 +38,8 @@ let hatchFlash = [], impacts = [];
 let finale = null;                   // diferente de null enquanto o final está rodando
 
 function resizeCanvas() {
+  // Some browser viewport transitions briefly report a 1×1 or zero-sized surface.
+  if (window.innerWidth <= 1 || window.innerHeight <= 1) return;
   const previousWidth = width, previousHeight = height;
   width = Math.min(window.innerWidth, 1100); height = window.innerHeight;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
