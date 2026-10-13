@@ -1,0 +1,29 @@
+{
+  "passed": 19,
+  "tests": [
+    "Limiares exatos das oito fases e meta original de 1.000 pontos",
+    "Todas as fases aumentam a velocidade e a frequência de ondas",
+    "Briefing congela tempo, recarga e ameaças; ENTER continua uma única vez",
+    "Pausa congela o tempo e ignora movimentos e R",
+    "Regeneração mantém imobilização, duração e recarga originais",
+    "QBER crítico inverte controles por 4 s; correção não remove a penalidade",
+    "Cápsula H cria três disparos, respeita bordas, cooldown e expiração",
+    "Correção reduz QBER e recarga, com limites inferiores de zero",
+    "Blindagem exige dois acertos e pontua apenas na destruição",
+    "Destruição conectada remove só o par e conta ambos os asteroides",
+    "Ruído ambiental pode comprometer o canal; recuperação não o neutraliza",
+    "Frente avisa antes de chegar, deixa três trilhas livres e só atinge uma vez",
+    "12 impactos e colisão direta ainda encerram a defesa",
+    "Meta inicia a animação original do canhão e termina em vitória",
+    "Reiniciar limpa os recursos e a progressão da campanha",
+    "Celular mantém tempos de reação proporcionais e entidades dentro da tela",
+    "Primeiras ondas apresentam um par entrelaçado e depois a blindagem",
+    "Redimensionar mantém trilhas, posição relativa e escala das ameaças",
+    "Campanha completa por intercepções reais atravessa os oito checkpoints"
+  ],
+  "syntax": "All JavaScript files parsed successfully",
+  "preview": "Chrome: desktop and 390x844, advanced mechanics and phase briefings",
+  "scoreTarget": 1000,
+  "phases": 8,
+  "screenshot": "campaign-desktop.png"
+}

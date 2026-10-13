@@ -1,0 +1,33 @@
+{
+  "validation": "JavaScript executed against a simulated DOM with native Canvas rendering; full browser UI not verified.",
+  "checks": [
+    "Inicialização com resolução 2×",
+    "Briefing iniciado",
+    "Todas as 32 falas e resumo",
+    "Movimento pelo teclado",
+    "Pausa bloqueia movimento",
+    "Carga e fases atualizam",
+    "Chave regenerada",
+    "Espionagem inverte comandos",
+    "Recuperação do canal",
+    "Acerto contabiliza pontos e fragmentos",
+    "Derrota oferece reinício",
+    "Sequência final termina em vitória",
+    "Navegação direta e Canvas móvel",
+    "Controle de movimento por toque",
+    "Disparo contínuo por toque",
+    "Soltar controle encerra disparo",
+    "HTML balanceado, CSS e referências locais válidas"
+  ],
+  "viewportSizes": [
+    [
+      1440,
+      900
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "passed": 17
+}

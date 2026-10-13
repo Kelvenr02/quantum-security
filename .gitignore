@@ -1,0 +1,22 @@
+# Arquivos locais e dependências
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Arquivos temporários das apresentações e prévias
+.pitch-build/
+tmp/
+.cache/
+playwright-report/
+test-results/
+
+# Credenciais locais
+*.pem
+*.key
+*.p12
+*.pfx

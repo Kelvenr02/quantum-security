@@ -1,0 +1,29 @@
+name: Testes do jogo
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gameplay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Obter o projeto
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Preparar Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+      - name: Verificar a sintaxe dos scripts
+        run: |
+          for file in story.js graphics.js phases.js script.js quantum.js presentation.js tests/gameplay.cjs; do
+            node --check "$file"
+          done
+      - name: Verificar as mecânicas e a campanha
+        run: node tests/gameplay.cjs

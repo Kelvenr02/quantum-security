@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operação Qubit — Defesa Orbital</title>
+<meta name="description" content="Proteja a Terra em uma missão de defesa orbital e descubra a criptografia quântica. Operação Qubit, ano 2090.">
+<meta name="theme-color" content="#070d17">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<section id="title" aria-label="Menu principal">
+  <canvas id="orbitalScene" aria-hidden="true"></canvas>
+  <header class="masthead"><div class="brand"><span class="brand-symbol">Q</span><span>QUBIT<span class="brand-small">COMANDO ORBITAL</span></span></div><div class="system-status"><span class="status-dot"></span> SISTEMAS ONLINE <span class="header-divider"></span><span>ANO 2090</span></div></header>
+  <div class="hero-content"><div class="eyebrow"><span></span> MISSÃO 001 / DEFESA PLANETÁRIA</div><h1>OPERAÇÃO<br><span>QUBIT<span class="title-period">.</span></span></h1><p class="hero-subtitle">A última linha de defesa<br>começa com uma chave.</p><p class="hero-description">Proteja a Terra. Domine a criptografia quântica.<br>Assuma o controle de uma missão que vai além do espaço.</p><div class="hero-actions"><button id="titleBtn" onclick="startIntro()"><span>INICIAR MISSÃO</span><span class="button-arrow">↗</span></button><button class="secondary-button" onclick="openDefenseBriefing()">COMO JOGAR <span>→</span></button></div><div class="enter-hint"><kbd>ENTER</kbd> para iniciar o briefing</div><div class="mission-specs"><div><b>08</b><span>FASES DE DEFESA</span></div><div><b>01</b><span>PLANETA A PROTEGER</span></div><div><b>∞</b><span>POSSIBILIDADES QUÂNTICAS</span></div></div></div>
+  <div class="planet-coordinate" aria-hidden="true"><span class="coordinate-line"></span><span>TERRA / SETOR 07<b>38.000 KM · ÓRBITA DE DEFESA</b></span></div><div class="orbit-label" aria-hidden="true"><span class="status-dot"></span> CANAL QUÂNTICO ATIVO</div>
+  <footer class="title-footer"><span>ENTRELAÇAMENTO. ESTRATÉGIA. SOBREVIVÊNCIA.</span><span class="footer-code">PROTOCOLO E91 <span>●</span> CONEXÃO SEGURA</span></footer>
+</section>
+
+<div id="intro">
+ <main class="screen" aria-label="Operação Qubit, cena interativa">
+  <div class="lab">
+   <div class="stars"></div><div class="window"><div class="planet"></div></div>
+   <div class="holo"><div class="bloch"></div><i></i><i></i><i></i></div>
+   <div class="cryo"><b></b><b></b><b></b><b></b></div>
+   <div class="console"><div class="screen-panel"></div><div class="light"></div><div class="light two"></div></div>
+  </div>
+  <div class="title"><div class="eyebrow">COMANDO ORBITAL / BRIEFING</div><h1>Antes de salvar o mundo.</h1><p>CONHEÇA O SEU CANAL QUÂNTICO</p></div><button class="skip-briefing" onclick="openDefenseBriefing()">Pular briefing ↗</button>
+  <div class="hud">COMANDO ORBITAL<br>CANAL: <span style="color:#70f9c8">CRIPTOQUÂNTICO</span><br>QBER: <span id="qberHud">3,2%</span></div>
+  <div class="character pilot" aria-label="Tenente piloto">
+   <div class="hair"></div><div class="head"></div><div class="eye"></div><div class="body"></div><div class="arm"></div><div class="arm right"></div><div class="leg"></div><div class="leg right"></div><div class="boot"></div><div class="boot right"></div><div class="name-tag">TENENTE</div>
+  </div>
+  <div class="character scientist" aria-label="Cientista guia">
+   <div class="hair"></div><div class="head"></div><div class="eye"></div><div class="body"></div><div class="arm"></div><div class="arm right"></div><div class="leg"></div><div class="leg right"></div><div class="boot"></div><div class="boot right"></div><div class="name-tag">DR. ÍRIS</div>
+  </div>
+  <section class="dialogue" id="dialogue">
+   <div class="speaker" id="speaker">DR. ÍRIS · CIENTISTA QUÂNTICA</div>
+   <div id="line">Tenente! Que bom que chegou. Temos uma emergência orbital — e antes de assumir os controles, você precisa entender o sistema que mantém nossa nave segura.</div>
+   <div class="controls"><span class="hint"><kbd>ENTER</kbd> avançar <span id="sceneCount">01 / 16</span></span><button id="nextBtn">CONTINUAR →</button></div>
+   <div class="progress"><div id="bar"></div></div>
+  </section>
+  <section class="overlay" id="learn">
+   <h2>BRIEFING CONCLUÍDO: O QUE VOCÊ APRENDEU</h2>
+   <div class="cards">
+    <div class="card"><h3>1 · Bits clássicos</h3><p>Um bit guarda um valor definido: 0 ou 1. Computadores clássicos representam informações com muitos bits e circuitos lógicos.</p></div>
+    <div class="card"><h3>2 · Qubits e superposição</h3><p>Um qubit é como uma moeda girando no ar: um sistema quântico que pode estar numa superposição de estados associados a 0 e 1. Ao medi-lo, obtemos um resultado clássico. Não é possível ler todos os componentes da superposição de uma vez.</p></div>
+    <div class="card"><h3>3 · Computação quântica</h3><p>Algoritmos quânticos usam operações sobre qubits, interferência e, muitas vezes, entrelaçamento. Eles podem acelerar tarefas específicas, mas não tornam todo cálculo mais rápido.</p></div>
+    <div class="card"><h3>4 · Entrelaçamento</h3><p>Partículas entrelaçadas compartilham um estado conjunto e podem apresentar correlações quânticas fortes. Essas correlações são úteis em protocolos quânticos, como alguns métodos de distribuição de chaves.</p></div>
+    <div class="card"><h3>5 · Chaves quânticas</h3><p>O rádio ainda pode transportar dados, mas comandos convencionais podem ser interceptados ou sofrer interferência. A distribuição quântica de chaves ajuda a detectar espionagem ao comparar amostras de medições. A segurança depende do protocolo e da implementação.</p></div>
+    <div class="card"><h3>6 · Ruído e decoerência</h3><p>Interações com o ambiente podem degradar estados e correlações quânticas. Radiação e flutuações causam ruído mesmo sem invasor, e isso também faz o QBER subir.</p></div>
+   </div>
+   <p><b>QBER</b> é a taxa de erro de bits quânticos: a proporção de resultados comparados que discordam. Neste jogo, 11% é o limite crítico fictício definido pelo protocolo da missão.</p>
+   <p>Na missão, observe o indicador, lembre que ruído e espionagem aumentam o QBER, e regenere a chave quando necessário. O jogo é uma analogia didática, não uma implementação real de criptografia quântica.</p>
+   <button onclick="startDefense()">INICIAR DEFESA PLANETÁRIA 🛡️</button>
+   <button onclick="restartStory()">REVER DIÁLOGO</button>
+  </section>
+ </main>
+</div>
+
+<div id="arcade">
+<div id="screen">
+  <canvas id="game"></canvas>
+  <div id="warning"></div>
+
+  <div class="game-topline"><span class="game-brand">Q <b>QUBIT</b></span><span class="game-sector">DEFESA ORBITAL / TERRA</span><button id="pauseBtn" onclick="togglePause()" aria-label="Pausar jogo">Ⅱ <span>PAUSAR</span></button></div>
+  <div class="qhud"><div class="panel-label">INTEGRIDADE DO CANAL</div><h2 id="linkStatus">Canal quântico: seguro</h2><div id="qberBox"><div class="qber-value"><b id="qberVal">0.0</b><span>% QBER</span><small>LIMITE 11%</small></div><div id="qberBar"><div id="qberFill"></div><div id="qberMark"></div></div><div id="keyStatus"><kbd>R</kbd> Regenerar chave: pronta</div></div></div>
+  <div id="hudDisplay"><div class="panel-label">ENERGIA DO CANHÃO</div><div class="score-display"><span id="scoreVal">0</span><small> / <span id="winVal">1000</span></small></div><div class="charge-track"><div id="chargeFill"></div></div><div class="hud-metrics"><span>FASE <b id="levelVal">1</b><small>/ 8</small></span><span>CARGA <b id="cannonVal">0</b>%</span></div><div class="impact-display"><span class="impact-dot"></span> IMPACTOS <b id="missesVal">0</b><span>/ 12</span></div></div>
+  <div id="phaseHud" class="phase-hud"><div><span class="panel-label">OPERAÇÃO EM CURSO</span><b id="phaseName">Órbita de treinamento</b></div><span id="phaseProgress">0 / 100</span><div class="phase-track"><div id="phaseFill"></div></div><small id="quantumStatus">Intercepte asteroides. Monitore o QBER.</small></div>
+  <div id="phaseOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="phaseTitle"><div class="phase-card"><div class="eyebrow" id="phaseEyebrow"></div><div id="phaseRoute" class="phase-route" aria-label="Progresso da campanha"></div><h2 id="phaseTitle"></h2><p id="phaseObjective"></p><div class="phase-science"><span id="phaseConcept"></span><p id="phaseScience"></p></div><div class="phase-checkpoint" id="phaseCheckpoint"></div><button id="btnContinue" onclick="continuePhase()">CONTINUAR DEFESA →</button><span class="hint"><kbd>ENTER</kbd> para continuar · tempo em espera</span></div></div>
+  <div class="game-bottomline"><span><kbd>←</kbd><kbd>→</kbd> MOVER</span><span><span class="status-dot"></span> DISPARO AUTOMÁTICO</span><span><kbd>R</kbd> NOVA CHAVE</span><span><kbd>ESC</kbd> PAUSAR</span></div>
+  <div id="pauseOverlay" hidden><div class="pause-card"><div class="eyebrow">COMANDO EM ESPERA</div><h2>Missão pausada.</h2><p>Respire. A Terra ainda está contando com você.</p><button onclick="togglePause()">RETOMAR MISSÃO →</button><span class="hint"><kbd>ESC</kbd> para continuar</span></div></div>
+  <div id="ui">
+    <div class="briefing-tag"><span class="status-dot"></span> PROTOCOLO DE DEFESA / E91</div>
+    <h1 id="uiTitle">O planeta depende de você.</h1>
+    <p id="uiDesc" class="desc">Uma nave-mãe se aproxima da Terra. Intercepte os asteroides e mantenha o canal quântico seguro até carregar o canhão de energia.</p>
+    <div id="missionInstructions"><div class="mission-goal"><span>SEU OBJETIVO</span><p><b>1.000 pontos.</b> Um disparo decisivo.</p><small>Complete 8 fases com desafios diferentes. Evite 12 impactos na Terra e qualquer colisão direta.</small></div><div class="threat-grid"><div class="threat-card"><span class="threat-icon asteroid-icon"></span><h3>INTERCEPTE</h3><p>Asteroides cinzas</p><small>Cada asteroide destruído vale 10 pontos.</small></div><div class="threat-card"><span class="threat-icon noise-icon"></span><h3>DESVIE</h3><p>Nuvens de ruído</p><small>Aumentam o erro em 3,5%.</small></div><div class="threat-card"><span class="threat-icon spy-icon">✦</span><h3>EVITE</h3><p>Pulsos espiões</p><small>Aumentam o erro em 7%.</small></div></div><div class="control-grid"><div><span><kbd>←</kbd> <kbd>→</kbd> <small>ou A / D</small></span><b>Mover a nave</b></div><div><kbd>AUTO</kbd><b>Disparo automático</b></div><div><kbd>R</kbd><b>Regenerar a chave</b></div></div><p class="protocol-note">Acima de <b>11% de QBER</b>, seus comandos ficam invertidos por 4 s. Regenerar a chave zera o erro, mas imobiliza a nave por 2 s. Recarga: 10 s.</p><div class="campaign-preview"><span class="panel-label">ROTA DA MISSÃO / DIFICULDADE PROGRESSIVA</span><ol id="campaignList"></ol><p><b class="pickup-h">H</b> Superposição: disparos nas trilhas vizinhas por 6 s. <b class="pickup-ecc">+</b> Correção: −5 pontos de QBER e −3 s na recarga da chave. Colete com a nave; os efeitos são automáticos.</p><p>Anel dourado: 2 disparos. Fio azul: destruição conjunta. Faixas violetas: prepare uma trilha de fuga.</p></div></div>
+    <details class="science-details"><summary>A ciência por trás da missão <span>+</span></summary><p id="uiScience" class="science">
+      A Terra e a nave compartilham pares de partículas <b>entrelaçadas</b> para gerar uma chave secreta (ideia do protocolo E91).
+      Quem tenta espionar perturba as correlações e a taxa de erro sobe: o entrelaçamento não impede o ataque, ele o <b>revela</b>.
+      O <b>ruído</b> (decoerência) também gera erros, e na prática é difícil distinguir ruído de espião.
+      As novas fases usam H, estados de Bell, decoerência e correção de erros como analogias de jogo, sem simular um computador quântico real. <a href="https://learning.quantum.ibm.com/course/basics-of-quantum-information/quantum-circuits" target="_blank" rel="noopener noreferrer">Portas e circuitos</a> · <a href="https://learning.quantum.ibm.com/course/foundations-of-quantum-error-correction/correcting-quantum-errors" target="_blank" rel="noopener noreferrer">Correção de erros — IBM Quantum</a>.
+    </p>
+    </details><button id="btnStart" onclick="startGame()">INICIAR DEFESA →</button>
+    <div class="hint">ou aperte ENTER</div>
+  </div>
+</div>
+</div>
+
+<script src="story.js"></script>
+<script src="graphics.js"></script>
+<script src="phases.js"></script>
+<script src="script.js"></script>
+<script src="quantum.js"></script>
+<script src="presentation.js"></script>
+</body>
+</html>
