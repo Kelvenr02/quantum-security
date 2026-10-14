@@ -4,17 +4,17 @@ const canvas = $('game'), ctx = canvas.getContext('2d');
 
 // ---------- Configuração ----------
 const FRAME_MS = 1000/60;
-const numLanes = 7, winScore = 1000, maxMisses = 12, maxLevel = missionPhases.length;
+const numLanes = OrbitalArena.lanes, winScore = 1000, maxMisses = 12, maxLevel = missionPhases.length;
 const shotCooldown = 300;
-const shipSize = 25;
+let shipSize = 25;
 const cloudSpeed = 3.5, spySpeed = 3.5;
 const cloudGapMin = 60, cloudGapMax = 200;
 
 // Os parâmetros e conceitos de cada fase estão em phases.js.
-const qberLimit = 11, qberMaxView = 16;
-const cloudQber = 3.5, spyQber = 7, qberDecayPerSec = 0.8;
+const qberLimit = channelRules.limit, qberMaxView = channelRules.max;
+const cloudQber = 3.5, spyQber = 7;
 const regenDuration = 2000, regenCooldown = 10000;
-const compromisedDuration = 4000, invulDuration = 1000;
+const compromisedDuration = 4000;
 
 // Cenário
 const earthVisible = 80;             // altura da Terra visível na base da tela (px)
@@ -31,33 +31,78 @@ const T_END  = 7600;                 // aparece a tela de vitória
 let width, height, laneWidth, shipY, earthTop, earthSprite = null;
 let isPlaying = false, rafId = null, lastTs = 0, gameTime = 0;
 let score, missed, level, currentLane, qber;
-let isRegen, regenEnd, keyReadyAt, isCompromised, compEnd, invulUntil;
-let nextAsteroidAt, nextCloudAt, nextSpyAt, lastShotTime, bannerUntil;
+let isRegen, regenEnd, keyReadyAt, isCompromised, compEnd, invulUntil, criticalGraceUntil;
+let nextCloudAt, nextSpyAt, lastShotTime, bannerUntil;
 let lasers = [], asteroids = [], clouds = [], spies = [], stars = [];
 let hatchFlash = [], impacts = [];
 let finale = null;                   // diferente de null enquanto o final está rodando
+let campaignMetrics=null;
+const previousCampaigns=[];
+const shipPilot=new LanePilot(numLanes,lane=>{
+  campaignMetrics?.count('laneChanges');
+  gameAudio.sfx('move',{pan:audioPan((lane+.5)*laneWidth)});
+});
+const movementKeys={ArrowLeft:-1,KeyA:-1,ArrowRight:1,KeyD:1};
+function syncShipPilot() { if(shipPilot.lane!==currentLane)shipPilot.reset(currentLane); }
+function shipPosition() { syncShipPilot();return shipPilot.position; }
+function shipCenterX() { return (shipPosition()+.5)*laneWidth; }
+function occupiedShipLane() { return Math.max(0,Math.min(numLanes-1,Math.round(shipPosition()))); }
+function shipOverlapsLanes(lanes) {
+  const x=shipCenterX(),radius=shipSize*.6;
+  return lanes.some(lane=>x+radius>lane*laneWidth+3&&x-radius<(lane+1)*laneWidth-3);
+}
+function shipTouches(entity,previousY,previousShipX,shipX,radius,previousEntityX=entity.x) {
+  const x=previousEntityX-previousShipX,y=previousY-shipY;
+  const dx=(entity.x-shipX)-x,dy=(entity.y-shipY)-y;
+  const t=Math.max(0,Math.min(1,-(x*dx+y*dy)/(dx*dx+dy*dy||1)));
+  return Math.hypot(x+dx*t,y+dy*t)<radius;
+}
+function clearMovementInput() { shipPilot.clear(); }
+function pressMovement(token,direction) {
+  if(!isPlaying||isPaused||isStageBriefing||isRegen)return;
+  syncShipPilot();shipPilot.press(token,direction,isCompromised);currentLane=shipPilot.lane;
+}
+function setQber(value,source) {const next=Math.max(0,Math.min(qberMaxView,value));campaignMetrics?.qberChange(source,qber,next);qber=next;}
+window.quantumDiagnostics=Object.freeze({
+  snapshot:()=>campaignMetrics?.snapshot({score,combatScore,level,missed,qber,channel:channelStateName(),guardians:bossesDefeated})??null,
+  previous:()=>JSON.parse(JSON.stringify(previousCampaigns)),
+  export:()=>JSON.stringify(window.quantumDiagnostics.snapshot(),null,2)
+});
 
 function resizeCanvas() {
+  // Some browser viewport transitions briefly report a 1×1 or zero-sized surface.
+  if (window.innerWidth <= 1 || window.innerHeight <= 1) return;
   const previousWidth = width, previousHeight = height;
-  width = Math.min(window.innerWidth, 1100); height = window.innerHeight;
+  width = Math.min(window.innerWidth, OrbitalArena.maxWidth); height = window.innerHeight;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
   canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   laneWidth = width / numLanes;
+  shipSize=Math.min(25,laneWidth*.38);
   if (previousWidth && previousHeight) {
     const xScale = width/previousWidth, yScale = height/previousHeight;
-    const speedScale = Math.max(.5,Math.min(1.3,height/800))/Math.max(.5,Math.min(1.3,previousHeight/800));
-    for (const entity of [...lasers,...asteroids,...clouds,...spies,...pickups]) {
-      entity.x *= xScale; entity.y *= yScale;
+    const speedScale = OrbitalArena.flightScale(height)/OrbitalArena.flightScale(previousHeight);
+    const shortTransition=height<620||previousHeight<620;
+    // Mantém o tempo de aproximação ao girar: altura reservada à base é fixa.
+    const scaleY=y=>shortTransition?(height-140)-(previousHeight-140-y)*speedScale:y*yScale;
+    for (const entity of [...lasers,...asteroids,...clouds,...spies,...pickups,...drones,...(scout?[scout]:[])]) {
+      entity.x *= xScale; entity.y = scaleY(entity.y);
+      for(const key of ['fromX','toX'])if(entity[key]!==undefined)entity[key]*=xScale;
+      if(entity.splitY!==undefined)entity.splitY=scaleY(entity.splitY);
       if (entity.baseX !== undefined) entity.baseX *= xScale;
       if (entity.speed !== undefined) entity.speed *= speedScale;
     }
-    asteroids.forEach(a => {a.radius=Math.min(32,laneWidth*.3)});
-    clouds.forEach(c => {c.radius=Math.min(38,laneWidth*.35)});
+    asteroids.forEach(a => {a.radius=Math.min(32,laneWidth*.3)*(a.fragment?.58:1)});
+    drones.forEach(d=>{d.radius=Math.min(23,laneWidth*.32)});
+    if(shortTransition){
+      drones.forEach(d=>{d.y=Math.min(height-200,Math.max(270,height*.36));});
+      if(scout)scout.y=Math.min(height-205,Math.max(260,height*.33));
+    }
+    clouds.forEach(c => {c.radius=Math.min(38,laneWidth*.35);if(shortTransition&&c.heldAt)c.y=height-156;});
     spies.forEach(p => {p.radius=laneWidth*.22});
     impacts.forEach(i => {i.x*=xScale});
-    if (interferenceFront) interferenceFront.y*=yScale;
+    if (interferenceFront) {interferenceFront.y=scaleY(interferenceFront.y);if(interferenceFront.followUp)interferenceFront.followUp.y=scaleY(interferenceFront.followUp.y);}
     if (finale) {finale.fromX*=xScale;finale.parts.forEach(p=>{p.x*=xScale;p.y*=yScale})}
   }
   earthTop = height - earthVisible; shipY = height - 140;
@@ -89,47 +134,78 @@ resizeCanvas();
 // ---------- Entrada ----------
 window.addEventListener('keydown', e => {
   if (!arcadeActive) return;
+  if(e.code==='Enter'&&e.repeat){e.preventDefault();return;}
+  if(e.target?.closest?.('input,textarea,select,[contenteditable="true"]'))return;
+  if(e.code==='Enter' && e.target?.closest?.('button,a,input') && !isStageBriefing)return;
   if (['ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
   // ENTER inicia / reinicia o jogo quando o menu está aberto (e não durante o final)
   if (e.code === 'Enter' && !isPlaying && !finale) {
     e.preventDefault();
-    if (!$('btnStart').disabled) startGame();
+    if(lastFailure&&!$('btnRetry').disabled)retryCheckpoint();
+    else if (!$('btnStart').disabled) startGame();
     return;
   }
   if (isStageBriefing) { if (e.code === 'Enter') { e.preventDefault(); continuePhase(); } return; }
   if (!isPlaying || isPaused) return;
   if (e.code === 'KeyR') tryRegen();
-  if (isRegen) return;
-  const dir = isCompromised ? -1 : 1;
-  if (e.code === 'ArrowLeft' || e.code === 'KeyA')  currentLane = Math.max(0, Math.min(numLanes-1, currentLane - dir));
-  if (e.code === 'ArrowRight' || e.code === 'KeyD') currentLane = Math.max(0, Math.min(numLanes-1, currentLane + dir));
+  if (movementKeys[e.code]) { e.preventDefault();pressMovement('key:'+e.code,movementKeys[e.code]); }
 });
+window.addEventListener('keyup',e=>shipPilot.release('key:'+e.code));
+
+const audioPan = x => width > 0 ? x / width * 1.2 - .6 : 0;
+function moveShip(direction) {
+  if(!isPlaying||isPaused||isStageBriefing||isRegen)return false;
+  syncShipPilot();const moved=shipPilot.move(direction);currentLane=shipPilot.lane;return moved;
+}
 
 function tryRegen() {
-  if (isRegen || isCompromised || gameTime < keyReadyAt) return;
+  if(!isPlaying||isPaused||isStageBriefing)return;
+  campaignMetrics?.count('regenAttempts');
+  if (isRegen || gameTime < keyReadyAt) {campaignMetrics?.count('regenRejected');if(!isRegen)notifyCombat('R RECARREGANDO · '+((keyReadyAt-gameTime)/1000).toFixed(1)+' s');return;}
+  campaignMetrics?.count('regenerationsStarted');campaignMetrics?.event('regen',{qber,emergency:isCompromised});
+  if(isCompromised)campaignMetrics?.count('emergencyRegenerations');
+  isCompromised=false;compEnd=0;
   isRegen = true; regenEnd = gameTime + regenDuration; keyReadyAt = gameTime + regenCooldown;
+  gameAudio.startLoop('regen');
 }
 
 // ---------- Fluxo ----------
-function startGame() {
+function startGame(checkpoint = null) {
   if (isPlaying || !arcadeActive) return; // evita dois loops ao mesmo tempo
+  gameAudio.stopEffects(); gameAudio.setPaused('game', false); gameAudio.setScene('phase', checkpoint?.level || 1); gameAudio.sfx('confirm');
   cancelAnimationFrame(rafId);
   finale = null;
   $('ui').style.display = 'none'; $('warning').style.display = 'none';
   isPlaying = true; isPaused = false; $('pauseOverlay').hidden = true; particles = []; $('pauseBtn').disabled = false; $('pauseBtn').innerHTML = 'Ⅱ <span>PAUSAR</span>';
-  score = 0; missed = 0; level = 1; currentLane = Math.floor(numLanes/2); qber = 0;
-  isRegen = false; isCompromised = false; regenEnd = 0; compEnd = 0; keyReadyAt = 0; invulUntil = 0;
+  score = 0; combatScore=0; campaignSeed=checkpoint?.seed??Math.floor(Math.random()*4294967296); missed = 0; level = 1; currentLane = Math.floor(numLanes/2); qber = 0;
+  if(campaignMetrics) {previousCampaigns.push(campaignMetrics.snapshot());if(previousCampaigns.length>5)previousCampaigns.shift();}
+  campaignMetrics=new CampaignMetrics({lanes:numLanes,stepMs:OrbitalArena.stepMs,width,height,seed:campaignSeed},checkpoint?.level||1);
+  campaignMetrics.event('campaignStart',{checkpoint:!!checkpoint});
+  shipPilot.reset(currentLane);
+  isRegen = false; isCompromised = false; regenEnd = 0; compEnd = 0; keyReadyAt = 0; invulUntil = 0; criticalGraceUntil=0;
   gameTime = 0; lastTs = 0; lastShotTime = -1000;
-  nextAsteroidAt = 1500; nextCloudAt = 3500; nextSpyAt = 12000; bannerUntil = 2000;
+  nextCloudAt = 3500; nextSpyAt = 12000; bannerUntil = 2000;
   lasers = []; asteroids = []; clouds = []; spies = [];
   hatchFlash = Array(numLanes).fill(null); impacts = [];
   resetQuantumMission();
-  updateHUD(); updateQberUI();
+  if (checkpoint) {
+    level=checkpoint.level;score=checkpoint.score;missed=checkpoint.missed;
+    bossesDefeated=level-1;bossCleared=bossCleared.map((_,i)=>i<level-1);
+    quantumCollected=checkpoint.quantumCollected||0;combatScore=checkpoint.combatScore||0;
+    restoreChannel(checkpoint.channel);
+    phaseCheckpointData=checkpoint.kind==='boss'?null:checkpoint;restoreResources(checkpoint);
+  }
+  resetEncounters();
+  if(!checkpoint)phaseCheckpointData=captureCheckpoint('wave');
+  resetResourceFeedback();$('btnRetryPhase').hidden=true;
+  updateHUD(); refreshCombatHUD();
   rafId = requestAnimationFrame(update);
 }
 
 function updateHUD() {
   $('scoreVal').innerText = score; $('missesVal').innerText = missed; $('levelVal').innerText = level;
+  $('combatScoreVal').innerText = combatScore;
+  $('missesVal').parentElement?.setAttribute?.('data-critical',String(missed>=maxMisses-3));
   $('winVal').innerText = winScore;
   $('cannonVal').innerText = Math.min(100, Math.round(score/winScore*100));
   $('chargeFill').style.width = Math.min(100, score/winScore*100) + '%';
@@ -142,23 +218,27 @@ function updateQberUI() {
   $('qberFill').style.width = (r*100) + '%';
   $('qberFill').style.background = isCompromised ? '#ef7976' : (qber > qberLimit*0.7 ? '#e6c491' : '#6ce8cd');
   const ls = $('linkStatus');
-  if (isCompromised) { ls.innerText = 'Canal quântico: COMPROMETIDO'; ls.style.color = '#ff5555'; }
-  else if (isRegen)  { ls.innerText = 'Canal quântico: regenerando chave...'; ls.style.color = '#88bbff'; }
-  else if (qber > qberLimit*0.7) { ls.innerText = 'Canal quântico: ATENÇÃO'; ls.style.color = '#ffaa00'; }
+  if (isRegen)  { ls.innerText = 'Canal: renovando chave...'; ls.style.color = '#88bbff'; }
+  else if (isCompromised) { ls.innerText = 'Canal: COMPROMETIDO'; ls.style.color = '#ff5555'; }
+  else if (qber >= channelRules.alert) { ls.innerText = qber>qberLimit?'Canal: CRÍTICO':'Canal: INSTÁVEL'; ls.style.color = '#ffaa00'; }
   else { ls.innerText = 'Canal quântico: seguro'; ls.style.color = '#6ce8cd'; }
   const wait = Math.max(0, (keyReadyAt - gameTime)/1000);
-  $('keyStatus').innerHTML = '<kbd>R</kbd> ' + ((wait <= 0 && !isRegen && !isCompromised) ? 'Regenerar chave: pronta' : `Recarga: ${isCompromised ? '—' : wait.toFixed(1) + 's'}`);
+  $('keyStatus').innerHTML = '<kbd>R</kbd> ' + (isRegen?'Renovando...':wait<=0?(isCompromised?'Renovação de emergência':'Renovar chave: pronta'):`Recarga: ${wait.toFixed(1)}s`);
 }
 
-function showWarning(html, bg, border) {
+function showWarning(html, bg, border, kind='state') {
   const w = $('warning'); w.innerHTML = html; w.style.background = bg; w.style.borderColor = border;
+  w.dataset.kind=kind;w.hidden=false;
   w.style.boxShadow = `0 0 20px ${border}`; w.style.display = 'block';
 }
 
 // Tela final: sempre oferece "Jogar Novamente" (vitória ou derrota).
 // O botão fica bloqueado por 0,8 s para ninguém reiniciar sem querer ao morrer atirando.
 function endGame(title, color, html) {
+  clearMovementInput();
+  gameAudio.stopEffects(); gameAudio.setPaused('game', false);
   finale = null; isStageBriefing = false; $('phaseOverlay').hidden = true;
+  boss=null;$('bossHud').hidden=true;$('btnRetry').hidden=true;$('btnRetryPhase').hidden=true;$('retrySummary').hidden=true;
   isPlaying = false; isPaused = false; $('pauseOverlay').hidden = true; cancelAnimationFrame(rafId); $('warning').style.display = 'none';
   const t = $('uiTitle'); t.innerText = title; t.style.color = color; t.style.textShadow = `0 0 10px ${color}`;
   $('uiDesc').innerHTML = html;
@@ -168,41 +248,60 @@ function endGame(title, color, html) {
     `Acima do limite, a chave é descartada e refeita. As fases também exploram <b>H, estados de Bell, decoerência, síndromes e interferência</b> por meio de mecânicas fictícias. O entrelaçamento real não transmite informação mais rápido que a luz.`;
   const b = $('btnStart');
   b.innerText = "Jogar Novamente"; b.disabled = true; b.blur();
-  setTimeout(() => { b.disabled = false; }, 800);
+  $('btnRetry').disabled=true;$('btnRetryPhase').disabled=true;
+  setTimeout(() => { b.disabled = false;$('btnRetry').disabled=false;$('btnRetryPhase').disabled=false; }, 800);
   $('missionInstructions').hidden = true; $('pauseBtn').disabled = true;
   $('ui').style.display = 'flex';
 }
-function gameOver(reason) {
-  endGame("FALHA NA DEFESA", "#ff5555",
-    `${reason}<br><br>Pontuação: <b>${score} / ${winScore}</b> · Fase <b>${level} / ${maxLevel}: ${phaseConfig().name}</b><br>Impactos na Terra: <b>${missed} / ${maxMisses}</b>`);
+function gameOver(reason,cause={}) {
+  const mode=boss?'boss':'wave';lastFailure={mode,cause,reason};
+  campaignMetrics?.finish('defeat',{reason,cause,mode,score,combatScore,missed,qber,shield:hullShield});
+  endGame('FALHA NA DEFESA','#ff5555',reason+'<br><small>'+defeatAdvice(cause)+'</small><br><br>'+
+    'Pontos: <b>'+combatScore+'</b> · Carga: <b>'+score+' / '+winScore+'</b> · Fase <b>'+level+' / '+maxLevel+': '+phaseConfig().name+'</b><br>Impactos na Terra: <b>'+missed+' / '+maxMisses+'</b>');
+  gameAudio.setScene('defeat');gameAudio.sfx('explosion',{pan:audioPan(shipCenterX())});gameAudio.sfx('defeat');
+  showRetryOptions(mode);$('btnStart').innerText='RECOMEÇAR CAMPANHA';$('menuHint').textContent='ENTER retoma do ponto salvo · Recomeçar campanha volta ao início';
 }
-// Quando o jogador chega a 1000 pontos, começa o final com o canhão
+// A carga e a vitória no oitavo desafio liberam o canhão.
 function gameWin() { startFinale(); }
 
 // Tela de vitória mostrada depois do final
 function showVictory() {
+  lastFailure=null;$('menuHint').textContent='ou aperte ENTER';
   endGame("A TERRA ESTÁ SALVA! 🎉", "#55ff55",
-    `<b>O canhão disparou!</b><br><br>Você protegeu a Terra, manteve o canal quântico sob seu controle até a carga completa e a nave-mãe foi destruída.<br><br>Fases concluídas: <b>${maxLevel}</b> · Cápsulas coletadas: <b>${quantumCollected}</b><br>Pontuação: <b>${score}</b> · Impactos: <b>${missed} de ${maxMisses} permitidos</b>`);
+    `<b>O canhão disparou!</b><br><br>Você neutralizou os oito guardiões, protegeu a Terra e liberou o disparo contra a nave-mãe.<br><br>Desafios concluídos: <b>${bossesDefeated} / ${maxLevel}</b> · Cápsulas coletadas: <b>${quantumCollected}</b><br>Pontos: <b>${combatScore}</b> · Carga: <b>${score} / ${winScore}</b> · Impactos atuais: <b>${missed} de ${maxMisses} permitidos</b>`);
+  gameAudio.setScene('victory'); gameAudio.sfx('victory');
 }
 
 // ---------- Final: canhão de energia da Terra ----------
 function startFinale() {
+  campaignMetrics?.finish('victory',{score,combatScore,missed,guardians:bossesDefeated});clearMovementInput();
+  gameAudio.stopLoop('regen'); gameAudio.setScene('finale');
   isPlaying = false; cancelAnimationFrame(rafId); $('pauseBtn').disabled = true;
   $('warning').style.display = 'none';
-  lasers = []; asteroids = []; clouds = []; spies = []; pickups = []; interferenceFront = null; superpositionUntil = 0;
+  lasers = []; asteroids = []; drones=[];scout=null; clouds = []; spies = []; pickups = []; interferenceFront = null; superpositionUntil = 0;
   $('quantumStatus').textContent = 'CANHÃO ORBITAL · CARGA COMPLETA';
   isRegen = false; isCompromised = false; qber = 0; updateQberUI();
-  finale = { t: 0, fromX: currentLane*laneWidth + laneWidth/2, boomed: false, parts: [] };
+  finale = { t: 0, fromX: shipCenterX(), boomed: false, chargeSound: false, beamSound: false, parts: [] };
   lastTs = 0;
   rafId = requestAnimationFrame(finaleLoop);
 }
 
 function finaleLoop(ts) {
   if (!finale) return;
+  if (gameAudio.pauses?.has('hidden')) { lastTs = 0; rafId = requestAnimationFrame(finaleLoop); return; }
   if (!lastTs) lastTs = ts;
   const dt = Math.min((ts - lastTs)/FRAME_MS, 3); lastTs = ts;
   gameTime += dt*FRAME_MS; finale.t += dt*FRAME_MS;
   const t = finale.t, cx = width/2, tipY = baseTipY(), top = hullBottom(cx);
+
+  // Som e imagem usam as mesmas marcações, uma vez por evento.
+  if (t >= T_MOVE && t < T_BEAM) {
+    if (!finale.chargeSound) { finale.chargeSound = true; gameAudio.startLoop('charge'); }
+    gameAudio.setLoopPitch('charge', .7 + (t - T_MOVE) / (T_BEAM - T_MOVE) * 1.8);
+  }
+  if (t >= T_BEAM && !finale.beamSound) {
+    finale.beamSound = true; gameAudio.stopLoop('charge'); gameAudio.sfx('cannon'); gameAudio.startLoop('beam');
+  }
 
   // a nave desliza até o canto esquerdo e fica fixa lá
   const k = Math.min(1, t/T_MOVE), ease = k*k*(3-2*k);
@@ -211,6 +310,7 @@ function finaleLoop(ts) {
   // explosão da nave-mãe
   if (t >= T_BOOM && !finale.boomed) {
     finale.boomed = true;
+    gameAudio.stopLoop('beam'); gameAudio.sfx('mothership');
     for (let i = 0; i < 120; i++) {
       const a = Math.random()*Math.PI*2, v = 1 + Math.random()*6;
       finale.parts.push({ x: cx + (Math.random()-.5)*width*0.5, y: top - 10,
@@ -283,11 +383,11 @@ function finaleLoop(ts) {
 }
 
 // ---------- Ruído e espionagem ----------
-function addQber(v) {
-  qber += v;
-  if (qber > qberLimit) { isCompromised = true; compEnd = gameTime + compromisedDuration; clouds = []; spies = []; }
+function addQber(v,source='unspecified') {
+  setQber(qber+v,source);
+  checkChannelCritical();
 }
-const noImpact = () => isRegen || isCompromised || gameTime < invulUntil;
+const noImpact = () => isRegen || gameTime < invulUntil;
 
 // ---------- Criação de entidades ----------
 const laneOf = e => Math.floor(e.x / laneWidth);
@@ -300,32 +400,13 @@ function shuffled(arr) {
   return arr;
 }
 
-function spawnAsteroids() {
-  if (gameTime < nextAsteroidAt) return;
-  const free = shuffled([...Array(numLanes).keys()].filter(i => !blockedByHazard(i)));
-  if (!free.length) return;
-  let count = phaseConfig().entangled && phaseWaveCount === 0 ? 2 : (Math.random() < phaseConfig().pair) ? 2 : 1;
-  count = Math.max(1, Math.min(count, free.length - 1));   // sempre sobra uma trilha livre
-  const entangledWave = count === 2 && phaseConfig().entangled && (phaseWaveCount === 0 || Math.random() < .55);
-  for (let k = 0; k < count; k++) {
-    const armored = !entangledWave && ((phaseWaveCount === 1 && phaseConfig().armor > 0) || Math.random() < phaseConfig().armor);
-    asteroids.push({ id: ++asteroidSerial, x: free[k]*laneWidth + laneWidth/2, y: -30 - k*40, radius: Math.min(32, laneWidth*0.3), speed: flightSpeed(phaseConfig().speed), hp: armored ? 2 : 1, armored, group: null });
-    flashHatch(free[k], "#ff9a3c");
-  }
-  if (entangledWave) {
-    const pair = asteroids.slice(-2), group = pair[0].id;
-    pair.forEach(a => { a.group = group; a.y = -30; a.hp = 1; a.armored = false; });
-  }
-  phaseWaveCount++;
-  nextAsteroidAt = gameTime + phaseConfig().interval * (0.9 + Math.random()*0.2);
-}
-
 function spawnClouds() {
-  if (clouds.length > 0 || noImpact() || gameTime < nextCloudAt) return;
+  if (clouds.length > (level>=5?2:0) || noImpact() || gameTime < nextCloudAt) return;
   const free = shuffled([...Array(numLanes).keys()].filter(i => !blockedByAsteroid(i)));
   if (free.length < 2) return;
   const gap = cloudGapMin + Math.random()*(cloudGapMax - cloudGapMin);
   clouds.push(makeCloud(free[0], -50), makeCloud(free[1], -50-gap));
+  campaignMetrics?.count('cloudsSpawned',2);
   flashHatch(free[0], "#b04dff"); flashHatch(free[1], "#b04dff");
   nextCloudAt = gameTime + phaseConfig().cloudInterval * (.9 + Math.random()*.2);
 }
@@ -334,18 +415,23 @@ function spawnSpies() {            // pulsos espiões: a partir da fase 2
   if (level < 2 || spies.length > 0 || noImpact() || gameTime < nextSpyAt) return;
   const free = [...Array(numLanes).keys()].filter(i => !blockedByHazard(i) && !blockedByAsteroid(i));
   if (!free.length) return;
-  const l = free[Math.floor(Math.random()*free.length)];
+  const playerLane=occupiedShipLane();
+  const l = free.includes(playerLane) && Math.random()<.6 ? playerLane : free[Math.floor(Math.random()*free.length)];
   spies.push({ x: l*laneWidth + laneWidth/2, y: -40, radius: laneWidth*0.22, speed: flightSpeed(spySpeed + (level-2)*.12) });
+  campaignMetrics?.count('spiesSpawned');
   flashHatch(l, "#ffd21f");
   nextSpyAt = gameTime + phaseConfig().spyInterval * (.9 + Math.random()*.2);
 }
 
 function fireLaser(x) {
   if (gameTime - lastShotTime < shotCooldown) return;
+  gameAudio.sfx('shot', { pan: audioPan(x) });
   lasers.push({ x, y: shipY - shipSize, radius: 4 });
+  let shots=1;
   if (gameTime < superpositionUntil) {
-    for (const lane of [currentLane-1, currentLane+1]) if (lane >= 0 && lane < numLanes) lasers.push({ x: (lane+.5)*laneWidth, y: shipY-shipSize, radius: 4, quantum: true });
+    for (const offset of [-1,1]) {const adjacent=x+offset*laneWidth;if(adjacent>=laneWidth/2&&adjacent<=width-laneWidth/2){lasers.push({ x:adjacent, y:shipY-shipSize, radius:4, quantum:true });shots++;}}
   }
+  campaignMetrics?.count('volleys');campaignMetrics?.count('shots',shots);
   lastShotTime = gameTime;
 }
 
@@ -461,6 +547,7 @@ function drawLink(shipX) {
 
 // ---------- Desenho: nave do jogador (caça com asas, canhões e dois motores) ----------
 function drawShip(x,color,flicker) {
+  if(gameTime<hullInvulUntil && Math.floor(gameTime/100)%2===0)return;
   if(flicker&&Math.floor(gameTime/150)%2===0)return;
   const shipColor=isRegen?'#99bbef':flicker?'#ef7976':'#6ce8cd';
   drawInterceptor(ctx,x,shipY,shipSize,shipColor,gameTime,flicker);
@@ -486,38 +573,26 @@ function drawBanner() {
 // ---------- Loop ----------
 function update(ts) {
   if (!isPlaying || isPaused || isStageBriefing) return;
-  const newLevel = phaseForScore(score);
-  if (newLevel !== level) { enterPhase(newLevel); return; }
+  if (!boss && encountersReady() && !bossCleared[level-1]) { beginBoss(); return; }
   if (!lastTs) lastTs = ts;
-  const dt = Math.min((ts - lastTs)/FRAME_MS, 3);
+  const dt = Math.max(0,Math.min((ts - lastTs)/FRAME_MS, 3));
   lastTs = ts; gameTime += dt*FRAME_MS;
 
-  if (isRegen && gameTime >= regenEnd) { isRegen = false; qber = 0; }
-  if (isCompromised && gameTime >= compEnd) {
-    isCompromised = false; qber = 2; invulUntil = gameTime + invulDuration;
-    nextCloudAt = Math.max(nextCloudAt, gameTime + 2500); nextSpyAt = Math.max(nextSpyAt, gameTime + 4000);
-  }
-  if (isCompromised) showWarning(`⚠️ CANAL COMPROMETIDO!<br>ALIENS NO CONTROLE: COMANDOS INVERTIDOS ${((compEnd-gameTime)/1000).toFixed(1)}s`, 'rgba(255,0,0,.8)', '#f33');
-  else if (isRegen)  showWarning(`🔑 REGENERANDO CHAVE...<br>NAVE PARADA ${((regenEnd-gameTime)/1000).toFixed(1)}s`, 'rgba(30,80,200,.8)', '#8bf');
-  else $('warning').style.display = 'none';
+  const movementMs=updateChannel(dt*FRAME_MS);
 
-  if (!isCompromised && !isRegen) {
-    const decay = level >= 5 ? .2 : qberDecayPerSec;
-    qber = Math.max(0, qber - decay*dt*FRAME_MS/1000);
-    if (phaseConfig().drift) addQber(phaseConfig().drift*dt*FRAME_MS/1000);
-  }
-  updateQberUI();
-
-  spawnAsteroids(); spawnClouds(); spawnSpies(); spawnQuantumPickup();
+  if (!boss) updateEncounters();
   drawBackground(dt);
 
-  const shipX = currentLane*laneWidth + laneWidth/2;
-  updateInterference(dt);
+  const previousShipX=shipCenterX();
+  shipPilot.advance(movementMs,isRegen,isCompromised);currentLane=shipPilot.lane;
+  const shipX = shipCenterX();
+  campaignMetrics?.tick(dt*FRAME_MS,{position:shipPosition(),previousPosition:previousShipX/laneWidth-.5,qber,regenReady:gameTime>=keyReadyAt&&!isRegen,regenerating:isRegen,compromised:isCompromised,recoveryWindow:bossRecoveryAvailable()||waveRecoveryAvailable()});
+  if(!boss)updateInterference(dt);
   drawEntangledLinks();
   const protectedNow = noImpact();
   if (!isRegen) fireLaser(shipX);
 
-  updateQuantumPickups(dt, shipX);
+  updateQuantumPickups(dt,shipX,previousShipX);
   updateQuantumStatus();
   drawSuperposition(shipX);
   drawLink(shipX);
@@ -527,27 +602,40 @@ function update(ts) {
 
   // Lasers (somem ao bater no casco da nave-mãe)
   for (let i = lasers.length-1; i >= 0; i--) {
-    const l = lasers[i]; l.y -= flightSpeed(10)*dt;
+    const l = lasers[i]; l.previousY=l.y; l.y -= flightSpeed(10)*dt;
     drawEnergyBolt(l);
     if (l.y < hullBottom(l.x)) lasers.splice(i, 1);
   }
 
+  if(boss) {
+    updateBossBattle(dt,shipX);drawMothership();
+    if(isPlaying&&!isStageBriefing){drawQuantumPickups();refreshCombatHUD();}
+    if(isPlaying&&!isStageBriefing)rafId=requestAnimationFrame(update);
+    return;
+  }
+
+  updateEncounterActors(dt);
+  drawFormationWarning();
+
   // Nuvens (ruído)
   for (let i = clouds.length-1; i >= 0; i--) {
-    const c = clouds[i]; c.y += c.speed*dt;
+    const c = clouds[i],previousY=c.y,previousX=c.x;
+    const holdY=shipY-16;
+    if(c.sway&&!c.heldAt&&c.y+c.speed*dt>=holdY){c.y=holdY;c.heldAt=gameTime;}
+    else if(!c.heldAt||gameTime-c.heldAt>=1200)c.y+=c.speed*dt;
     if (c.sway) c.x = Math.max(c.radius, Math.min(width-c.radius, c.baseX + Math.sin((gameTime-c.born)/900)*laneWidth*.65));
     drawCloud(c);
-    if (!noImpact() && Math.hypot(shipX - c.x, shipY - c.y) < c.radius + shipSize*0.7) {
-      clouds.splice(i, 1); addQber(cloudQber); if (isCompromised) break; continue;
+    if (!noImpact() && shipTouches(c,previousY,previousShipX,shipX,c.radius+shipSize*.7,previousX)) {
+      clouds.splice(i, 1); campaignMetrics?.count('cloudContacts');gameAudio.sfx('noise', { pan: audioPan(c.x) }); addQber(cloudQber,'cloud'); if (isCompromised) break; continue;
     }
     if (c.y > height + 50) clouds.splice(i, 1);
   }
 
   // Pulsos espiões (espionagem)
   for (let i = spies.length-1; i >= 0; i--) {
-    const p = spies[i]; p.y += p.speed*dt; drawSpy(p);
-    if (!noImpact() && Math.hypot(shipX - p.x, shipY - p.y) < p.radius*1.6 + shipSize*0.7) {
-      spies.splice(i, 1); addQber(spyQber); if (isCompromised) break; continue;
+    const p = spies[i],previousY=p.y;p.y += p.speed*dt; drawSpy(p);
+    if (!noImpact() && shipTouches(p,previousY,previousShipX,shipX,p.radius*1.6+shipSize*.7)) {
+      spies.splice(i, 1); campaignMetrics?.count('spyContacts');gameAudio.sfx('spy', { pan: audioPan(p.x) }); addQber(spyQber,'spy'); if (isCompromised) break; continue;
     }
     if (p.y > height + 50) spies.splice(i, 1);
   }
@@ -555,28 +643,38 @@ function update(ts) {
   // Snapshot: destruir um par conectado não invalida a iteração das outras rochas.
   for (const a of [...asteroids].reverse()) {
     if (!asteroids.includes(a)) continue;
-    a.y += a.speed*dt; drawAsteroid(a); drawAsteroidQuantum(a);
-    if (Math.hypot(shipX-a.x, shipY-a.y) < a.radius+shipSize*.7) { gameOver('A nave defensora foi destruída por um impacto direto!'); return; }
+    const previousY=a.y,previousX=a.x;a.y += a.speed*dt;
+    if(a.fragment)a.x=a.fromX+(a.toX-a.fromX)*Math.min(1,(gameTime-a.born)/500);
+    // Um disparo que chega antes do limiar ainda pode impedir a fragmentação.
+    drawAsteroid(a); drawAsteroidQuantum(a);
+    if (gameTime>=hullInvulUntil && shipTouches(a,previousY,previousShipX,shipX,a.radius+shipSize*.7)) {
+      takeHullHit('A nave foi atingida sem escudo de emergência!',shipX);
+      if(!isPlaying)return;
+      asteroids.splice(asteroids.indexOf(a),1);resolveThreat(a);continue;
+    }
     let destroyed = false;
     for (let j = lasers.length-1; j >= 0; j--) {
       const l = lasers[j];
-      if (Math.hypot(l.x-a.x, l.y-a.y) < a.radius+l.radius) {
+      if (laserTouchesEntity(l,a,previousY,previousX)) {
         lasers.splice(j,1); a.hp--;
+        campaignMetrics?.count('asteroidHits');
         if (a.hp <= 0) { destroyQuantumAsteroid(a); destroyed = true; }
-        else a.hitUntil = gameTime+160;
-        if (score >= winScore) { gameWin(); return; }
-        if (destroyed && phaseForScore(score) !== level) { enterPhase(phaseForScore(score)); return; }
+        else { a.hitUntil = gameTime+160; gameAudio.sfx('impact', { pan: audioPan(a.x) }); }
         break;
       }
     }
     if (destroyed) continue;
+    if(a.splittable&&a.y>=a.splitY){splitAsteroid(a);continue;}
     if (a.y-a.radius*.5 > earthTop) {
-      asteroids.splice(asteroids.indexOf(a),1); impacts.push({x:a.x,t:gameTime});
-      missed++; updateHUD();
-      if (missed >= maxMisses) { gameOver('Defesa falhou! '+maxMisses+' asteroides atingiram a Terra.'); return; }
+      asteroids.splice(asteroids.indexOf(a),1);resolveThreat(a); impacts.push({x:a.x,t:gameTime});
+      gameAudio.sfx('earth', { pan: audioPan(a.x) });
+      campaignMetrics?.count('earthImpacts');campaignMetrics?.event('earthImpact',{kind:a.kind||'rock',lane:laneOf(a)});missed++; updateHUD();
+      if (missed >= maxMisses) { gameOver('Defesa falhou! '+maxMisses+' asteroides atingiram a Terra.',{kind:'earth'}); return; }
     }
   }
 
+  if(encountersReady()){beginBoss();return;}
+  drawQuantumPickups();refreshCombatHUD();
   drawMothership();   // por último: asteroides, nuvens e pulsos saem de baixo do casco
   drawBanner();
   rafId = requestAnimationFrame(update);

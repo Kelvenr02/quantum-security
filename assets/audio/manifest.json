@@ -1,0 +1,176 @@
+{
+  "license": "CC0-1.0",
+  "files": {
+    "menu": {
+      "kind": "music",
+      "file": "menu.ogg",
+      "source": "Juhani Junkala [Retro Game Music Pack] Title Screen.wav",
+      "author": "Juhani Junkala / SubspaceAudio",
+      "license": "CC0-1.0",
+      "url": "https://opengameart.org/content/5-chiptunes-action",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "victory": {
+      "kind": "music",
+      "file": "victory.ogg",
+      "source": "Juhani Junkala [Retro Game Music Pack] Ending.wav",
+      "author": "Juhani Junkala / SubspaceAudio",
+      "license": "CC0-1.0",
+      "url": "https://opengameart.org/content/5-chiptunes-action",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "action1": {
+      "kind": "music",
+      "file": "action1.ogg",
+      "source": "Juhani Junkala [Retro Game Music Pack] Level 1.wav",
+      "author": "Juhani Junkala / SubspaceAudio",
+      "license": "CC0-1.0",
+      "url": "https://opengameart.org/content/5-chiptunes-action",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "action2": {
+      "kind": "music",
+      "file": "action2.ogg",
+      "source": "Juhani Junkala [Retro Game Music Pack] Level 2.wav",
+      "author": "Juhani Junkala / SubspaceAudio",
+      "license": "CC0-1.0",
+      "url": "https://opengameart.org/content/5-chiptunes-action",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "action3": {
+      "kind": "music",
+      "file": "action3.ogg",
+      "source": "Juhani Junkala [Retro Game Music Pack] Level 3.wav",
+      "author": "Juhani Junkala / SubspaceAudio",
+      "license": "CC0-1.0",
+      "url": "https://opengameart.org/content/5-chiptunes-action",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "adventure1": {
+      "kind": "music",
+      "file": "adventure1.ogg",
+      "source": "Juhani Junkala [Chiptune Adventures] 1. Stage 1.ogg",
+      "author": "Juhani Junkala / SubspaceAudio",
+      "license": "CC0-1.0",
+      "url": "https://opengameart.org/content/4-chiptunes-adventure",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "adventure2": {
+      "kind": "music",
+      "file": "adventure2.ogg",
+      "source": "Juhani Junkala [Chiptune Adventures] 2. Stage 2.ogg",
+      "author": "Juhani Junkala / SubspaceAudio",
+      "license": "CC0-1.0",
+      "url": "https://opengameart.org/content/4-chiptunes-adventure",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "adventureBoss": {
+      "kind": "music",
+      "file": "adventureBoss.ogg",
+      "source": "Juhani Junkala [Chiptune Adventures] 3. Boss Fight.ogg",
+      "author": "Juhani Junkala / SubspaceAudio",
+      "license": "CC0-1.0",
+      "url": "https://opengameart.org/content/4-chiptunes-adventure",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "briefing": {
+      "kind": "music",
+      "file": "briefing.ogg",
+      "source": "Juhani Junkala [Chiptune Adventures] 4. Stage Select.ogg",
+      "author": "Juhani Junkala / SubspaceAudio",
+      "license": "CC0-1.0",
+      "url": "https://opengameart.org/content/4-chiptunes-adventure",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "boss": {
+      "kind": "music",
+      "file": "boss.ogg",
+      "source": "boss.wav",
+      "author": "Juhani Junkala / SubspaceAudio",
+      "license": "CC0-1.0",
+      "url": "https://opengameart.org/content/boss-battle-music",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "shot": {
+      "kind": "sfx",
+      "file": "shot.ogg",
+      "source": "laserSmall_000.ogg",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "url": "https://kenney.nl/assets/sci-fi-sounds",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "shotAlt": {
+      "kind": "sfx",
+      "file": "shotAlt.ogg",
+      "source": "laserSmall_001.ogg",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "url": "https://kenney.nl/assets/sci-fi-sounds",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "explosion": {
+      "kind": "sfx",
+      "file": "explosion.ogg",
+      "source": "explosionCrunch_000.ogg",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "url": "https://kenney.nl/assets/sci-fi-sounds",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "impact": {
+      "kind": "sfx",
+      "file": "impact.ogg",
+      "source": "impactMetal_000.ogg",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "url": "https://kenney.nl/assets/sci-fi-sounds",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "earth": {
+      "kind": "sfx",
+      "file": "earth.ogg",
+      "source": "lowFrequency_explosion_000.ogg",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "url": "https://kenney.nl/assets/sci-fi-sounds",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "spy": {
+      "kind": "sfx",
+      "file": "spy.ogg",
+      "source": "forceField_000.ogg",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "url": "https://kenney.nl/assets/sci-fi-sounds",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "noise": {
+      "kind": "sfx",
+      "file": "noise.ogg",
+      "source": "computerNoise_000.ogg",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "url": "https://kenney.nl/assets/sci-fi-sounds",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "cannon": {
+      "kind": "sfx",
+      "file": "cannon.ogg",
+      "source": "laserLarge_000.ogg",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "url": "https://kenney.nl/assets/sci-fi-sounds",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    },
+    "mothership": {
+      "kind": "sfx",
+      "file": "mothership.ogg",
+      "source": "explosionCrunch_004.ogg",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "url": "https://kenney.nl/assets/sci-fi-sounds",
+      "processing": "Full loop; loudness normalization; OGG Vorbis encoding"
+    }
+  }
+}

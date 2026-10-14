@@ -7,7 +7,7 @@ O repositório preserva o jogo original antes da reformulação da introdução.
 - Ponto de referência original: tag `v0.1.0-original`.
 - A tag registra o código, testes, pitch e materiais existentes em `output/`.
 - `.pitch-build/` contém arquivos temporários de produção das apresentações e permanece apenas no computador.
-- O GitHub Actions verifica a sintaxe e executa os testes em pushes para `main` e em pull requests.
+- O GitHub Actions verifica a sintaxe e executa os testes em pushes para qualquer branch e em pull requests.
 
 ## Alterações futuras
 
