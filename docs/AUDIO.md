@@ -29,9 +29,9 @@ Cada fase recebe uma composição diferente. As transições usam sobreposição
 - Disparo: um som por rajada real, incluindo H; não um som por projétil.
 - Movimento: confirmação discreta, só quando a nave realmente muda de trilha.
 - Impacto: sons diferentes para blindagem, destruição, colisão e dano à Terra; panorâmica moderada acompanha a posição horizontal.
-- Canal: ruído e espionagem têm sinais diferentes. O alerta de comprometimento ocorre na entrada da penalidade, uma vez por episódio.
-- Chave: um som contínuo acompanha a regeneração e termina no mesmo evento que libera a nave. Uma confirmação indica a nova chave.
-- Recursos: H e + têm confirmações distintas; um aviso anuncia a frente de interferência.
+- Canal: ruído e espionagem têm sinais diferentes. Um sinal avisa a transição de seguro para instável/crítico; o alerta de comprometimento ocorre na entrada da penalidade, uma vez por episódio.
+- Chave: um som contínuo acompanha a regeneração e termina no mesmo evento que libera a nave. Uma confirmação indica a nova chave; outro sinal marca o término da recarga de R, sem repetir a cada quadro.
+- Recursos: H e + têm confirmações distintas; o apoio do chefe sinaliza a liberação ao terminar o aviso de 900 ms. Consumo de escudo tem um sinal próprio. A frente de interferência mantém seu aviso.
 - Final: carga, disparo e explosão são acionados pelo relógio da animação, com marcações para impedir repetição entre frames.
 - Pausa e janela inativa: o contexto de áudio é suspenso; sons e música retomam de onde pararam, sem reproduzir eventos atrasados.
 

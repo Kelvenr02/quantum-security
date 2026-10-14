@@ -1,0 +1,50 @@
+/* Matriz reproduzível de estratégias. Não representa uma amostra de jogadores. */
+const fs=require('node:fs');
+const {makeGame}=require('../tests/gameplay.cjs');
+const {flyCampaign}=require('../tests/balance.cjs');
+
+function scenarios() {
+  const cases=[];
+  const add=(name,width,height,seed,options={},manageChannel=true)=>cases.push({name,width,height,seed,options,manageChannel});
+  for(const [width,height]of [[1600,900],[1100,800],[390,700],[844,390],[760,360]])
+    for(const seed of [1,42,519,2026])add('equilibrado',width,height,seed);
+  for(const strategy of ['meteors','noise'])for(const [width,height]of [[1600,900],[390,700]])
+    for(const seed of [42,519])add(strategy,width,height,seed,{strategy});
+  for(const [width,height]of [[1600,900],[390,700]])for(const seed of [42,519])
+    add('leitura-300ms',width,height,seed,{decisionMs:240,reactionMs:300,input:'held'});
+  for(const seed of [42,519]) {
+    add('leitura-500ms',1600,900,seed,{decisionMs:320,reactionMs:500,input:'held'});
+    add('comando-perdido',1600,900,seed,{reactionMs:300,errorEvery:13});
+    for(const manage of [true,false])add(manage?'canal-com-R':'canal-sem-R',1600,900,seed,{},manage);
+    for(const manage of [true,false])add(manage?'inversao-com-R':'inversao-sem-R',1600,900,seed,{reactionMs:300,compensate:false},manage);
+  }
+  for(const [width,height]of [[1600,900],[390,700]])add('imovel',width,height,519,{idle:true});
+  return cases;
+}
+function runScenario(config) {
+  const {width,height,seed,options,manageChannel}=config;
+  const game=makeGame(width,height);
+  return {...config,...JSON.parse(JSON.stringify(game.run('('+flyCampaign.toString()+')('+[seed,54000,manageChannel,JSON.stringify(options)].join(',')+')')))};
+}
+function summarize(rows) {
+  return [...new Set(rows.map(r=>r.name))].map(name=>{
+    const group=rows.filter(r=>r.name===name),wins=group.filter(r=>r.won);
+    const range=key=>wins.length?[Math.min(...wins.map(r=>r[key])),Math.max(...wins.map(r=>r[key]))]:null;
+    return {name,cases:group.length,wins:wins.length,seconds:range('seconds'),regens:range('regens'),missed:range('missed'),
+      losses:group.filter(r=>!r.won).map(r=>({seed:r.seed,width:r.width,height:r.height,phase:r.lastPhase,cause:r.failure,timeout:r.outcome==='playing'}))};
+  });
+}
+if(require.main===module) {
+  const args=process.argv.slice(2),output=args[0]==='--output'?args[1]:null;
+  if(args.length&&(!output||args.length!==2))throw Error('Uso: node tools/analyze-balance.cjs [--output arquivo.json]');
+  const rows=[];
+  for(const config of scenarios()) {
+    const row=runScenario(config);rows.push(row);
+    process.stderr.write(`${rows.length}: ${row.name} ${row.width}×${row.height} seed=${row.seed}: ${row.won?'vitória':'fase '+row.lastPhase+' / '+(row.failure?.kind||'limite de tempo')} (${row.seconds}s)\n`);
+  }
+  const report={schemaVersion:1,description:'Controladores determinísticos com acesso ao estado interno; resultados não estimam habilidade ou sucesso humano.',
+    maxActionSeconds:900,summary:summarize(rows),runs:rows};
+  if(output){fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report.summary,null,2));}
+  else console.log(JSON.stringify(report,null,2));
+}
+module.exports={scenarios,runScenario,summarize};

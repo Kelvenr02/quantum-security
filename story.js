@@ -4,7 +4,7 @@ const tutorial = (() => {
   const el = id => document.getElementById(id);
   const steps = [
     { name: 'O chamado', title: 'Tenente, a Terra está sob ataque.', story: '2090 · Base de Comando Orbital. O radar acaba de detectar a primeira onda.',
-      lines: [['Íris', 'A nave-mãe está lançando asteroides contra a Terra. Nosso interceptor Q-07 já está em órbita. Precisamos de você nos controles.'], ['Tenente', 'Vou pilotar daqui da base? E o piloto automático?'], ['Íris', 'Sim, por rádio. Eles mudam de tática; precisamos das suas decisões. O sistema cuida dos disparos, e você escolhe onde interceptar. Cada rocha destruída ajuda a carregar o canhão orbital. Vença os oito guardiões para liberar o disparo final.']],
+      lines: [['Íris', 'A nave-mãe está lançando asteroides contra a Terra. Nosso interceptor Q-07 já está em órbita. Precisamos de você nos controles.'], ['Tenente', 'Vou pilotar daqui da base? E o piloto automático?'], ['Íris', 'Sim, por rádio. Eles mudam de tática; precisamos das suas decisões. O sistema cuida dos disparos, e você escolhe onde interceptar. O canhão carrega enquanto você resolve três encontros em cada setor; cada destruição rende pontos. Vença os oito guardiões para liberar o disparo final.']],
       task: 'Sua missão: proteger a Terra e sobreviver até o canhão carregar.', science: '', next: 'ASSUMIR O COMANDO →' },
     { name: 'A chave', title: 'E se o inimigo ouvir?', story: 'Q-07 aguardando conexão · Antes de pilotar, precisamos proteger as ordens.',
       lines: [['Tenente', 'Se os comandos vão pelo rádio, os invasores podem escutar ou mandar ordens falsas?'], ['Íris', 'Por isso usamos cifragem e autenticação com chaves secretas. Um bit vale 0 ou 1. Um qubit pode combinar os estados de 0 e 1 numa superposição; ao medir, sai apenas um resultado.'], ['Íris', 'Nossa distribuição quântica de chaves, ou QKD, usa a ideia do protocolo E91: partículas entrelaçadas compartilham um estado e têm resultados correlacionados. Testamos parte das medições e processamos o restante para obter uma chave compartilhada. Veja um par no painel.']],
@@ -13,8 +13,8 @@ const tutorial = (() => {
       lines: [['Tenente', 'E como vamos perceber uma tentativa de roubar a chave?'], ['Íris', 'Espionar as partículas pode alterar suas correlações. Verificamos os erros pelo QBER, a taxa de erro dos bits comparados. Ruído e decoerência — perda de propriedades quânticas pela interação com o ambiente — também geram erros. Um alerta não prova espionagem.'], ['Íris', 'O Quantum Security monitora o canal e gerencia as chaves produzidas pelos equipamentos QKD. Se as verificações falham, descartamos aquela chave. A chave validada protege seus comandos, que continuam viajando pelo rádio.']],
       task: 'Ative o Quantum Security para liberar a conexão com o Q-07.', science: '', next: 'TESTAR A NAVE →' },
     { name: 'Decolagem', title: 'A última checagem é sua.', story: 'Simulador conectado · Um único alvo antes de assumir a defesa real.',
-      lines: [['Íris', 'Mova com ← → ou A / D; a nave atira sozinha. Desvie das nuvens roxas e dos pulsos espiões amarelos: eles elevam o QBER e não podem ser destruídos.'], ['Tenente', 'E, se o canal piorar, uso R para renovar a chave. Preciso escolher um momento seguro.'], ['Íris', 'Exato: por 2 s você fica parado e sem disparar; a recarga leva 10 s. No protocolo fictício do jogo, passar de 11% de QBER inverte os controles por 4 s. Intercepte o alvo e teste uma renovação.']],
-      task: '', science: 'Na missão: 1.000 pontos e 8 guardiões. O escudo absorve um golpe; outro sem escudo encerra a defesa, assim como 12 impactos na Terra. Esc pausa. Após uma derrota, você pode repetir a fase.', next: 'INICIAR DEFESA →' }
+      lines: [['Íris', 'Mova nas nove trilhas com ← → ou A / D; segure para continuar. A nave atira sozinha. Desvie das nuvens roxas e dos pulsos espiões amarelos: eles elevam o QBER e não podem ser destruídos.'], ['Tenente', 'E, se o canal piorar, uso R para renovar a chave. Preciso escolher um momento seguro.'], ['Íris', 'Exato: por 2 s você fica parado e sem disparar; a recarga leva 10 s. No protocolo fictício do jogo, passar de 11% de QBER inverte os controles por até 4 s; R pode interromper se estiver disponível. Intercepte o alvo e teste uma renovação.']],
+      task: '', science: 'Na missão: três encontros por fase, carga de 1.000 e 8 guardiões. O escudo absorve um golpe; outro sem escudo encerra a defesa, assim como 12 impactos na Terra. Esc pausa. Após uma derrota, você pode repetir a fase.', next: 'INICIAR DEFESA →' }
   ];
   const flightStep = steps.length - 1;
   let step = 0, frame = 0, last = 0, simulation = null;
@@ -90,12 +90,12 @@ const tutorial = (() => {
   }
   function draw() {
     if (!simulation) return;
-    const canvas = el('trainingCanvas'), g = canvas.getContext('2d'), w = 700, laneW = 100, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const canvas = el('trainingCanvas'), g = canvas.getContext('2d'), w = 700, laneW = w/simulation.lanes, dpr = Math.min(window.devicePixelRatio || 1, 2);
     if (canvas.width !== 700 * dpr || canvas.height !== 400 * dpr) { canvas.width = 700 * dpr; canvas.height = 400 * dpr; }
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (!backdrop) backdrop = makeSpaceBackdrop(w, 400);
     g.drawImage(backdrop, 0, 0, w, 400); g.strokeStyle = '#7895a825'; g.lineWidth = 1;
-    for (let i = 0; i < 7; i++) { g.beginPath(); g.moveTo(i * laneW, 35); g.lineTo(i * laneW, 360); g.stroke(); g.fillStyle = '#7d99ac'; g.font = '11px Consolas, monospace'; g.textAlign = 'center'; g.fillText(String(i + 1), (i + .5) * laneW, 25); }
+    for (let i = 0; i < simulation.lanes; i++) { g.beginPath(); g.moveTo(i * laneW, 35); g.lineTo(i * laneW, 360); g.stroke(); g.fillStyle = '#7d99ac'; g.font = '11px Consolas, monospace'; g.textAlign = 'center'; g.fillText(String(i + 1), (i + .5) * laneW, 25); }
     g.fillStyle = '#163746'; g.fillRect(0, 365, w, 35); g.strokeStyle = '#83ddcb'; g.beginPath(); g.moveTo(0, 365); g.lineTo(w, 365); g.stroke();
     g.fillStyle = '#b4cecc'; g.font = '10px Consolas, monospace'; g.fillText('TERRA / SIMULAÇÃO · TENTATIVAS LIVRES', w / 2, 388);
     for (const laser of simulation.lasers) { g.fillStyle = '#95ffe2'; g.fillRect((laser.lane + .5) * laneW - 2, laser.y - 10, 4, 20); }
@@ -104,7 +104,7 @@ const tutorial = (() => {
       rock.addColorStop(0, '#abbac3'); rock.addColorStop(1, '#354959'); g.fillStyle = rock;
       g.beginPath(); for (let i = 0; i < 9; i++) { const angle = i / 9 * Math.PI * 2, r = i % 2 ? 20 : 25; i ? g.lineTo(x + Math.cos(angle) * r, a.y + Math.sin(angle) * r) : g.moveTo(x + r, a.y); } g.closePath(); g.fill();
     }
-    const x = (simulation.lane + .5) * laneW;
+    const x = (simulation.position + .5) * laneW;
     drawInterceptor(g, x, 330, 20, simulation.regenerating ? '#91c7ff' : '#6ce8cd', simulation.time, false);
     if (simulation.asteroids.length && !simulation.complete) { const targetX = (simulation.asteroids[0].lane + .5) * laneW; g.strokeStyle = '#6ce8cd88'; g.strokeRect(targetX - 40, 305, 80, 50); }
   }
@@ -113,10 +113,10 @@ const tutorial = (() => {
     if (!document.hidden && simulation && !manualPause) simulation.update(last ? timestamp - last : 0);
     last = timestamp; draw(); sync(); frame = requestAnimationFrame(loop);
   }
-  function pause() { if (!introActive || !simulation) return; manualPause = !manualPause; simulation.paused = manualPause; gameAudio.setPaused('training', manualPause); last = 0; el('trainingPauseNotice').hidden = !manualPause; sync(); }
+  function pause() { if (!introActive || !simulation) return; manualPause = !manualPause; simulation.clearInput();simulation.paused = manualPause; gameAudio.setPaused('training', manualPause); last = 0; el('trainingPauseNotice').hidden = !manualPause; sync(); }
   function move(direction) { if (simulation && introActive) { simulation.move(direction); sync(); draw(); } }
   function next() { if (!introActive || !completed() || manualPause) return; if (step < steps.length - 1) { enter(step + 1); gameAudio.sfx('ui'); } else { stop(); startDefense(); startGame(); } }
-  function stop() { introActive = false; cancelAnimationFrame(frame); frame = 0; last = 0; gameAudio.stopEffects(); gameAudio.setPaused('training', false); }
+  function stop() { simulation?.clearInput();introActive = false; cancelAnimationFrame(frame); frame = 0; last = 0; gameAudio.stopEffects(); gameAudio.setPaused('training', false); }
   function start() {
     if (typeof isPlaying !== 'undefined' && (isPlaying || finale)) return;
     stop(); arcadeActive = false;
@@ -129,16 +129,25 @@ const tutorial = (() => {
   el('trainingRestart').addEventListener('click', () => { if (introActive) enter(0); });
   el('trainingHome').addEventListener('click', event => { event.preventDefault(); stop(); gameAudio.setScene('menu'); el('intro').hidden = true; el('intro').style.display = 'none'; el('title').style.display = ''; window.dispatchEvent(new Event('resize')); el('titleBtn').focus(); });
   el('trainingPause').addEventListener('click', pause);
-  el('trainingLeft').addEventListener('click', () => move(-1)); el('trainingRight').addEventListener('click', () => move(1));
+  for(const [id,direction] of [['trainingLeft',-1],['trainingRight',1]]) {
+    const button=el(id);
+    button.addEventListener('pointerdown',event=>{
+      event.preventDefault();button.setPointerCapture?.(event.pointerId);
+      if(introActive)simulation?.press('pointer:'+event.pointerId,direction);
+    });
+    for(const type of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(type,event=>simulation?.release('pointer:'+event.pointerId));
+    button.addEventListener('click',event=>{if(!event.detail)move(direction);});
+  }
   el('trainingRegen').addEventListener('click', () => { if (simulation) { simulation.regenerate(); sync(); } });
   document.addEventListener('keydown', event => {
     if (!introActive) { if (event.code === 'Enter' && el('title').style.display !== 'none' && !event.defaultPrevented && !event.target.closest('button, a')) { event.preventDefault(); start(); } return; }
     if (event.target.closest('button, a') && (event.code === 'Enter' || event.code === 'Space')) return;
     if (event.code === 'Escape') { event.preventDefault(); pause(); }
-    if (['ArrowLeft', 'KeyA', 'ArrowRight', 'KeyD'].includes(event.code) && simulation) { event.preventDefault(); move(['ArrowLeft', 'KeyA'].includes(event.code) ? -1 : 1); }
+    if (['ArrowLeft', 'KeyA', 'ArrowRight', 'KeyD'].includes(event.code) && simulation) { event.preventDefault(); simulation.press('key:'+event.code,['ArrowLeft', 'KeyA'].includes(event.code) ? -1 : 1); }
     if (event.code === 'KeyR' && simulation) { event.preventDefault(); simulation.regenerate(); sync(); }
     if (event.code === 'Enter' && !event.repeat) { event.preventDefault(); next(); }
   });
+  document.addEventListener('keyup',event=>simulation?.release('key:'+event.code));
   window.addEventListener('blur', () => { if (introActive && simulation && !manualPause) pause(); });
   document.addEventListener('visibilitychange', () => { last = 0; if (document.hidden && introActive && simulation && !manualPause) pause(); });
   return { start, stop };

@@ -285,3 +285,76 @@
 .audio-panel[hidden] { display:none; }.audio-panel>div { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:15px; }.audio-panel b { font-size:13px; font-weight:500; }.audio-panel #audioClose { padding:2px 7px; border:0; background:transparent; font-size:21px; }.audio-panel #audioMute { width:100%; margin-bottom:18px; }.audio-panel label { display:flex; justify-content:space-between; font-size:11px; margin-bottom:8px; }.audio-panel output { color:var(--cyan); font:10px var(--mono); }.audio-panel input { width:100%; margin:0 0 17px; accent-color:var(--cyan); cursor:pointer; }.audio-panel small { display:block; color:#87a7b8; font-size:10px; line-height:1.6; }.audio-panel a { display:block; margin-top:12px; color:#93c5bf; font-size:10px; text-underline-offset:3px; }
 .audio-controls :focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
 @media(max-width:700px) { .audio-controls { right:10px; bottom:10px; }#audioToggle { padding:8px 10px; font-size:10px; }.audio-panel { width:235px; } }
+
+/* Arena ampliada: instrumentos agrupados no topo, campo de combate desobstruído. */
+#screen { width:min(100vw,1600px); max-width:1600px; border:0; box-shadow:inset 1px 0 #729caf20,inset -1px 0 #729caf20,0 0 120px #0008; }
+.game-topline { height:42px; padding:0 16px; }
+.game-brand { font-size:25px; }
+.qhud,#hudDisplay { box-sizing:border-box; top:49px; width:236px; padding:8px 12px; min-height:108px; }
+.qhud { left:12px; }.qhud h2 { font-size:10px; margin:3px 0; }
+.qber-value b { font-size:22px; }.qber-value small { font-size:8px; }
+#qberBar { height:4px; margin:4px 0; }#keyStatus { font-size:9px; height:18px; }
+#hudDisplay { right:12px; }.score-display { font-size:24px; margin:2px 0; }.score-display small { font-size:10px; }
+.charge-track { margin:4px 0; }.hud-metrics { font-size:9px; }.impact-display { margin-top:4px; padding-top:0; border:0; font-size:9px; }.shield-status { margin-top:4px; font-size:8px; }
+.phase-hud,.boss-hud { box-sizing:border-box; top:49px; left:260px; right:260px; max-width:none; min-height:78px; padding:10px 14px; background:#0b1827c9; }
+.phase-hud b,.boss-hud b { font-size:13px; }.phase-hud>small,.boss-hud p { font-size:11px; line-height:1.5; }
+.phase-hud>span,.boss-hud>span { font-size:10px; }
+.touch-controls button { min-width:52px; min-height:44px; user-select:none; -webkit-user-select:none; }
+@media(max-width:900px) {
+ .qhud,#hudDisplay { top:48px; width:calc(50% - 18px); min-height:108px; padding:8px 10px; }
+ .phase-hud,.boss-hud { top:164px; left:12px; right:12px; min-height:0; padding:8px 11px; gap:5px 10px; }
+ .phase-hud .panel-label,.boss-hud .panel-label { display:none; }
+ .phase-hud b,.boss-hud b { font-size:12px; }.phase-hud>small,.boss-hud p { font-size:10px; }
+ .qber-value { gap:4px; }.qber-value small { font-size:7px; }
+ .game-sector { font-size:7px; letter-spacing:1px; }
+}
+@media(pointer:coarse) {
+ .touch-controls { left:12px; right:88px; bottom:15px; gap:8px; justify-content:space-evenly; }
+ .touch-controls button { padding:10px 15px!important; font-size:13px!important; }
+}
+@media(max-height:620px) {
+ .game-topline { height:34px; }.qhud,#hudDisplay { top:40px; min-height:95px; padding:6px 10px; }
+ .qhud .panel-label,#hudDisplay>.panel-label { display:none; }
+ .phase-hud,.boss-hud { top:40px; }
+ .phase-hud>small,.boss-hud p { font-size:10px; }
+}
+@media(max-height:620px) and (max-width:900px) { .phase-hud,.boss-hud { top:143px; } }
+@media(max-height:620px) and (min-width:600px) {
+ .qhud,#hudDisplay { width:176px; }
+ .phase-hud,.boss-hud { top:40px; left:200px; right:200px; }
+ .phase-hud b,.boss-hud b { font-size:11px; }.phase-hud>small,.boss-hud p { font-size:9px; }
+ .qber-value small { font-size:6px; }#keyStatus,.hud-metrics,.impact-display { font-size:8px; }
+}
+/* Alertas do canal pertencem ao painel; a arena preserva ataques, alvos e rotas. */
+#screen #warning { position:static!important; inset:auto!important; transform:none!important; padding:0!important; margin:3px 0 0; border:0!important; background:transparent!important; box-shadow:none!important; backdrop-filter:none; font:500 9px/1.3 var(--mono)!important; text-align:left; letter-spacing:0; width:auto; max-width:none; color:#e6c491; }
+#screen #warning[data-kind="compromised"] { color:#ef7976; }
+#screen #warning[data-kind="regen"] { color:#91c7ff; }
+#screen #warning[hidden],#keyStatus[hidden],.tactical-feedback[hidden],#btnRetryPhase[hidden],#retrySummary[hidden] { display:none!important; }
+.resource-strip { display:flex; justify-content:space-between; align-items:center; gap:5px; margin-top:4px; font:8px var(--mono); }
+.resource-strip .shield-status { display:inline; margin:0; }
+.shield-status[data-empty="true"] { color:#ef9d95; }
+#powerStatus { color:#7895a6; }#powerStatus[data-active="true"] { color:#6ce8cd; }
+.boss-hud .boss-threat { color:#e6c491; font-family:var(--mono); }
+.boss-hud .boss-threat[data-urgent="true"] { color:#efaaa2; }
+.boss-hud #bossHint { color:#99b5c1; font-size:10px; }
+.tactical-feedback { grid-column:1/-1; display:block; color:#91c7ff; font:9px/1.4 var(--mono); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tactical-feedback[data-priority="2"] { color:#efaaa2; }
+#ui .retry-summary { font:11px/1.6 var(--font); color:#a5bdc9; margin:12px 0; max-width:530px; }
+#ui .desc small { display:block; margin-top:10px; color:#c1d1d8; font-size:12px; line-height:1.6; }
+.impact-display[data-critical="true"] b { color:#ef7976; }.impact-display[data-critical="true"] .impact-dot { background:#ef7976; }
+#ui:has(#btnRetry:not([hidden])) { padding:24px 22px; }
+#ui:has(#btnRetry:not([hidden])) .briefing-tag { margin:0 0 12px; }
+#ui:has(#btnRetry:not([hidden])) p.desc { margin-bottom:14px; }
+#ui:has(#btnRetry:not([hidden])) #btnRetryPhase { order:1; }
+#ui:has(#btnRetry:not([hidden])) #retrySummary { order:2; }
+#ui:has(#btnRetry:not([hidden])) #btnStart { order:3; }
+#ui:has(#btnRetry:not([hidden])) #menuHint { order:4; }
+#ui:has(#btnRetry:not([hidden])) .science-details { order:10; }
+#ui:has(#btnRetry:not([hidden])) .review-training:not(#btnRetryPhase) { order:11; }
+@media(max-height:620px) { .boss-hud #bossHint,.boss-hud .boss-threat,.tactical-feedback { font-size:8px;line-height:1.35; }#screen #warning { font-size:8px!important; }.qhud,#hudDisplay { min-height:95px; } }
+@media(max-height:380px) and (min-width:600px) {
+ .qhud,#hudDisplay { top:34px; min-height:82px; padding:4px 8px; }
+ .qhud h2 { font-size:9px; }.qber-value b { font-size:18px; }.score-display { font-size:20px; }
+ .phase-hud,.boss-hud { top:34px; padding:5px 8px; gap:3px 8px; }
+ #keyStatus { height:17px; }#qberBar { margin:3px 0; }.resource-strip { font-size:7px; }
+}

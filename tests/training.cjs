@@ -23,13 +23,13 @@ test('Regeneração mantém 2 s de imobilização e 10 s de recarga', () => {
 });
 test('Pausa congela as ameaças, o relógio e a regeneração', () => {
   const sim = new TrainingSimulation(); sim.paused = true; sim.move(-1); advance(sim, 5000);
-  assert.equal(sim.time, 0); assert.equal(sim.lane, 3); assert.equal(sim.asteroids[0].y, 100);
+  assert.equal(sim.time, 0); assert.equal(sim.lane, 4); assert.equal(sim.asteroids[0].y, 100);
   const regen = intercept(); regen.regenerate(); regen.paused = true; advance(regen, 5000);
   assert.equal(regen.regenerating, true); assert.equal(regen.regenerated, false);
 });
-test('Erros permitem nova tentativa e movimento respeita as sete trilhas', () => {
-  const sim = new TrainingSimulation(); sim.move(-20); assert.equal(sim.lane, 0); sim.move(20); assert.equal(sim.lane, 6);
-  sim.lane = 2; sim.asteroids[0].y = 330; sim.update(0); assert.equal(sim.asteroids[0].y, 100);
+test('Erros permitem nova tentativa e movimento respeita as nove trilhas', () => {
+  const sim = new TrainingSimulation();sim.lane=0;sim.move(-1);assert.equal(sim.lane,0);sim.lane=8;sim.move(1);assert.equal(sim.lane,8);
+  sim.lane = sim.asteroids[0].lane; sim.asteroids[0].y = 330; sim.update(0); assert.equal(sim.asteroids[0].y, 100);
   sim.lane = 0; sim.asteroids[0].y = 366; sim.update(0); assert.equal(sim.asteroids[0].y, 100); assert.equal(sim.complete, false);
 });
 test('Recomeçar cria um treino sem progresso ou penalidades anteriores', () => {

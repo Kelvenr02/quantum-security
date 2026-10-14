@@ -1,61 +1,149 @@
 const assert=require('node:assert/strict');
-const {QuantumBoss}=require('../bosses.js');
+const {QuantumBoss}=require('../boss-model.js');
 const {makeGame}=require('./gameplay.cjs');
 const results=[];
 function test(name,fn){fn();results.push(name);}
-function advance(m,ms,lane=0){const events=[];for(let t=0;t<ms;t+=20)events.push(...m.advance(Math.min(20,ms-t),{lane}));return events;}
-function open(m,lane=0){advance(m,m.warning+600,lane);}
+function advance(m,ms,lane=0){const events=[];for(let t=0;t<ms;t+=20)events.push(...m.advance(Math.min(20,ms-t),{lane,position:lane}));return events;}
+function at(m,elapsed,lane=0){return advance(m,Math.max(0,elapsed-m.elapsed),lane);}
 
-test('Oito guardiões anunciam salvas por 2 s e mantêm rotas de fuga',()=>{
-  for(let phase=1;phase<=8;phase++){
-    const m=new QuantumBoss(phase);
-    for(let round=0;round<20;round++){
-      assert.ok(m.warning>=2000);
-      const blocked=new Set(m.pulses.flatMap(p=>p.lanes));assert.ok(blocked.size<=5,'Ao menos duas trilhas devem ficar fora das salvas');
-      const events=advance(m,1900);assert.equal(events.some(e=>e.type==='pulse'),false);
-      advance(m,m.period-1900);
+test('Cada salva tem aviso e corredor alcançável; rotas não exigem posição segura permanente',()=>{
+  for(const lanes of [7,9])for(let phase=1;phase<=8;phase++)for(let r=0;r<12;r++){
+    const m=new QuantumBoss(phase,0,lanes);m.round=r;
+    if(r%2)m.hp=m.hp.map(h=>Math.ceil(h/2));
+    if(phase===8)m.hp=[[36],[24],[12]][r%3];m.prepareRound(0);
+    let from=m.lanes,last=0;
+    for(const p of m.pulses){
+      const safe=m.lanes.filter(l=>!p.lanes.includes(l));assert.ok(safe.length>=2);
+      const available=p.at-Math.max(last,p.lockAt??p.announceAt);
+      assert.ok(p.at-(p.lockAt??p.announceAt)>=2000);
+      for(const lane of from)assert.ok(safe.some(s=>Math.abs(s-lane)*150+400<=available));
+      from=safe;last=p.at;
     }
+    assert.ok(m.period-m.recoveryStart>=2400);
+    assert.ok(m.targets().every(n=>n.lane>=0&&n.lane<lanes));
+  }
+  const m=new QuantumBoss(7);assert.equal(m.lanes.some(l=>m.pulses.every(p=>!p.lanes.includes(l))),false);
+});
+test('Sentinela valida um relé por ciclo e fecha com QBER ≥ 8%',()=>{
+  const m=new QuantumBoss(1);at(m,2800);assert.equal(m.hit(0,8,m.lane(1)),false);assert.equal(m.hit(1,0,m.lane(5)),false);
+  for(let i=0;i<4;i++){assert.equal(m.hit(0,0,m.lane(1)),true);advance(m,300);}
+  assert.equal(m.health,8);assert.equal(m.hit(1,0,m.lane(5)),false);assert.match(m.hint(0),/RELÉ VALIDADO/);
+  advance(m,m.period-m.elapsed);assert.equal(m.relay,1);assert.equal(m.pressure,true);assert.equal(m.pulses.length,2);
+});
+test('Observador rastreia por 650 ms e fixa a mira por pelo menos 2 s',()=>{
+  const m=new QuantumBoss(2);advance(m,500,7);assert.equal(m.pulses[0].tracking,true);assert.ok(m.pulses[0].lanes.includes(7));
+  advance(m,160,2);const locked=[...m.pulses[0].lanes];assert.equal(m.pulses[0].tracking,false);
+  advance(m,500,6);assert.deepEqual(m.pulses[0].lanes,locked);assert.ok(m.pulses[0].at-m.pulses[0].lockAt>=2000);
+});
+test('Varredura revela uma entre três sondas; mudança da segunda metade é anunciada',()=>{
+  const m=new QuantumBoss(2);assert.equal(m.targets().length,3);assert.ok(m.targets().every(n=>n.label==='?'));
+  at(m,3100);const real=m.targets().find(n=>n.open),fake=m.targets().find(n=>n.decoy);
+  assert.equal(m.hit(fake.id,0,fake.lane),false);assert.equal(m.hit(real.id,0,real.lane),true);
+  m.hp=[8];m.roundStart=m.time;m.prepareRound(real.lane);at(m,3400);assert.match(m.hint(0),/nova varredura/);
+  const first=m.targets().find(n=>n.label==='✓').lane;at(m,4900);assert.notEqual(m.targets().find(n=>n.open).lane,first);
+});
+test('Erros de leitura causam ruído limitado; trânsito e disparos laterais não são punidos',()=>{
+  const m=new QuantumBoss(2);at(m,3100);const fake=m.targets().find(n=>n.decoy);
+  m.hit(fake.id,0,fake.lane);assert.equal(m.drainEvents().filter(e=>e.type==='noise').length,0);
+  advance(m,700,fake.lane);m.hit(fake.id,0,fake.lane);m.hit(fake.id,0,fake.lane);
+  const errors=m.drainEvents().filter(e=>e.type==='noise');assert.equal(errors.length,1);assert.equal(errors[0].amount,.8);
+  advance(m,300,fake.lane);m.hit(fake.id,0,fake.lane);assert.equal(m.drainEvents().filter(e=>e.type==='noise').length,0);
+});
+test('Hadamard abre laterais e centro em momentos diferentes com sobreposição breve',()=>{
+  const m=new QuantumBoss(3);at(m,3000);assert.deepEqual(m.targets().map(n=>n.open),[true,false,true]);
+  at(m,4200);for(const n of m.targets())assert.equal(m.hit(n.id,0,n.lane),true);assert.deepEqual(m.hp,[7,7,7]);
+  at(m,4700);assert.deepEqual(m.targets().map(n=>n.open),[false,true,false]);
+});
+test('Hadamard muda a formação após metade da vida com aviso de 2 s',()=>{
+  const m=new QuantumBoss(3);m.hp=[4,4,4];m.prepareRound(4);at(m,2500);const next=m.nextTriadCenter;assert.notEqual(next,null);
+  const old=m.triadCenter;at(m,4400);assert.equal(m.triadCenter,next);assert.notEqual(m.triadCenter,old);
+});
+test('Bell alterna lados no mesmo ciclo, compartilha dano e limita rajadas',()=>{
+  const m=new QuantumBoss(4);at(m,2800);const first=m.targets().find(n=>n.open);
+  assert.equal(m.hit(1-first.id,0),false);
+  for(let i=0;i<3;i++){assert.equal(m.hit(first.id,0,first.lane),true);advance(m,300);}
+  assert.equal(m.hit(first.id,0,first.lane),false);assert.deepEqual(m.hp,[13,13]);
+  at(m,4800);assert.notEqual(m.targets().find(n=>n.open).lane,first.lane);
+  m.hp=[8,8];m.roundStart=m.time;m.prepareRound(4);at(m,2800);const n=m.targets().find(n=>n.open);
+  m.hit(n.id,0,n.lane);advance(m,300);m.hit(n.id,0,n.lane);advance(m,300);assert.equal(m.hit(n.id,0,n.lane),false);
+});
+test('Devorador anuncia mudanças de zona, mede posição física e exige 50% de coerência',()=>{
+  const m=new QuantumBoss(5);at(m,1200,m.zone[0]);assert.ok(m.nextZone);const next=[...m.nextZone.lanes];
+  at(m,3100,m.zone[0]);assert.deepEqual(m.zone,next);
+  m.coherence=49;assert.equal(m.targets().some(n=>n.open),false);
+  advance(m,200,m.zone[0]);assert.ok(m.coherence>=50);assert.equal(m.targets().some(n=>n.open),true);
+  m.hp=[10];m.prepareRound(4);assert.equal(m.zone.length,1);assert.equal(m.pulses.length,3);
+  const before=m.coherence;m.advance(50,{lane:m.zone[0],position:m.zone[0]+.49});assert.ok(m.coherence<before);
+});
+test('Síndrome muda entre ciclos e antecipa a segunda leitura durante a pressão',()=>{
+  const m=new QuantumBoss(6);at(m,2800);assert.match(m.hint(0),/TRILHA 8/);assert.equal(m.hit(0,0,m.lane(1)),false);
+  assert.equal(m.hit(2,0,m.lane(5)),true);
+  advance(m,m.period-m.elapsed);assert.equal(m.selection,0);
+  m.hp=[2,2,2];m.roundStart=m.time;m.prepareRound(4);at(m,3400);assert.notEqual(m.nextSelection,null);
+  const next=m.nextSelection;at(m,4900);assert.equal(m.selection,next);assert.equal(m.targets().find(n=>n.open).lane,m.lane([1,3,5][next]));
+});
+test('Interferômetro abre antes de B e muda núcleo; pressão acrescenta C',()=>{
+  const m=new QuantumBoss(7);at(m,3000);assert.equal(m.pulses[1].fired,false);assert.equal(m.targets().some(n=>n.open),true);
+  const lane=m.targets().find(n=>n.open).lane;at(m,4500);assert.notEqual(m.targets().find(n=>n.open).lane,lane);
+  m.hp=[10];m.prepareRound(4);assert.equal(m.pulses.length,3);assert.equal(m.pulses[2].at-m.pulses[1].at,2000);
+});
+test('Nave-mãe combina Bell/QKD, H/coerência e síndrome/três rotas sem aumentar a vida',()=>{
+  const m=new QuantumBoss(8);assert.equal(m.maxHp,36);at(m,2800);assert.equal(m.targets(9).some(n=>n.open),false);
+  m.hp=[25];assert.equal(m.hit(0,0,m.targets(0).find(n=>n.open).lane),true);assert.equal(m.stage,1);assert.equal(m.elapsed,0);
+  assert.equal(m.stabilizing,true);assert.equal(m.targets().length,3);assert.ok(m.pulses[0].at-m.time>=2200);
+  m.hp=[13];at(m,4200,m.zone[0]);m.coherence=80;assert.equal(m.hit(0,0,m.targets().find(n=>n.open).lane),true);
+  assert.equal(m.stage,2);assert.equal(m.pulses.length,3);assert.ok(m.pulses[0].at-m.time>=2200);
+});
+test('Disparos H podem atingir três núcleos finais distintos, sem dano repetido no mesmo alvo',()=>{
+  const m=new QuantumBoss(8);m.hp=[24];m.prepareRound(4);at(m,4200,m.zone[0]);m.coherence=80;
+  const nodes=m.targets();for(const n of nodes)assert.equal(m.hit(n.id,0,n.lane),true);assert.equal(m.health,21);
+  assert.equal(m.hit(nodes[0].id,0,nodes[0].lane),false);
+});
+test('Mudança de comportamento não altera uma salva já anunciada',()=>{
+  for(const phase of [1,2,3,4,5,6,7]){
+    const m=new QuantumBoss(phase),before=JSON.stringify(m.pulses);m.hp=m.hp.map(h=>Math.floor(h/2));
+    advance(m,50,4);assert.equal(JSON.stringify(m.pulses),before);assert.equal(m.pressure,false);
+    advance(m,m.period-m.elapsed,4);assert.equal(m.pressure,true);
   }
 });
-test('Sentinela exige canal abaixo de 8% e relés em sequência',()=>{
-  const m=new QuantumBoss(1);open(m);assert.equal(m.hit(0,9),false);assert.equal(m.hit(1,0),false);
-  assert.equal(m.hit(0,0),true);assert.equal(m.health,11);
-  assert.equal(m.hit(0,0),false,'Uma colisão não pode aplicar dano várias vezes no mesmo instante');
+test('Proteção física dos chefes é curta e não absorve uma segunda salva distinta',()=>{
+  const g=makeGame();g.run('beginBoss();continuePhase();takeHullHit("A",100)');assert.equal(g.run('hullInvulUntil-gameTime'),450);
+  g.run('gameTime=400;takeHullHit("A",100)');assert.equal(g.run('isPlaying'),true);
+  g.run('gameTime=500;takeHullHit("B",100)');assert.equal(g.run('isPlaying'),false);
 });
-test('Observador só revela e aceita dano na sonda verdadeira após a varredura',()=>{
-  const m=new QuantumBoss(2);assert.equal(m.hit(0,0),false);open(m);
-  const decoy=m.targets().find(n=>n.id===-1),real=m.targets().find(n=>n.open);
-  assert.equal(m.hit(decoy.id,0,decoy.lane),false);assert.equal(m.hit(real.id,0,real.lane),true);
+test('Ruído de leitura usa o canal real e é descartado durante R',()=>{
+  for(const regen of [false,true]){
+    const g=makeGame();g.run('level=2;beginBoss();continuePhase();boss.model.time=3300;boss.model.pulses.forEach(p=>p.fired=true);boss.model.playerLane=boss.model.lane(3);boss.model.stationaryMs=1000;currentLane=boss.model.lane(3);shipPilot.reset(currentLane);');
+    if(regen)g.run('tryRegen()');
+    g.run('lasers=[{x:shipCenterX(),y:bossArenaY(),previousY:bossArenaY()+1,radius:4}];updateBossBattle(0,shipCenterX())');
+    assert.equal(g.run('qber'),regen?0:.8);assert.equal(g.run('hullShield'),1);
+  }
 });
-test('Tríade permite que H atinja três núcleos diferentes na mesma abertura',()=>{
-  const m=new QuantumBoss(3);open(m);for(const n of m.targets())assert.equal(m.hit(n.id,0,n.lane),true);
-  assert.deepEqual(m.hp,[7,7,7]);
+test('Previsões mostram somente a mecânica do guardião correspondente',()=>{
+  for(let phase=1;phase<=8;phase++){
+    const m=new QuantumBoss(phase);m.hp=m.hp.map(h=>Math.ceil(h/2));m.prepareRound(4);at(m,3500);
+    if(!m.stabilizing)assert.equal(m.nextZone,undefined);
+    if(!m.syndrome)assert.equal(m.nextSelection,null);
+    if(phase!==3)assert.equal(m.nextTriadCenter,null);
+  }
 });
-test('Bell compartilha dano, mas o lado protegido não recebe acertos',()=>{
-  const m=new QuantumBoss(4);open(m);assert.equal(m.hit(1,0,5),false);assert.equal(m.hit(0,0,1),true);assert.deepEqual(m.hp,[15,15]);
-  advance(m,m.period);assert.equal(m.targets().find(n=>n.open).lane,5);
-  const final=new QuantumBoss(8);open(final);assert.equal(final.hit(0,0,5),false);assert.equal(final.hit(0,0,1),true);assert.equal(final.health,34);
+test('Apoio H é lançado no centro útil à formação, inclusive no estágio de coerência',()=>{
+  for(const phase of [3,8]){
+    const g=makeGame();g.run('level='+phase+';beginBoss();continuePhase();');
+    if(phase===8)g.run('boss.model.hp=[24];boss.model.prepareRound(4)');
+    g.run('pickups=[];bossSupply()');assert.equal(g.run('pickups[0].type'),'hadamard');assert.equal(g.run('laneOf(pickups[0])'),g.run('boss.model.triadCenter'));
+  }
 });
-test('Faixa verde restaura coerência e reabre o escudo',()=>{
-  const m=new QuantumBoss(5);open(m,6);advance(m,1600,6);
-  assert.ok(m.coherence<35);assert.equal(m.targets().some(n=>n.open),false);
-  advance(m,1200,m.zone[0]);assert.ok(m.coherence>=35);assert.equal(m.targets().some(n=>n.open),true);
+test('R carregado para a entrada preserva 400 ms de reação antes da primeira salva',()=>{
+  for(let phase=1;phase<=8;phase++){
+    const g=makeGame();g.run('level='+phase+';tryRegen();beginBoss();continuePhase()');
+    assert.ok(g.run('boss.model.pulses[0].at-boss.model.time>=regenEnd-gameTime+400'));
+  }
 });
-test('Síndrome identifica módulo danificado sem permitir dano nos outros',()=>{
-  const m=new QuantumBoss(6);open(m);assert.match(m.hint(0),/TRILHA 6/);assert.equal(m.hit(0,0,1),false);
-  for(let i=0;i<5;i++){m.hit(2,0,5);advance(m,150);}
-  assert.equal(m.hp[2],0);assert.match(m.hint(0),/TRILHA 2/);
-});
-test('Interferômetro tem duas salvas e só abre após ambas',()=>{
-  const m=new QuantumBoss(7);const events=advance(m,3400);
-  assert.equal(events.filter(e=>e.type==='pulse').length,2);assert.equal(m.targets().some(n=>n.open),false);
-  advance(m,100);assert.equal(m.targets().some(n=>n.open),true);
-});
-test('Nave-mãe passa por três estágios com um novo aviso antes de cada um',()=>{
-  const m=new QuantumBoss(8);open(m);
-  for(let i=0;i<6;i++){m.hit(0,0,1);advance(m,150);}
-  assert.equal(m.stage,1);assert.ok(m.elapsed<2000);assert.equal(m.stabilizing,true);
-  m.hp=[12];m.roundStart=m.time;m.prepareRound(3);assert.equal(m.stage,2);assert.equal(m.pulses.length,2);
+test('Vitória cancela ataques pendentes e não deixa uma salva C atingir depois',()=>{
+  const g=makeGame();g.run('level=7;beginBoss();continuePhase();boss.model.hp=[1];boss.model.time=3000;boss.model.pulses.forEach(p=>p.fired=true);lasers=[{x:(boss.model.targets().find(n=>n.open).lane+.5)*laneWidth,y:bossArenaY(),previousY:bossArenaY()+1,radius:4}];updateBossBattle(0,shipCenterX())');
+  assert.equal(g.run('boss.status'),'won');assert.equal(g.run('boss.channelPulse'),null);
+  g.run('boss.model.pulses.forEach(p=>p.fired=false);boss.model.time=6500;updateBossBattle(1,shipCenterX())');assert.equal(g.run('hullShield'),1);
 });
 test('Escudo absorve um golpe, protege por 1,4 s e depois a nave fica vulnerável',()=>{
   const g=makeGame();g.run('takeHullHit("teste",100)');assert.equal(g.run('isPlaying'),true);assert.equal(g.run('hullShield'),0);
@@ -64,7 +152,7 @@ test('Escudo absorve um golpe, protege por 1,4 s e depois a nave fica vulneráve
   assert.equal(g.elements.get('btnRetry').hidden,false);
 });
 test('Pausa congela guardião, salvas e cápsulas e retomada mantém um único loop',()=>{
-  const g=makeGame();g.run('score=100;update(100);continuePhase();update(100);update(120);');
+  const g=makeGame();g.run('score=100;beginBoss();continuePhase();update(100);update(120);');
   const time=g.run('boss.model.time');g.press('Escape');g.run('update(99999)');assert.equal(g.run('boss.model.time'),time);
   g.press('Escape');assert.equal(g.run('isPaused'),false);
 });
@@ -79,20 +167,20 @@ test('ENTER em um botão de retomada preserva a ação nativa em vez de reinicia
   g.run('retryPhase()');assert.equal(g.run('level'),5);assert.equal(g.run('score'),460);
 });
 test('Guardião impede ondas comuns e a vitória repara dois impactos uma única vez',()=>{
-  const g=makeGame();g.run('score=100;missed=5;beginBoss();continuePhase();gameTime=99999;nextAsteroidAt=0;update(100)');
+  const g=makeGame();g.run('score=100;missed=5;beginBoss();continuePhase();gameTime=99999;update(100)');
   assert.equal(g.run('asteroids.length+clouds.length+spies.length'),0);
   g.run('finishBoss()');assert.equal(g.run('level'),1,'Não deve avançar antes de vencer');
   g.run('boss.status="won";finishBoss();finishBoss()');assert.equal(g.run('level'),2);assert.equal(g.run('missed'),3);assert.equal(g.run('bossesDefeated'),1);
 });
 test('Ficar parado não vence o guardião: duas salvas sem desvio encerram o combate',()=>{
-  const g=makeGame();g.run('level=2;score=220;beginBoss();continuePhase();let idleTime=100;for(let i=0;i<700&&isPlaying;i++){cancelAnimationFrame(rafId);idleTime+=FRAME_MS;update(idleTime);}');
+  const g=makeGame();g.run('level=2;score=220;beginBoss();continuePhase();let idleTime=100;for(let i=0;i<1000&&isPlaying;i++){cancelAnimationFrame(rafId);idleTime+=FRAME_MS;update(idleTime);}');
   assert.equal(g.run('isPlaying'),false);assert.equal(g.run('bossesDefeated'),0);
 });
 test('Ondas triplas e rochas rápidas mantêm limites de trilha e velocidade',()=>{
   const g=makeGame();g.sandbox.Math.random=()=>0;
-  g.run('level=6;phaseWaveCount=3;nextAsteroidAt=0;spawnAsteroids()');
+  g.run('level=6;resetEncounters();spawnFormation(encounterDirector.plan[2][4])');
   assert.equal(g.run('asteroids.length'),3);assert.ok(g.run('asteroids.every(a=>a.x>0&&a.x<width)'));
-  g.run('level=2;asteroids=[];nextAsteroidAt=0;spawnAsteroids()');assert.equal(g.run('asteroids.some(a=>a.rush)'),true);
+  g.run('level=2;resetEncounters();asteroids=[];spawnFormation(encounterDirector.plan[0][1])');assert.equal(g.run('asteroids.some(a=>a.rush)'),true);
 });
 
 console.log(JSON.stringify({passed:results.length,tests:results},null,2));

@@ -25,11 +25,11 @@ function opening() {
     makeSpaceBackdrop:() => ({}), drawInterceptor:noop, arcadeActive:false, isPlaying:false, finale:null,
     launches:0, defenses:0, startDefense:() => sandbox.defenses++, startGame:() => sandbox.launches++ };
   const context = vm.createContext(sandbox);
-  for (const file of ['training.js','story.js']) vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'), context, {filename:file});
+  for (const file of ['arena.js','training.js','story.js']) vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'), context, {filename:file});
   const run = code => vm.runInContext(code, context);
   const click = id => elements.get(id).click();
   const action = name => elements.get('trainingExperiment').click({target:{closest:() => ({dataset:{trainingAction:name}})}});
-  const press = code => listeners.keydown.forEach(fn => fn({code, repeat:false, target:{closest:() => null}, preventDefault:noop}));
+  const press = code => {listeners.keydown.forEach(fn => fn({code, repeat:false, target:{closest:() => null}, preventDefault:noop}));(listeners.keyup||[]).forEach(fn=>fn({code}));};
   const advance = ms => { for (let t = 0; t < ms; t += 20) { time += 20; const queued = [...frames.values()]; frames.clear(); queued.forEach(fn => fn(time)); } };
   run('startIntro()');
   return {elements,sandbox,audio,frames,run,click,action,press,advance};

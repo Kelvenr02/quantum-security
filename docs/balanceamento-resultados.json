@@ -1,0 +1,2183 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-14",
+  "description": "Controladores determinísticos com acesso ao estado interno; resultados não estimam habilidade ou sucesso humano.",
+  "command": "node tools/analyze-balance.cjs --output tmp/balanceamento.json",
+  "summary": [
+    {
+      "name": "equilibrado",
+      "cases": 20,
+      "wins": 20,
+      "seconds": [
+        540,
+        604
+      ],
+      "regens": [
+        27,
+        33
+      ],
+      "missed": [
+        1,
+        7
+      ],
+      "losses": []
+    },
+    {
+      "name": "meteors",
+      "cases": 4,
+      "wins": 4,
+      "seconds": [
+        544,
+        570
+      ],
+      "regens": [
+        27,
+        29
+      ],
+      "missed": [
+        5,
+        8
+      ],
+      "losses": []
+    },
+    {
+      "name": "noise",
+      "cases": 4,
+      "wins": 4,
+      "seconds": [
+        543,
+        563
+      ],
+      "regens": [
+        26,
+        29
+      ],
+      "missed": [
+        4,
+        7
+      ],
+      "losses": []
+    },
+    {
+      "name": "leitura-300ms",
+      "cases": 4,
+      "wins": 3,
+      "seconds": [
+        545,
+        590
+      ],
+      "regens": [
+        26,
+        32
+      ],
+      "missed": [
+        5,
+        9
+      ],
+      "losses": [
+        {
+          "seed": 42,
+          "width": 1600,
+          "height": 900,
+          "phase": 8,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "leitura-500ms",
+      "cases": 2,
+      "wins": 0,
+      "seconds": null,
+      "regens": null,
+      "missed": null,
+      "losses": [
+        {
+          "seed": 42,
+          "width": 1600,
+          "height": 900,
+          "phase": 1,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "B"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 5,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "comando-perdido",
+      "cases": 2,
+      "wins": 1,
+      "seconds": [
+        558,
+        558
+      ],
+      "regens": [
+        29,
+        29
+      ],
+      "missed": [
+        7,
+        7
+      ],
+      "losses": [
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 8,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "B"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "canal-com-R",
+      "cases": 2,
+      "wins": 2,
+      "seconds": [
+        547,
+        570
+      ],
+      "regens": [
+        29,
+        30
+      ],
+      "missed": [
+        4,
+        7
+      ],
+      "losses": []
+    },
+    {
+      "name": "canal-sem-R",
+      "cases": 2,
+      "wins": 2,
+      "seconds": [
+        564,
+        567
+      ],
+      "regens": [
+        0,
+        0
+      ],
+      "missed": [
+        6,
+        6
+      ],
+      "losses": []
+    },
+    {
+      "name": "inversao-com-R",
+      "cases": 2,
+      "wins": 0,
+      "seconds": null,
+      "regens": null,
+      "missed": null,
+      "losses": [
+        {
+          "seed": 42,
+          "width": 1600,
+          "height": 900,
+          "phase": 8,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 8,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "inversao-sem-R",
+      "cases": 2,
+      "wins": 0,
+      "seconds": null,
+      "regens": null,
+      "missed": null,
+      "losses": [
+        {
+          "seed": 42,
+          "width": 1600,
+          "height": 900,
+          "phase": 5,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 5,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "C"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "imovel",
+      "cases": 2,
+      "wins": 0,
+      "seconds": null,
+      "regens": null,
+      "missed": null,
+      "losses": [
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 1,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 390,
+          "height": 700,
+          "phase": 1,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "name": "equilibrado",
+      "width": 1600,
+      "height": 900,
+      "seed": 1,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 565,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 1,
+      "regens": 27,
+      "compromises": 9,
+      "compromisedMs": 22316.666666692647,
+      "bossSeconds": {
+        "1": 23,
+        "2": 31.6,
+        "3": 14.6,
+        "4": 31.5,
+        "5": 33,
+        "6": 24.6,
+        "7": 35.6,
+        "8": 66.7
+      },
+      "waves": {
+        "1": 29.5,
+        "2": 28.6,
+        "3": 33.2,
+        "4": 35.5,
+        "5": 42.7,
+        "6": 45.5,
+        "7": 44.9,
+        "8": 44.1
+      },
+      "hullHits": 0,
+      "earthImpacts": 6,
+      "repairs": 5,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "equilibrado",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 570,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 29,
+      "compromises": 10,
+      "compromisedMs": 26600.00000002957,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.5,
+        "3": 22,
+        "4": 34.1,
+        "5": 33.1,
+        "6": 24.8,
+        "7": 42.8,
+        "8": 63.8
+      },
+      "waves": {
+        "1": 27.1,
+        "2": 28.7,
+        "3": 32,
+        "4": 31.9,
+        "5": 44.6,
+        "6": 45.1,
+        "7": 41.2,
+        "8": 44.2
+      },
+      "hullHits": 0,
+      "earthImpacts": 14,
+      "repairs": 7,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "equilibrado",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 547,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 4,
+      "regens": 30,
+      "compromises": 10,
+      "compromisedMs": 22266.666666682577,
+      "bossSeconds": {
+        "1": 23,
+        "2": 23.4,
+        "3": 13.6,
+        "4": 34,
+        "5": 26.8,
+        "6": 24.4,
+        "7": 35.8,
+        "8": 62.7
+      },
+      "waves": {
+        "1": 29.4,
+        "2": 27.5,
+        "3": 32.8,
+        "4": 34.1,
+        "5": 41.1,
+        "6": 45.4,
+        "7": 45.6,
+        "8": 47.4
+      },
+      "hullHits": 0,
+      "earthImpacts": 13,
+      "repairs": 9,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "equilibrado",
+      "width": 1600,
+      "height": 900,
+      "seed": 2026,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 541,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 6,
+      "regens": 28,
+      "compromises": 9,
+      "compromisedMs": 20583.333333348477,
+      "bossSeconds": {
+        "1": 23,
+        "2": 26.1,
+        "3": 13.3,
+        "4": 31.2,
+        "5": 25.6,
+        "6": 24.7,
+        "7": 36.2,
+        "8": 63.1
+      },
+      "waves": {
+        "1": 27.2,
+        "2": 28.1,
+        "3": 32.2,
+        "4": 34.9,
+        "5": 40.5,
+        "6": 43.2,
+        "7": 44.9,
+        "8": 46.8
+      },
+      "hullHits": 0,
+      "earthImpacts": 13,
+      "repairs": 7,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "equilibrado",
+      "width": 1100,
+      "height": 800,
+      "seed": 1,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 561,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 5,
+      "regens": 29,
+      "compromises": 10,
+      "compromisedMs": 19750.00000001982,
+      "bossSeconds": {
+        "1": 23,
+        "2": 25.9,
+        "3": 15.1,
+        "4": 33.7,
+        "5": 33.1,
+        "6": 24.6,
+        "7": 42.6,
+        "8": 62.5
+      },
+      "waves": {
+        "1": 29.8,
+        "2": 27.5,
+        "3": 32.2,
+        "4": 35.1,
+        "5": 42.3,
+        "6": 44.3,
+        "7": 44.4,
+        "8": 45.1
+      },
+      "hullHits": 0,
+      "earthImpacts": 14,
+      "repairs": 9,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "equilibrado",
+      "width": 1100,
+      "height": 800,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 550,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 28,
+      "compromises": 8,
+      "compromisedMs": 17216.666666685225,
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 32.1,
+        "3": 15.3,
+        "4": 34,
+        "5": 25.4,
+        "6": 24.6,
+        "7": 33.3,
+        "8": 65
+      },
+      "waves": {
+        "1": 27.3,
+        "2": 28.6,
+        "3": 32.3,
+        "4": 31.7,
+        "5": 42.2,
+        "6": 43.8,
+        "7": 44.4,
+        "8": 46.5
+      },
+      "hullHits": 0,
+      "earthImpacts": 13,
+      "repairs": 6,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "equilibrado",
+      "width": 1100,
+      "height": 800,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 566,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 6,
+      "regens": 31,
+      "compromises": 11,
+      "compromisedMs": 31000.000000035492,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.6,
+        "3": 22.3,
+        "4": 33.9,
+        "5": 26.7,
+        "6": 24.5,
+        "7": 37,
+        "8": 63.7
+      },
+      "waves": {
+        "1": 29.8,
+        "2": 30.2,
+        "3": 33.2,
+        "4": 34,
+        "5": 37.2,
+        "6": 47,
+        "7": 44.3,
+        "8": 47.2
+      },
+      "hullHits": 0,
+      "earthImpacts": 17,
+      "repairs": 11,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "equilibrado",
+      "width": 1100,
+      "height": 800,
+      "seed": 2026,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 560,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 5,
+      "regens": 31,
+      "compromises": 12,
+      "compromisedMs": 25416.66666669096,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.5,
+        "3": 15.5,
+        "4": 34.4,
+        "5": 32.8,
+        "6": 24.6,
+        "7": 36.8,
+        "8": 58.9
+      },
+      "waves": {
+        "1": 27.7,
+        "2": 27.4,
+        "3": 36.9,
+        "4": 34.4,
+        "5": 40.5,
+        "6": 43.4,
+        "7": 46.7,
+        "8": 45.4
+      },
+      "hullHits": 0,
+      "earthImpacts": 14,
+      "repairs": 9,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "equilibrado",
+      "width": 390,
+      "height": 700,
+      "seed": 1,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 542,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 28,
+      "compromises": 12,
+      "compromisedMs": 28300.000000018976,
+      "bossSeconds": {
+        "1": 23,
+        "2": 23.4,
+        "3": 13.4,
+        "4": 34,
+        "5": 25.2,
+        "6": 24.6,
+        "7": 35.7,
+        "8": 62.2
+      },
+      "waves": {
+        "1": 29.8,
+        "2": 28.8,
+        "3": 33,
+        "4": 31.7,
+        "5": 42.5,
+        "6": 47.2,
+        "7": 43.8,
+        "8": 43.9
+      },
+      "hullHits": 0,
+      "earthImpacts": 16,
+      "repairs": 9,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "equilibrado",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 555,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 29,
+      "compromises": 13,
+      "compromisedMs": 28800.000000026368,
+      "bossSeconds": {
+        "1": 23,
+        "2": 32.4,
+        "3": 13.4,
+        "4": 31.4,
+        "5": 33,
+        "6": 24.6,
+        "7": 35,
+        "8": 67.3
+      },
+      "waves": {
+        "1": 27.4,
+        "2": 28.4,
+        "3": 32.9,
+        "4": 33.2,
+        "5": 43,
+        "6": 42.4,
+        "7": 44,
+        "8": 43
+      },
+      "hullHits": 0,
+      "earthImpacts": 13,
+      "repairs": 6,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "equilibrado",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 540,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 3,
+      "regens": 27,
+      "compromises": 10,
+      "compromisedMs": 22966.6666666861,
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 26,
+        "3": 13.5,
+        "4": 33.6,
+        "5": 26.6,
+        "6": 24.5,
+        "7": 35.2,
+        "8": 62.7
+      },
+      "waves": {
+        "1": 29.9,
+        "2": 27.5,
+        "3": 31.3,
+        "4": 33.7,
+        "5": 36.9,
+        "6": 44.3,
+        "7": 43.7,
+        "8": 46.9
+      },
+      "hullHits": 0,
+      "earthImpacts": 11,
+      "repairs": 8,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "equilibrado",
+      "width": 390,
+      "height": 700,
+      "seed": 2026,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 559,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 4,
+      "regens": 29,
+      "compromises": 13,
+      "compromisedMs": 34133.33333336454,
+      "bossSeconds": {
+        "1": 23,
+        "2": 32.4,
+        "3": 15.3,
+        "4": 31.1,
+        "5": 25.7,
+        "6": 24.5,
+        "7": 35.9,
+        "8": 65.5
+      },
+      "waves": {
+        "1": 27.1,
+        "2": 28.4,
+        "3": 35.9,
+        "4": 31.4,
+        "5": 45.7,
+        "6": 44,
+        "7": 46.8,
+        "8": 46.1
+      },
+      "hullHits": 0,
+      "earthImpacts": 12,
+      "repairs": 8,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "equilibrado",
+      "width": 844,
+      "height": 390,
+      "seed": 1,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 581,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 30,
+      "compromises": 12,
+      "compromisedMs": 37566.666666701465,
+      "bossSeconds": {
+        "1": 24,
+        "2": 16.2,
+        "3": 13.6,
+        "4": 40.3,
+        "5": 25.4,
+        "6": 24.4,
+        "7": 35.3,
+        "8": 63.9
+      },
+      "waves": {
+        "1": 28.2,
+        "2": 31,
+        "3": 33.8,
+        "4": 36.2,
+        "5": 40.8,
+        "6": 62.4,
+        "7": 55.1,
+        "8": 50.7
+      },
+      "hullHits": 0,
+      "earthImpacts": 19,
+      "repairs": 12,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "equilibrado",
+      "width": 844,
+      "height": 390,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 586,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 6,
+      "regens": 31,
+      "compromises": 14,
+      "compromisedMs": 38250.00000004453,
+      "bossSeconds": {
+        "1": 24,
+        "2": 31.7,
+        "3": 16.3,
+        "4": 40.3,
+        "5": 23.4,
+        "6": 24.4,
+        "7": 35.4,
+        "8": 66.3
+      },
+      "waves": {
+        "1": 30.9,
+        "2": 30.5,
+        "3": 32.2,
+        "4": 35.5,
+        "5": 46.3,
+        "6": 53.1,
+        "7": 51,
+        "8": 44.2
+      },
+      "hullHits": 0,
+      "earthImpacts": 15,
+      "repairs": 9,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "equilibrado",
+      "width": 844,
+      "height": 390,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 590,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 30,
+      "compromises": 12,
+      "compromisedMs": 37733.33333337371,
+      "bossSeconds": {
+        "1": 23.9,
+        "2": 23.4,
+        "3": 13.5,
+        "4": 49.3,
+        "5": 17.3,
+        "6": 24.4,
+        "7": 33,
+        "8": 86.7
+      },
+      "waves": {
+        "1": 27.4,
+        "2": 27.3,
+        "3": 35.7,
+        "4": 35.6,
+        "5": 43.3,
+        "6": 49.1,
+        "7": 56.1,
+        "8": 43.8
+      },
+      "hullHits": 0,
+      "earthImpacts": 18,
+      "repairs": 11,
+      "dronesDestroyed": 10,
+      "dronesEscaped": 2
+    },
+    {
+      "name": "equilibrado",
+      "width": 844,
+      "height": 390,
+      "seed": 2026,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 594,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 6,
+      "regens": 30,
+      "compromises": 12,
+      "compromisedMs": 41366.66666670781,
+      "bossSeconds": {
+        "1": 24.1,
+        "2": 23.1,
+        "3": 13.4,
+        "4": 42.8,
+        "5": 24.4,
+        "6": 24.4,
+        "7": 35.4,
+        "8": 68.2
+      },
+      "waves": {
+        "1": 30.5,
+        "2": 27.4,
+        "3": 35.2,
+        "4": 33.6,
+        "5": 45,
+        "6": 54.6,
+        "7": 59.3,
+        "8": 52.4
+      },
+      "hullHits": 0,
+      "earthImpacts": 16,
+      "repairs": 10,
+      "dronesDestroyed": 10,
+      "dronesEscaped": 2
+    },
+    {
+      "name": "equilibrado",
+      "width": 760,
+      "height": 360,
+      "seed": 1,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 602,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 32,
+      "compromises": 12,
+      "compromisedMs": 30150.00000001202,
+      "bossSeconds": {
+        "1": 31,
+        "2": 23.3,
+        "3": 13.4,
+        "4": 51.6,
+        "5": 23.4,
+        "6": 24.4,
+        "7": 35.4,
+        "8": 66.8
+      },
+      "waves": {
+        "1": 28.5,
+        "2": 34.3,
+        "3": 36.3,
+        "4": 35.9,
+        "5": 43.2,
+        "6": 53.4,
+        "7": 56.2,
+        "8": 45.2
+      },
+      "hullHits": 0,
+      "earthImpacts": 19,
+      "repairs": 12,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "equilibrado",
+      "width": 760,
+      "height": 360,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 580,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 6,
+      "regens": 32,
+      "compromises": 12,
+      "compromisedMs": 31750.000000034022,
+      "bossSeconds": {
+        "1": 24,
+        "2": 25.5,
+        "3": 15.6,
+        "4": 40.4,
+        "5": 25.3,
+        "6": 24.4,
+        "7": 35,
+        "8": 64.4
+      },
+      "waves": {
+        "1": 28.9,
+        "2": 30.4,
+        "3": 37,
+        "4": 34.3,
+        "5": 43.8,
+        "6": 55.6,
+        "7": 51.4,
+        "8": 43.6
+      },
+      "hullHits": 0,
+      "earthImpacts": 18,
+      "repairs": 12,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "equilibrado",
+      "width": 760,
+      "height": 360,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 598,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 31,
+      "compromises": 16,
+      "compromisedMs": 40050.00000004089,
+      "bossSeconds": {
+        "1": 24.1,
+        "2": 16.7,
+        "3": 13.6,
+        "4": 49.2,
+        "5": 24.6,
+        "6": 24.5,
+        "7": 27.1,
+        "8": 85.2
+      },
+      "waves": {
+        "1": 27.5,
+        "2": 27.8,
+        "3": 38.4,
+        "4": 37.5,
+        "5": 46.5,
+        "6": 61.3,
+        "7": 48.1,
+        "8": 45.3
+      },
+      "hullHits": 0,
+      "earthImpacts": 17,
+      "repairs": 10,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "equilibrado",
+      "width": 760,
+      "height": 360,
+      "seed": 2026,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 604,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 6,
+      "regens": 33,
+      "compromises": 13,
+      "compromisedMs": 36050.000000024826,
+      "bossSeconds": {
+        "1": 31,
+        "2": 23.4,
+        "3": 14.6,
+        "4": 42.4,
+        "5": 25.6,
+        "6": 24.7,
+        "7": 36.3,
+        "8": 66.5
+      },
+      "waves": {
+        "1": 31.5,
+        "2": 29.5,
+        "3": 36.6,
+        "4": 31.4,
+        "5": 53,
+        "6": 59.2,
+        "7": 45.6,
+        "8": 53
+      },
+      "hullHits": 0,
+      "earthImpacts": 16,
+      "repairs": 10,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "meteors",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "strategy": "meteors"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 570,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 29,
+      "compromises": 10,
+      "compromisedMs": 26600.00000002957,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.5,
+        "3": 22,
+        "4": 34.1,
+        "5": 33.1,
+        "6": 24.8,
+        "7": 42.8,
+        "8": 63.8
+      },
+      "waves": {
+        "1": 27.1,
+        "2": 28.7,
+        "3": 32,
+        "4": 31.9,
+        "5": 44.6,
+        "6": 45.1,
+        "7": 41.2,
+        "8": 44.2
+      },
+      "hullHits": 0,
+      "earthImpacts": 14,
+      "repairs": 7,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "meteors",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "strategy": "meteors"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 546,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 8,
+      "regens": 28,
+      "compromises": 10,
+      "compromisedMs": 23500.0000000172,
+      "bossSeconds": {
+        "1": 23,
+        "2": 23.4,
+        "3": 13.6,
+        "4": 31.1,
+        "5": 33.1,
+        "6": 24.6,
+        "7": 35.8,
+        "8": 57.8
+      },
+      "waves": {
+        "1": 29.4,
+        "2": 27.5,
+        "3": 33.9,
+        "4": 35.9,
+        "5": 40.3,
+        "6": 45.2,
+        "7": 44.5,
+        "8": 47.1
+      },
+      "hullHits": 1,
+      "earthImpacts": 17,
+      "repairs": 9,
+      "dronesDestroyed": 10,
+      "dronesEscaped": 2
+    },
+    {
+      "name": "meteors",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {
+        "strategy": "meteors"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 545,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 5,
+      "regens": 27,
+      "compromises": 12,
+      "compromisedMs": 33400.00000003888,
+      "bossSeconds": {
+        "1": 23,
+        "2": 32.4,
+        "3": 13.4,
+        "4": 31.4,
+        "5": 26.6,
+        "6": 24.5,
+        "7": 35.1,
+        "8": 58
+      },
+      "waves": {
+        "1": 27.4,
+        "2": 28.4,
+        "3": 32.9,
+        "4": 33.2,
+        "5": 43.5,
+        "6": 43.7,
+        "7": 45.9,
+        "8": 45.2
+      },
+      "hullHits": 0,
+      "earthImpacts": 12,
+      "repairs": 7,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "meteors",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "strategy": "meteors"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 544,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 27,
+      "compromises": 13,
+      "compromisedMs": 28466.666666687554,
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 26,
+        "3": 15.1,
+        "4": 31.3,
+        "5": 24.9,
+        "6": 24.5,
+        "7": 35.4,
+        "8": 62.8
+      },
+      "waves": {
+        "1": 29.9,
+        "2": 27.5,
+        "3": 33.5,
+        "4": 32.4,
+        "5": 40.2,
+        "6": 44.8,
+        "7": 47,
+        "8": 45.5
+      },
+      "hullHits": 0,
+      "earthImpacts": 15,
+      "repairs": 8,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "noise",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "strategy": "noise"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 561,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 6,
+      "regens": 29,
+      "compromises": 11,
+      "compromisedMs": 19666.666666688165,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.5,
+        "3": 22,
+        "4": 34.1,
+        "5": 24.8,
+        "6": 24.6,
+        "7": 36.7,
+        "8": 64.2
+      },
+      "waves": {
+        "1": 27.1,
+        "2": 28.7,
+        "3": 32,
+        "4": 31.9,
+        "5": 44.6,
+        "6": 44.9,
+        "7": 43.8,
+        "8": 47.2
+      },
+      "hullHits": 0,
+      "earthImpacts": 14,
+      "repairs": 8,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "noise",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "strategy": "noise"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 545,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 29,
+      "compromises": 9,
+      "compromisedMs": 20183.333333348302,
+      "bossSeconds": {
+        "1": 23,
+        "2": 23.4,
+        "3": 13.6,
+        "4": 34,
+        "5": 34.9,
+        "6": 24.6,
+        "7": 36.2,
+        "8": 57.9
+      },
+      "waves": {
+        "1": 29.4,
+        "2": 27.5,
+        "3": 32.8,
+        "4": 32,
+        "5": 40,
+        "6": 45.4,
+        "7": 46.5,
+        "8": 44.2
+      },
+      "hullHits": 0,
+      "earthImpacts": 16,
+      "repairs": 9,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "noise",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {
+        "strategy": "noise"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 563,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 4,
+      "regens": 28,
+      "compromises": 12,
+      "compromisedMs": 27716.666666691774,
+      "bossSeconds": {
+        "1": 23,
+        "2": 32.4,
+        "3": 13.4,
+        "4": 31.4,
+        "5": 33,
+        "6": 24.4,
+        "7": 35.4,
+        "8": 65.3
+      },
+      "waves": {
+        "1": 27.4,
+        "2": 28.4,
+        "3": 32.9,
+        "4": 33.2,
+        "5": 43,
+        "6": 49,
+        "7": 45.9,
+        "8": 44.5
+      },
+      "hullHits": 0,
+      "earthImpacts": 13,
+      "repairs": 9,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "noise",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "strategy": "noise"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 543,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 26,
+      "compromises": 15,
+      "compromisedMs": 37866.66666669748,
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 26,
+        "3": 13.5,
+        "4": 31.5,
+        "5": 25.2,
+        "6": 24.9,
+        "7": 35.3,
+        "8": 67.2
+      },
+      "waves": {
+        "1": 29.9,
+        "2": 27.5,
+        "3": 31.3,
+        "4": 32.2,
+        "5": 41.8,
+        "6": 42.5,
+        "7": 47.4,
+        "8": 44
+      },
+      "hullHits": 0,
+      "earthImpacts": 16,
+      "repairs": 9,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "leitura-300ms",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "decisionMs": 240,
+        "reactionMs": 300,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 527,
+      "lastPhase": 8,
+      "failure": {
+        "kind": "earth"
+      },
+      "missed": 12,
+      "regens": 30,
+      "compromises": 7,
+      "compromisedMs": 23400.00000002724,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 52.6,
+        "3": 15.1,
+        "4": 34.6,
+        "5": 34.9,
+        "6": 24.6,
+        "7": 42.7
+      },
+      "waves": {
+        "1": 27.4,
+        "2": 28.2,
+        "3": 32.2,
+        "4": 33.3,
+        "5": 44,
+        "6": 46.2,
+        "7": 47.9,
+        "8": 39.9
+      },
+      "hullHits": 0,
+      "earthImpacts": 19,
+      "repairs": 7,
+      "dronesDestroyed": 9,
+      "dronesEscaped": 3
+    },
+    {
+      "name": "leitura-300ms",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "decisionMs": 240,
+        "reactionMs": 300,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 590,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 9,
+      "regens": 32,
+      "compromises": 13,
+      "compromisedMs": 36266.66666670094,
+      "bossSeconds": {
+        "1": 32,
+        "2": 41.6,
+        "3": 22.3,
+        "4": 33.9,
+        "5": 25.6,
+        "6": 24.7,
+        "7": 34.4,
+        "8": 73.3
+      },
+      "waves": {
+        "1": 30.2,
+        "2": 29.1,
+        "3": 33.1,
+        "4": 34.1,
+        "5": 40.5,
+        "6": 44.3,
+        "7": 47.2,
+        "8": 44.1
+      },
+      "hullHits": 3,
+      "earthImpacts": 16,
+      "repairs": 7,
+      "dronesDestroyed": 9,
+      "dronesEscaped": 3
+    },
+    {
+      "name": "leitura-300ms",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {
+        "decisionMs": 240,
+        "reactionMs": 300,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 571,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 31,
+      "compromises": 15,
+      "compromisedMs": 34200.000000032625,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 40.8,
+        "3": 13.6,
+        "4": 34.4,
+        "5": 32.9,
+        "6": 24.5,
+        "7": 35.2,
+        "8": 73.2
+      },
+      "waves": {
+        "1": 27.1,
+        "2": 28.5,
+        "3": 32,
+        "4": 31.8,
+        "5": 42.8,
+        "6": 40.2,
+        "7": 45.4,
+        "8": 45.7
+      },
+      "hullHits": 0,
+      "earthImpacts": 15,
+      "repairs": 8,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "leitura-300ms",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "decisionMs": 240,
+        "reactionMs": 300,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 545,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 5,
+      "regens": 26,
+      "compromises": 12,
+      "compromisedMs": 33633.33333336742,
+      "bossSeconds": {
+        "1": 32.2,
+        "2": 32,
+        "3": 13.4,
+        "4": 33.9,
+        "5": 25.3,
+        "6": 24.8,
+        "7": 27.4,
+        "8": 61.9
+      },
+      "waves": {
+        "1": 29.5,
+        "2": 28,
+        "3": 32,
+        "4": 32.3,
+        "5": 41.4,
+        "6": 44.9,
+        "7": 43.9,
+        "8": 42.5
+      },
+      "hullHits": 1,
+      "earthImpacts": 12,
+      "repairs": 7,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "leitura-500ms",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "decisionMs": 320,
+        "reactionMs": 500,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 52,
+      "lastPhase": 1,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "B"
+      },
+      "missed": 2,
+      "regens": 1,
+      "compromises": 0,
+      "compromisedMs": 0,
+      "bossSeconds": {
+        "1": 22
+      },
+      "waves": {
+        "1": 29.7
+      },
+      "hullHits": 2,
+      "earthImpacts": 2,
+      "repairs": 0,
+      "dronesDestroyed": 0,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "comando-perdido",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "reactionMs": 300,
+        "errorEvery": 13
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 558,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 29,
+      "compromises": 9,
+      "compromisedMs": 24500.00000002852,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 32.5,
+        "3": 13.6,
+        "4": 31.5,
+        "5": 34.8,
+        "6": 24.6,
+        "7": 37.2,
+        "8": 63.2
+      },
+      "waves": {
+        "1": 27.3,
+        "2": 28.7,
+        "3": 35,
+        "4": 33.4,
+        "5": 39.8,
+        "6": 43.7,
+        "7": 47,
+        "8": 42.7
+      },
+      "hullHits": 2,
+      "earthImpacts": 15,
+      "repairs": 8,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "canal-com-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 570,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 7,
+      "regens": 29,
+      "compromises": 10,
+      "compromisedMs": 26600.00000002957,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.5,
+        "3": 22,
+        "4": 34.1,
+        "5": 33.1,
+        "6": 24.8,
+        "7": 42.8,
+        "8": 63.8
+      },
+      "waves": {
+        "1": 27.1,
+        "2": 28.7,
+        "3": 32,
+        "4": 31.9,
+        "5": 44.6,
+        "6": 45.1,
+        "7": 41.2,
+        "8": 44.2
+      },
+      "hullHits": 0,
+      "earthImpacts": 14,
+      "repairs": 7,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "canal-sem-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {},
+      "manageChannel": false,
+      "won": true,
+      "seconds": 567,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 6,
+      "regens": 0,
+      "compromises": 48,
+      "compromisedMs": 191666.6666667352,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 25.6,
+        "3": 13.3,
+        "4": 25.4,
+        "5": 23.5,
+        "6": 24.5,
+        "7": 33.3,
+        "8": 103.6
+      },
+      "waves": {
+        "1": 27.2,
+        "2": 28.7,
+        "3": 31.7,
+        "4": 32.2,
+        "5": 43.6,
+        "6": 44.2,
+        "7": 43.8,
+        "8": 43.5
+      },
+      "hullHits": 0,
+      "earthImpacts": 16,
+      "repairs": 10,
+      "dronesDestroyed": 12,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "inversao-com-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "reactionMs": 300,
+        "compensate": false
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 497,
+      "lastPhase": 8,
+      "failure": {
+        "kind": "earth"
+      },
+      "missed": 12,
+      "regens": 24,
+      "compromises": 11,
+      "compromisedMs": 31100.00000003481,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.5,
+        "3": 22,
+        "4": 34.1,
+        "5": 33.1,
+        "6": 25,
+        "7": 42.4
+      },
+      "waves": {
+        "1": 27.1,
+        "2": 28.7,
+        "3": 32,
+        "4": 31.9,
+        "5": 44.6,
+        "6": 43.1,
+        "7": 46.8,
+        "8": 31.5
+      },
+      "hullHits": 0,
+      "earthImpacts": 18,
+      "repairs": 6,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "inversao-sem-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "reactionMs": 300,
+        "compensate": false
+      },
+      "manageChannel": false,
+      "won": false,
+      "seconds": 261,
+      "lastPhase": 5,
+      "failure": {
+        "kind": "earth"
+      },
+      "missed": 12,
+      "regens": 0,
+      "compromises": 12,
+      "compromisedMs": 48049.999999982465,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 32.2,
+        "3": 13.5,
+        "4": 31.1
+      },
+      "waves": {
+        "1": 27.2,
+        "2": 28.7,
+        "3": 33.1,
+        "4": 35.4,
+        "5": 36.3
+      },
+      "hullHits": 1,
+      "earthImpacts": 15,
+      "repairs": 3,
+      "dronesDestroyed": 5,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "leitura-500ms",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "decisionMs": 320,
+        "reactionMs": 500,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 309,
+      "lastPhase": 5,
+      "failure": {
+        "kind": "earth"
+      },
+      "missed": 12,
+      "regens": 11,
+      "compromises": 2,
+      "compromisedMs": 4083.333333337978,
+      "bossSeconds": {
+        "1": 22.9,
+        "2": 42.6,
+        "3": 33.9,
+        "4": 49.6
+      },
+      "waves": {
+        "1": 31.6,
+        "2": 28.2,
+        "3": 32.6,
+        "4": 33.5,
+        "5": 33.9
+      },
+      "hullHits": 2,
+      "earthImpacts": 18,
+      "repairs": 6,
+      "dronesDestroyed": 5,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "comando-perdido",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "reactionMs": 300,
+        "errorEvery": 13
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 540,
+      "lastPhase": 8,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "B"
+      },
+      "missed": 10,
+      "regens": 28,
+      "compromises": 12,
+      "compromisedMs": 30350.000000031083,
+      "bossSeconds": {
+        "1": 23,
+        "2": 25.9,
+        "3": 22.1,
+        "4": 33.9,
+        "5": 33.1,
+        "6": 24.4,
+        "7": 42.9,
+        "8": 34
+      },
+      "waves": {
+        "1": 29.4,
+        "2": 27.5,
+        "3": 31.2,
+        "4": 34.7,
+        "5": 40.1,
+        "6": 45.9,
+        "7": 46.3,
+        "8": 45.8
+      },
+      "hullHits": 2,
+      "earthImpacts": 17,
+      "repairs": 7,
+      "dronesDestroyed": 10,
+      "dronesEscaped": 2
+    },
+    {
+      "name": "canal-com-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 547,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 4,
+      "regens": 30,
+      "compromises": 10,
+      "compromisedMs": 22266.666666682577,
+      "bossSeconds": {
+        "1": 23,
+        "2": 23.4,
+        "3": 13.6,
+        "4": 34,
+        "5": 26.8,
+        "6": 24.4,
+        "7": 35.8,
+        "8": 62.7
+      },
+      "waves": {
+        "1": 29.4,
+        "2": 27.5,
+        "3": 32.8,
+        "4": 34.1,
+        "5": 41.1,
+        "6": 45.4,
+        "7": 45.6,
+        "8": 47.4
+      },
+      "hullHits": 0,
+      "earthImpacts": 13,
+      "repairs": 9,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "canal-sem-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {},
+      "manageChannel": false,
+      "won": true,
+      "seconds": 564,
+      "lastPhase": 8,
+      "failure": null,
+      "missed": 6,
+      "regens": 0,
+      "compromises": 48,
+      "compromisedMs": 191633.33333342828,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 17.1,
+        "3": 13.3,
+        "4": 31.1,
+        "5": 23.5,
+        "6": 24.5,
+        "7": 33.3,
+        "8": 103.6
+      },
+      "waves": {
+        "1": 29.4,
+        "2": 29.9,
+        "3": 32.3,
+        "4": 34.5,
+        "5": 39.2,
+        "6": 43.4,
+        "7": 42.1,
+        "8": 43.9
+      },
+      "hullHits": 0,
+      "earthImpacts": 17,
+      "repairs": 11,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 1
+    },
+    {
+      "name": "inversao-com-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "reactionMs": 300,
+        "compensate": false
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 464,
+      "lastPhase": 8,
+      "failure": {
+        "kind": "earth"
+      },
+      "missed": 12,
+      "regens": 25,
+      "compromises": 8,
+      "compromisedMs": 23483.333333354647,
+      "bossSeconds": {
+        "1": 23,
+        "2": 23.4,
+        "3": 13.6,
+        "4": 34,
+        "5": 25.1,
+        "6": 24.6,
+        "7": 42.7
+      },
+      "waves": {
+        "1": 29.4,
+        "2": 27.5,
+        "3": 32.8,
+        "4": 34.1,
+        "5": 40.4,
+        "6": 48.2,
+        "7": 44.3,
+        "8": 21.3
+      },
+      "hullHits": 0,
+      "earthImpacts": 18,
+      "repairs": 6,
+      "dronesDestroyed": 11,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "inversao-sem-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "reactionMs": 300,
+        "compensate": false
+      },
+      "manageChannel": false,
+      "won": false,
+      "seconds": 310,
+      "lastPhase": 5,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "C"
+      },
+      "missed": 8,
+      "regens": 0,
+      "compromises": 16,
+      "compromisedMs": 60983.33333334938,
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 41.1,
+        "3": 13.6,
+        "4": 40.2,
+        "5": 25.2
+      },
+      "waves": {
+        "1": 29.4,
+        "2": 29.9,
+        "3": 31.8,
+        "4": 35.1,
+        "5": 40.6
+      },
+      "hullHits": 3,
+      "earthImpacts": 9,
+      "repairs": 1,
+      "dronesDestroyed": 4,
+      "dronesEscaped": 2
+    },
+    {
+      "name": "imovel",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "idle": true
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 33,
+      "lastPhase": 1,
+      "failure": {
+        "kind": "earth"
+      },
+      "missed": 12,
+      "regens": 0,
+      "compromises": 0,
+      "compromisedMs": 0,
+      "bossSeconds": {},
+      "waves": {
+        "1": 33.4
+      },
+      "hullHits": 0,
+      "earthImpacts": 12,
+      "repairs": 0,
+      "dronesDestroyed": 0,
+      "dronesEscaped": 0
+    },
+    {
+      "name": "imovel",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "idle": true
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 33,
+      "lastPhase": 1,
+      "failure": {
+        "kind": "earth"
+      },
+      "missed": 12,
+      "regens": 0,
+      "compromises": 0,
+      "compromisedMs": 0,
+      "bossSeconds": {},
+      "waves": {
+        "1": 33.4
+      },
+      "hullHits": 0,
+      "earthImpacts": 12,
+      "repairs": 0,
+      "dronesDestroyed": 0,
+      "dronesEscaped": 0
+    }
+  ]
+}
