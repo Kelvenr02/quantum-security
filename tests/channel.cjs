@@ -7,9 +7,9 @@ function quiet(g){g.run('encounterDirector.nextAt=1e9;nextCloudAt=nextSpyAt=next
 function step(g,ms){for(let elapsed=0;elapsed<ms;elapsed+=10)g.run('cancelAnimationFrame(rafId);update((lastTs||100)+10)');}
 function guardian(g,phase=1){g.run('level='+phase+';score=phaseConfig().target;beginBoss();continuePhase()');}
 
-test('Recuperação passiva é de 0,18 pp/s nas primeiras fases e 0,08 nas últimas',()=>{
-  const g=makeGame();g.run('qber=10;updateChannel(1000)');near(g.run('qber'),9.82);
-  g.run('level=5;missionPhases[4].drift=0;qber=10;updateChannel(1000)');near(g.run('qber'),9.92);
+test('Recuperação passiva é de 0,20 pp/s nas primeiras fases e 0,10 nas últimas',()=>{
+  const g=makeGame();g.run('qber=10;updateChannel(1000)');near(g.run('qber'),9.80);
+  g.run('level=5;missionPhases[4].drift=0;qber=10;updateChannel(1000)');near(g.run('qber'),9.90);
 });
 test('Estados distinguem canal seguro, instável, comprometido e renovando',()=>{
   const g=makeGame();assert.equal(g.run('channelStateName()'),'safe');

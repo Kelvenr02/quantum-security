@@ -6,6 +6,8 @@ A arena agora tem **nove trilhas**, ocupa até **1.600 px** de largura e usa tra
 
 O canal mantém QBER e recarga entre encontros. Os chefes anunciam perturbações douradas que afetam o canal sem consumir o escudo físico; desvie ou escolha um respiro para renovar. R também pode interromper o comprometimento quando estiver disponível.
 
+O ajuste leve mais recente reduz a velocidade dos meteoros em aproximadamente 6%, aumenta a recuperação passiva para 0,20/0,10 pp de QBER por segundo e antecipa os avisos secundários dos chefes em até 200 ms. Mecânicas, vida dos chefes, recursos e limite de impactos permanecem iguais.
+
 Cada fase reúne **três encontros** com formações anunciadas, novas combinações e respiros para R. Sondas fixam a mira antes de disparar ruído; drones sustentam interferência até serem destruídos ou recuarem; meteoros rachados se dividem se não forem interceptados cedo. O chefe chega depois de limpar os três encontros.
 
 ## Som e música
@@ -51,6 +53,8 @@ Em paisagem baixa, a velocidade considera o espaço disponível acima da base. G
 Os confrontos substituem as ondas comuns durante a luta. Cada salva tem pelo menos 2 segundos de aviso e deixa duas ou mais trilhas livres. Os corredores mudam entre A/B e, em alguns confrontos, C. Aberturas podem coincidir com a preparação do próximo ataque: escolha entre atirar mais e iniciar a fuga. As explicações da Dr. Íris e as pausas congelam o tempo.
 
 Os oito chefes têm padrões próprios: relés validados por ciclo; sondas com nova varredura; núcleos H com aberturas distintas; Bell alternando lados; zonas de coerência anunciadas; síndromes que mudam; rotas A/B/C; e três combinações na nave-mãe. A pressão muda com o avanço da luta, preservando avisos já emitidos.
+
+Antes de cada chefe, o briefing mostra o objetivo e três passos para vencer, com os mesmos símbolos usados na arena. Durante a luta, o painel indica o alvo, as contagens de A/B/C e os motivos de bloqueio. A explicação científica pode ser expandida no briefing.
 
 Veja o [planejamento, as regras dos guardiões e os limites do balanceamento](docs/DESAFIOS.md).
 

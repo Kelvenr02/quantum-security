@@ -10,7 +10,7 @@ Elevar a pressão e a variedade preservando tempo para observar, escolher e reag
 
 Cada fase tem encontros de apresentação, combinação e pressão, com 13–16 formações no total. O roteiro oferece variantes espelhadas/alternadas por semente própria; efeitos visuais não mudam as formações. Avisos duram 900 ms; respiros após limpar o encontro duram 1,8 s. Nuvens, pulsos e frentes param de ser lançados no escoamento final, mas os existentes continuam até resolverem. Caudas de nuvens/pulsos completamente abaixo do alcance da nave não bloqueiam a limpeza. Uma frente B pendente ou o último meteoro ainda bloqueiam o avanço.
 
-A velocidade base cresce de 3,35 para 5,05 unidades por quadro, ajustada à altura. Abaixo de 620 px, a escala considera o espaço acima dos 140 px da base; girar a tela preserva o tempo de aproximação. Intervalos de referência vão de 1.300 a 800 ms, ampliados pelos acertos e pelo percurso das formações. Há até seis rochas e um orçamento de quatro acertos pendentes nas fases 1–2/seis nas demais; a divisão pode elevar a quantidade em uma, suspendendo novos lançamentos até seus fragmentos serem resolvidos.
+A velocidade base cresce de 3,15 para 4,75 unidades por quadro, ajustada à altura; o ajuste leve posterior à auditoria reduziu esses valores em aproximadamente 6%. Abaixo de 620 px, a escala considera o espaço acima dos 140 px da base; girar a tela preserva o tempo de aproximação. Intervalos de referência vão de 1.300 a 800 ms, ampliados pelos acertos e pelo percurso das formações. Há até seis rochas e um orçamento de quatro acertos pendentes nas fases 1–2/seis nas demais; a divisão pode elevar a quantidade em uma, suspendendo novos lançamentos até seus fragmentos serem resolvidos.
 
 | Novidade | Introdução | Resposta do jogador |
 | --- | --- | --- |
@@ -25,9 +25,11 @@ A velocidade base cresce de 3,35 para 5,05 unidades por quadro, ajustada à altu
 
 Pontos premiam destruições; carga acompanha a resolução do roteiro, incluindo fugas/impactos sem pontos. O chefe exige os três encontros e a arena livre de ameaças. Os limites de escudo e impactos permanecem ativos até o último perigo. Ver [valores, margens e validações da fase 3](IMPLEMENTACAO.md).
 
-A recuperação passiva continua em 0,18 pp/s nas fases 1–4 e 0,08 nas fases 5–8. Fontes de ruído, espionagem e chefes continuam ativas. As novas ameaças são mecanismos fictícios para criar decisões, sem representar armas quânticas reais.
+A recuperação passiva é de 0,20 pp/s nas fases 1–4 e 0,10 nas fases 5–8 após o ajuste leve. Fontes de ruído, espionagem e chefes continuam ativas. As novas ameaças são mecanismos fictícios para criar decisões, sem representar armas quânticas reais.
 
 ## Confrontos
+
+Cada briefing separa o objetivo de três passos práticos: identificar o alvo, cumprir a condição de dano e desviar dos ataques. Os símbolos ✓, H, BELL, C, + e − correspondem aos alvos desenhados; ATIVO indica uma abertura. A nave dispara automaticamente. A/B/C identificam faixas das quais sair antes de a contagem zerar; RESPIRO indica uma oportunidade para R, que imobiliza a nave sem protegê-la fisicamente. No chefe final, cada passo descreve um dos três estágios. O conceito científico permanece disponível em uma seção expansível. Durante a luta, o painel repete a ação atual e explica bloqueios por QBER ou coerência.
 
 | Fase | Guardião | Decisão principal | Relação didática |
 | --- | --- | --- | --- |

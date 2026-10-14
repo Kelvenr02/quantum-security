@@ -134,6 +134,7 @@ resizeCanvas();
 // ---------- Entrada ----------
 window.addEventListener('keydown', e => {
   if (!arcadeActive) return;
+  if(e.code==='Enter' && e.target?.closest?.('summary'))return;
   if(e.code==='Enter'&&e.repeat){e.preventDefault();return;}
   if(e.target?.closest?.('input,textarea,select,[contenteditable="true"]'))return;
   if(e.code==='Enter' && e.target?.closest?.('button,a,input') && !isStageBriefing)return;

@@ -18,7 +18,7 @@ test('Escala de queda é contínua em 620 px e mantém as velocidades das telas 
 test('Rocha mais rápida oferece ao menos 1,4 s até contato, além do aviso da formação',()=>{
   for(const [w,h]of [[1600,900],[1100,800],[390,700],[844,390],[760,360]]) {
     const g=makeGame(w,h);
-    assert.ok(g.run('(shipY+30-Math.min(32,laneWidth*.3)-shipSize*.7)/flightSpeed(5.05*1.22)*FRAME_MS')>=1400);
+    assert.ok(g.run('(shipY+30-Math.min(32,laneWidth*.3)-shipSize*.7)/flightSpeed(missionPhases[7].speed*1.22)*FRAME_MS')>=1400);
     assert.equal(g.run('encounterDirector.warningMs'),900);
   }
 });

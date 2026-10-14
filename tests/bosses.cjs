@@ -26,6 +26,7 @@ test('Cada salva tem aviso e corredor alcançável; rotas não exigem posição 
 });
 test('Sentinela valida um relé por ciclo e fecha com QBER ≥ 8%',()=>{
   const m=new QuantumBoss(1);at(m,2800);assert.equal(m.hit(0,8,m.lane(1)),false);assert.equal(m.hit(1,0,m.lane(5)),false);
+  assert.match(m.hint(8),/R no RESPIRO/,'Bloqueio informa como voltar a atacar');
   for(let i=0;i<4;i++){assert.equal(m.hit(0,0,m.lane(1)),true);advance(m,300);}
   assert.equal(m.health,8);assert.equal(m.hit(1,0,m.lane(5)),false);assert.match(m.hint(0),/RELÉ VALIDADO/);
   advance(m,m.period-m.elapsed);assert.equal(m.relay,1);assert.equal(m.pressure,true);assert.equal(m.pulses.length,2);
@@ -37,6 +38,7 @@ test('Observador rastreia por 650 ms e fixa a mira por pelo menos 2 s',()=>{
 });
 test('Varredura revela uma entre três sondas; mudança da segunda metade é anunciada',()=>{
   const m=new QuantumBoss(2);assert.equal(m.targets().length,3);assert.ok(m.targets().every(n=>n.label==='?'));
+  assert.doesNotMatch(m.hint(0),/TRILHA/,'Instrução não revela a sonda antes da varredura');
   at(m,3100);const real=m.targets().find(n=>n.open),fake=m.targets().find(n=>n.decoy);
   assert.equal(m.hit(fake.id,0,fake.lane),false);assert.equal(m.hit(real.id,0,real.lane),true);
   m.hp=[8];m.roundStart=m.time;m.prepareRound(real.lane);at(m,3400);assert.match(m.hint(0),/nova varredura/);
@@ -86,6 +88,9 @@ test('Interferômetro abre antes de B e muda núcleo; pressão acrescenta C',()=
   const m=new QuantumBoss(7);at(m,3000);assert.equal(m.pulses[1].fired,false);assert.equal(m.targets().some(n=>n.open),true);
   const lane=m.targets().find(n=>n.open).lane;at(m,4500);assert.notEqual(m.targets().find(n=>n.open).lane,lane);
   m.hp=[10];m.prepareRound(4);assert.equal(m.pulses.length,3);assert.equal(m.pulses[2].at-m.pulses[1].at,2000);
+  assert.deepEqual(m.pulses.map(p=>p.at-m.roundStart),[2200,4000,6000],'Avisar antes não antecipa nem atrasa os impactos');
+  assert.ok(m.pulses.slice(1).every(p=>p.at-p.announceAt===2400),'B/C deixam mais tempo para ler a próxima rota');
+  assert.ok(m.period-m.recoveryStart>=2400,'O respiro para R permanece disponível');
 });
 test('Nave-mãe combina Bell/QKD, H/coerência e síndrome/três rotas sem aumentar a vida',()=>{
   const m=new QuantumBoss(8);assert.equal(m.maxHp,36);at(m,2800);assert.equal(m.targets(9).some(n=>n.open),false);
@@ -168,9 +173,12 @@ test('ENTER em um botão de retomada preserva a ação nativa em vez de reinicia
 });
 test('Guardião impede ondas comuns e a vitória repara dois impactos uma única vez',()=>{
   const g=makeGame();g.run('score=100;missed=5;beginBoss();continuePhase();gameTime=99999;update(100)');
+  assert.equal(g.elements.get('bossInstructions').hidden,false);assert.equal(g.elements.get('phaseScienceDetails').open,false);
+  assert.equal((g.elements.get('bossInstructions').innerHTML.match(/<li>/g)||[]).length,3);
   assert.equal(g.run('asteroids.length+clouds.length+spies.length'),0);
   g.run('finishBoss()');assert.equal(g.run('level'),1,'Não deve avançar antes de vencer');
   g.run('boss.status="won";finishBoss();finishBoss()');assert.equal(g.run('level'),2);assert.equal(g.run('missed'),3);assert.equal(g.run('bossesDefeated'),1);
+  assert.equal(g.elements.get('bossInstructions').hidden,true);assert.equal(g.elements.get('phaseScienceDetails').open,true);
 });
 test('Ficar parado não vence o guardião: duas salvas sem desvio encerram o combate',()=>{
   const g=makeGame();g.run('level=2;score=220;beginBoss();continuePhase();let idleTime=100;for(let i=0;i<1000&&isPlaying;i++){cancelAnimationFrame(rafId);idleTime+=FRAME_MS;update(idleTime);}');

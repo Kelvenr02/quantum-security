@@ -358,3 +358,15 @@
  .phase-hud,.boss-hud { top:34px; padding:5px 8px; gap:3px 8px; }
  #keyStatus { height:17px; }#qberBar { margin:3px 0; }.resource-strip { font-size:7px; }
 }
+/* Briefings: ações curtas primeiro, explicação científica expansível. */
+#phaseOverlay { align-items:flex-start; }
+.phase-card { margin-block:auto; }
+.phase-science>summary { cursor:pointer; font:10px/1.5 var(--mono); color:var(--gold); }
+.phase-science>summary:focus-visible { outline:2px solid var(--cyan); outline-offset:5px; }
+#phaseOverlay[data-mode="boss"] #phaseObjective { color:#d8eee8; margin-bottom:14px; }
+.boss-instructions { margin:0 0 17px; padding-left:24px; font:13px/1.6 var(--font); color:#c3d7df; }
+.boss-instructions li { padding-left:4px; margin-bottom:10px; }
+.boss-instructions li::marker { color:var(--cyan); font-weight:700; }
+.phase-card .boss-controls { display:grid; gap:4px; margin:0 0 18px; padding:11px 13px; border-left:2px solid #6ce8cd70; background:#081a2380; font:11px/1.5 var(--font); color:#a5c2ca; }
+#bossInstructions[hidden],#bossControls[hidden] { display:none!important; }
+@media(max-width:760px) { .boss-instructions { font-size:12px; }.phase-card .boss-controls { font-size:10px; } }

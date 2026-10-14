@@ -1,5 +1,19 @@
 # Balanceamento final — revisão de 14/10/2026
 
+## Ajuste leve posterior à auditoria
+
+A pedido do usuário, foram alterados somente parâmetros para oferecer um pouco mais de margem ao iniciante:
+
+- Velocidades base dos meteoros reduzidas em aproximadamente 6%, de 3,35–5,05 para 3,15–4,75. Progressão, formações e resistências preservadas; lasers e pilotagem mantêm suas velocidades.
+- Recuperação passiva de QBER de 0,18/0,08 para 0,20/0,10 pp/s. R continua com 2 s de imobilização e 10 s de recarga; ruído, limites e comprometimento mantêm suas regras.
+- Avisos de salvas secundárias antecipados em até 200 ms, com 2,4 s de antecedência. Horários de impacto, corredores, aberturas e respiros não mudaram. A primeira salva e o rastreamento do Observador mantêm seus tempos.
+
+As 162 verificações passaram, incluindo seis campanhas completas em 541–598 s de ação, com 26–32 usos de R e 5–7 impactos líquidos. Dez cenários foram comparados antes/depois com a mesma configuração e semente: houve seis vitórias em cada grupo; a variante que perde uma decisão a cada 13 passou de uma para duas vitórias em duas sementes. Outras variantes ainda perderam, e algumas trajetórias pioraram: a amostra não comprova ganho universal nem mede a experiência humana. O objetivo do ajuste é aumentar a margem física de reação, sem garantir sucesso automático. No Chrome, foram conferidos os avisos adiantados, desvio de A/B e pausa em computador, celular e paisagem, sem erros de execução.
+
+Os números de 46 cenários e os tempos nas seções abaixo são o registro histórico **anterior a esse ajuste**, preservado para comparação. A ferramenta de análise executa os parâmetros atuais.
+
+## Registro da revisão em seis fases
+
 As seis etapas da revisão estão implementadas. A campanha mantém nove trilhas, movimento contínuo, três encontros por setor, oito guardiões e o limite de 12 impactos na Terra. Não há ajuste oculto da dificuldade conforme o desempenho do jogador.
 
 ## Ajustes da fase 6

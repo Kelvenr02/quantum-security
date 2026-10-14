@@ -2,28 +2,68 @@
 const bossArenaConfig=typeof module!=='undefined'&&module.exports?require('./arena.js').OrbitalArena:OrbitalArena;
 const quantumBosses = [
   { name:'Sentinela da Chave', concept:'QKD · verificação do canal', hp:[4,4,4],
-    objective:'Desative um relé por ciclo com QBER abaixo de 8%. Após validar o primeiro, surge uma segunda salva: saia da marca e retorne para atacar. R renova nos respiros.',
+    objective:'Destrua os 3 relés, um de cada vez.',
+    instructions:[
+      'Fique abaixo do relé marcado ATIVO. A nave atira automaticamente.',
+      'O relé só recebe dano com QBER abaixo de 8%. Se bloquear, use R no aviso RESPIRO.',
+      'Depois de destruir um relé, desvie das faixas A/B e espere o próximo abrir.'
+    ],
     science:'QKD usa verificações para decidir se é possível obter uma chave segura. O escudo ligado ao QBER é uma analogia: erros exigem avaliação e podem levar ao descarte dos dados.' },
   { name:'Observador Fantasma', concept:'Medição e perturbação', hp:[16],
-    objective:'Três sondas disputam sua atenção. O rastreio fixa a mira antes da salva; a varredura revela a verdadeira (✓). Atirar parado numa falsa (×) devolve ruído. Na segunda metade, a leitura muda durante o ciclo.',
+    objective:'Destrua a sonda verdadeira, marcada com ✓.',
+    instructions:[
+      'A mira acompanha sua nave. Quando parar de seguir, saia das faixas marcadas com A.',
+      'Espere aparecer ✓. Alinhe a nave com essa sonda quando aparecer ATIVO.',
+      'Insistir em × aumenta o QBER. A sonda correta muda durante a luta: procure o novo ✓.'
+    ],
     science:'Uma medição tem efeitos sobre um sistema quântico. Revelar uma sonda após a varredura representa essa ideia; não é um teste real de espionagem. QBER sozinho não identifica um espião.' },
   { name:'Tríade Hadamard', concept:'Superposição · porta H', hp:[8,8,8],
-    objective:'As laterais abrem primeiro; depois, o centro. H aproveita uma breve abertura dos três. Na segunda metade, os núcleos mudam de trilha com aviso azul: acompanhe a formação.',
+    objective:'Destrua os 3 núcleos H.',
+    instructions:[
+      'Mire nos núcleos ATIVOS: os dois das pontas abrem antes do núcleo do meio.',
+      'Recolha a cápsula H que cai. Ela faz a nave atirar também nas duas trilhas vizinhas.',
+      'Os contornos azuis mostram para onde os núcleos vão mudar. Prepare o movimento e desvie de A/B.'
+    ],
     science:'H pode preparar uma superposição de estados. Três alvos e disparos simultâneos são uma metáfora de jogo, não a leitura simultânea de resultados de um qubit.' },
   { name:'Gêmeos de Bell', concept:'Entrelaçamento · H + CNOT', hp:[16,16],
-    objective:'Um acerto no lado aberto danifica o par. Há duas aberturas em lados opostos por ciclo, com até três acertos em cada; na segunda metade, apenas dois. Antecipe a travessia entre salvas.',
+    objective:'Destrua o par de núcleos conectados.',
+    instructions:[
+      'Mire no núcleo marcado BELL quando ele estiver ATIVO. Cada acerto danifica os dois lados.',
+      'O lado BELL alterna. Acompanhe a mudança e mire no novo alvo ATIVO.',
+      'Cada abertura aceita poucos acertos. Saia das faixas A/B antes de zerar, mesmo que ainda possa atirar.'
+    ],
     science:'Um estado de Bell é um estado conjunto entrelaçado. Energia compartilhada e dano simultâneo são regras fictícias: entrelaçamento não permite transmitir ações instantâneas.' },
   { name:'Devorador de Coerência', concept:'Interação com o ambiente', hp:[20],
-    objective:'Mantenha coerência de pelo menos 50% na faixa verde. A zona azul anuncia a próxima posição durante a abertura. Na segunda metade, a faixa estreita e uma terceira salva exige outra mudança.',
+    objective:'Destrua o núcleo C com coerência de 50% ou mais.',
+    instructions:[
+      'Fique na faixa verde para recuperar coerência. Abaixo de 50%, seus tiros não causam dano.',
+      'Dentro da faixa, alinhe a nave com o núcleo C quando ele estiver ATIVO.',
+      'O contorno azul mostra a próxima faixa verde. Acompanhe a mudança e desvie de A/B/C.'
+    ],
     science:'Interações com o ambiente podem degradar coerência. A zona de estabilização representa controle do ruído; não é uma região física que restaura automaticamente estados quânticos.' },
   { name:'Guardião da Síndrome', concept:'Correção de erros · auxiliares', hp:[5,5,5],
-    objective:'A síndrome + aponta o módulo correto a cada ciclo. Módulos ○ devolvem ruído se você insistir neles. Na segunda metade, uma indicação azul anuncia outra síndrome durante a abertura.',
+    objective:'Destrua os 3 módulos, mirando no símbolo +.',
+    instructions:[
+      'Mire no módulo + do chefe quando ele estiver ATIVO. Insistir nos módulos ○ aumenta o QBER.',
+      'Quando o + mudar de módulo, alinhe a nave com o novo alvo.',
+      'Recolha as cápsulas + que caem para reduzir QBER e recarga de R. Continue desviando de A/B.'
+    ],
     science:'Medições de síndromes fornecem informação sobre certos erros sem medir diretamente o estado lógico. Atirar no módulo indicado é uma analogia de diagnóstico e correção, não cópia de qubits.' },
   { name:'Interferômetro', concept:'Interferência de amplitudes', hp:[20],
-    objective:'Siga os corredores de A e B: as trilhas livres mudam entre as salvas. O núcleo − também muda. Na segunda metade, entra C: prepare outra travessia antes de terminar a abertura.',
+    objective:'Destrua o núcleo − enquanto desvia dos ataques em sequência.',
+    instructions:[
+      'Veja a letra da próxima salva: A, depois B e, na segunda metade, C.',
+      'Antes de cada contagem zerar, vá para uma trilha sem a faixa daquela letra. O lugar seguro muda.',
+      'Entre os desvios, mire no núcleo − quando estiver ATIVO. Ele também muda de trilha.'
+    ],
     science:'Amplitudes podem reforçar-se ou cancelar-se. As janelas + e − e as trilhas de fuga são uma metáfora visual de interferência; os pulsos são ataques fictícios.' },
   { name:'Núcleo da Nave-Mãe', concept:'Operação quântica sob ruído', hp:[36],
-    objective:'Três combinações: Bell com verificação de QBER (<9%); H com zonas de coerência (mínimo 50%); síndrome com rotas A/B/C. Leia os avisos e renove nos respiros. Cada estágio começa com um novo aviso.',
+    objective:'Vença os 3 estágios da nave-mãe.',
+    instructions:[
+      '1º estágio: mire no BELL ATIVO com QBER abaixo de 9%. Use R no RESPIRO se precisar renovar.',
+      '2º estágio: siga a faixa verde para ter 50% de coerência ou mais. Mire nos H ATIVOS e recolha a cápsula H.',
+      '3º estágio: mire no módulo + ATIVO. Troque de trilha para escapar de A, B e C.'
+    ],
     science:'Sistemas quânticos combinam preparação, operações, medições e controle de erros. O combate reúne analogias desses recursos; não executa um algoritmo ou protocolo quântico real.' }
 ];
 
@@ -85,8 +125,9 @@ class QuantumBoss {
       this.syndrome&&this.pressure?[[2600,4250],[4850,6600]]:
       this.phase===1?(this.pressure?[[2550,3850],[4450,6500]]:[[2550,5900]]):[[2600,6500]];
     this.pulses=[];
+    // Antecipar B/C facilita a leitura sem mudar impactos, aberturas ou respiros.
     const add=(center,at,label)=>this.pulses.push({id:this.round+':'+label,label,at:this.roundStart+at,
-      announceAt:this.roundStart+Math.max(0,at-2200),lanes:this.lanes.filter(l=>!this.corridor(center).includes(l)),fired:false});
+      announceAt:this.roundStart+Math.max(0,at-2400),lanes:this.lanes.filter(l=>!this.corridor(center).includes(l)),fired:false});
     add(this.centers[0],this.warning,'A');
     if(this.phase===2){const p=this.pulses[0];p.lockAt=this.roundStart+650;p.announceAt=this.roundStart;p.lanes=this.corridor(playerLane);p.tracking=true;}
     const double=this.stabilizing||this.bell||this.phase===7||this.pressure;
@@ -156,15 +197,36 @@ class QuantumBoss {
     return true;
   }
   hint(qber) {
-    if(this.complete)return 'DESAFIO SUPERADO · reparos e escudo ao concluir a retirada';
+    if(this.complete)return 'CHEFE VENCIDO · aguarde a conclusão';
     const mode=this.pressure?'PRESSÃO · ':this.enraged?'PRÓXIMO CICLO MAIS INTENSO · ':'';
-    if(this.phase===1)return mode+(qber>=8?'ESCUDO FECHADO · QBER ≥ 8% · renove com R':this.hp[this.relay]<=0?'RELÉ VALIDADO · próximo relé no novo ciclo':'RELÉ '+(this.relay+1)+'/3 · siga o iluminado');
-    if(this.phase===2)return mode+(this.elapsed<2400?'RASTREIO → MIRA FIXA → VARREDURA':this.pressure&&this.elapsed<4400?'✓ VERDADEIRA · nova varredura em '+Math.max(0,(4400-this.elapsed)/1000).toFixed(1)+' s':'MIRE ✓ · × devolve ruído ao canal');
-    if(this.stabilizing)return (this.phase===8?'2/3 · H + ':'')+'COERÊNCIA '+Math.round(this.coherence)+'% / mínimo 50% · '+(this.nextZone?'NOVA ZONA EM '+((this.nextZone.at-this.elapsed)/1000).toFixed(1)+' s':'sustente a faixa verde');
-    if(this.syndrome)return (this.phase===8?'3/3 · ':'')+mode+'SÍNDROME + → TRILHA '+(this.lane([1,3,5][this.selection])+1)+(this.nextSelection!==null?' · PRÓXIMA '+(this.lane([1,3,5][this.nextSelection])+1):' · ○ devolve ruído');
-    if(this.bell)return (this.phase===8?'1/3 · QKD + ':'')+mode+(this.phase===8&&qber>=9?'QBER ≥ 9% · renove para abrir':'BELL · '+(this.pressure?'2':'3')+' acertos por abertura · troque de lado');
-    if(this.phase===3)return mode+(this.nextTriadCenter!==null?'NÚCLEOS VÃO MUDAR · siga a marca azul':'H · laterais primeiro, centro depois · sobreposição breve');
-    return mode+'INTERFERÊNCIA · siga A → B'+(this.pressure?' → C':'')+' · − muda de trilha';
+    if(this.phase===1)return qber>=8?'QBER alto: use R no RESPIRO para abrir o relé.':
+      this.hp[this.relay]<=0?'RELÉ VALIDADO · desvie e espere o próximo abrir.':
+      mode+'Mire no relé ATIVO · TRILHA '+(this.lane([1,5,3][this.relay])+1);
+    if(this.phase===2){
+      if(this.elapsed<650)return 'A mira segue você. Quando fixar, saia das faixas A.';
+      if(this.elapsed<2400)return 'Mira fixa: saia de A. Depois, procure o ✓.';
+      const real=this.targets(qber).find(n=>n.label==='✓');
+      return 'Mire no ✓ quando ATIVO · TRILHA '+(real.lane+1)+
+        (this.pressure&&this.elapsed<4400?' · nova varredura em '+((4400-this.elapsed)/1000).toFixed(1)+' s':'');
+    }
+    if(this.stabilizing)return (this.phase===8?'2/3 · ':'')+'COERÊNCIA '+Math.round(this.coherence)+'% · '+
+      (this.coherence<50?'fique na faixa verde até 50%.':'fique na faixa verde; mire no '+(this.hadamard?'H':'C')+' ATIVO.')+
+      (this.nextZone?' Muda em '+((this.nextZone.at-this.elapsed)/1000).toFixed(1)+' s.':'');
+    if(this.syndrome){
+      if(this.phase!==8&&this.hp[this.selection]<=0)return 'MÓDULO CORRIGIDO · desvie até aparecer outro +.';
+      return (this.phase===8?'3/3 · ':'')+'Mire no + quando ATIVO · TRILHA '+(this.lane([1,3,5][this.selection])+1)+
+        (this.nextSelection!==null?' · próximo +: TRILHA '+(this.lane([1,3,5][this.nextSelection])+1):'');
+    }
+    if(this.bell){
+      const stage=this.phase===8?'1/3 · ':'';
+      if(this.phase===8&&qber>=9)return stage+'QBER alto: use R no RESPIRO; precisa ficar abaixo de 9%.';
+      const target=this.targets(qber).find(n=>n.open);
+      return stage+(target?'Mire no BELL ATIVO · TRILHA '+(target.lane+1)+' · até '+(this.pressure?2:3)+' acertos.':
+        'BELL fechado: desvie de A/B e espere ATIVO.');
+    }
+    if(this.phase===3)return this.nextTriadCenter!==null?'Os núcleos vão mudar: prepare as posições azuis.':
+      'Mire nos H ATIVOS: pontas primeiro, meio depois. Pegue a cápsula H.';
+    return mode+'Mire no − ATIVO · TRILHA '+(this.targets(qber)[0].lane+1)+' · desvie de A/B'+(this.pressure?'/C':'')+'.';
   }
 }
 if(typeof module!=='undefined'&&module.exports)module.exports={QuantumBoss,quantumBosses};

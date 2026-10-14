@@ -27,6 +27,8 @@ function enterPhase(nextLevel) {
   if(!isRegen){shipPilot.reset(occupiedShipLane());currentLane=shipPilot.lane;}
   campaignMetrics?.setContext(level,'wave');campaignMetrics?.event('phaseStart',{score,qber});
   bossCheckpointData=null;
+  $('bossInstructions').hidden=true;$('bossControls').hidden=true;
+  $('phaseScienceDetails').open=true;$('phaseOverlay').dataset.mode='phase';
   $('btnContinue').textContent='CONTINUAR DEFESA →';
   $('bossHud').hidden=true;$('phaseHud').hidden=false;
   lasers = []; asteroids = []; clouds = []; spies = []; pickups = []; particles = [];
@@ -44,7 +46,7 @@ function enterPhase(nextLevel) {
   $('phaseCheckpoint').textContent = channelBriefingStatus()+' · GUARDIÕES '+bossesDefeated+'/8 · IMPACTOS '+missed+'/'+maxMisses+' · ESCUDO '+hullShield+(lastReward?' · REPARO +'+lastReward.repair+(lastReward.clean?' (SEM DANO)':''):'')+' · AO FIM: '+quantumBosses[level-1].name.toUpperCase();
   $('phaseRoute').innerHTML = missionPhases.map((p,i)=>'<span class="'+(i+1<level?'complete':i+1===level?'current':'')+'" title="'+p.name+'" aria-label="Fase '+(i+1)+': '+p.name+'">'+String(i+1).padStart(2,'0')+'</span>').join('');
   updateHUD(); updateQuantumStatus(); drawBackground(0); drawMothership();
-  $('phaseOverlay').hidden = false; $('btnContinue').focus();
+  $('phaseOverlay').hidden = false; $('btnContinue').focus({preventScroll:true});$('phaseOverlay').scrollTop=0;
 }
 
 function continuePhase() {

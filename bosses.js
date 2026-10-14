@@ -31,11 +31,14 @@ function beginBoss(retrying=false) {
   const d=boss.model.definition;
   $('phaseEyebrow').textContent='DR. ÍRIS / DESAFIO FINAL DA FASE '+String(level).padStart(2,'0');
   $('phaseTitle').textContent=d.name;$('phaseObjective').textContent=d.objective;
+  $('bossInstructions').innerHTML=d.instructions.map(text=>'<li>'+text+'</li>').join('');
+  $('bossInstructions').hidden=false;$('bossControls').hidden=false;
+  $('phaseScienceDetails').open=false;$('phaseOverlay').dataset.mode='boss';
   $('phaseConcept').textContent=d.concept;$('phaseScience').textContent=d.science;
   $('phaseCheckpoint').textContent=channelBriefingStatus()+' · ESCUDO '+hullShield+' · RETOMADA SALVA NO CHEFE';
   $('phaseRoute').innerHTML=quantumBosses.map((d,i)=>'<span class="'+(i<level-1?'complete':i===level-1?'current':'')+'">'+String(i+1).padStart(2,'0')+'</span>').join('');
   $('btnContinue').textContent='ENFRENTAR DESAFIO →';$('pauseBtn').disabled=true;$('warning').style.display='none';
-  updateHUD();updateQberUI();$('phaseOverlay').hidden=false;$('btnContinue').focus();
+  updateHUD();updateQberUI();$('phaseOverlay').hidden=false;$('btnContinue').focus({preventScroll:true});$('phaseOverlay').scrollTop=0;
 }
 function bossSupply() {
   const m=boss.model,phase=m.phase;
@@ -62,9 +65,10 @@ function updateBossHUD() {
   $('bossFill').style.width=(m.health/m.maxHp*100)+'%';
   const pulse=boss.channelPulse,remaining=pulse?pulse.releaseAt-m.time:0;
   const jamHint=remaining>0?'RUÍDO EM '+(remaining/1000).toFixed(1)+' s · ':'';
-  const upcoming=m.pulses.filter(p=>!p.fired&&m.time>=p.announceAt).map(p=>p.label+' '+(p.tracking?'RASTREIA':((p.at-m.time)/1000).toFixed(1)+' s')).join(' → ');
-  const threat=(upcoming?upcoming+' · ':'')+jamHint+(bossRecoveryAvailable()?'RESPIRO · R 2 s':'');
-  $('bossThreat').textContent=threat||'Observe o núcleo iluminado e prepare a próxima rota.';
+  const visible=m.pulses.filter(p=>!p.fired&&m.time>=p.announceAt);
+  const upcoming=visible.map(p=>p.label+' '+(p.tracking?'MIRA SEGUINDO':((p.at-m.time)/1000).toFixed(1)+' s')).join(' → ');
+  const threat=(upcoming?(visible[0].tracking?'':'DESVIE DE ')+upcoming+' · ':'')+jamHint+(bossRecoveryAvailable()?'RESPIRO · use R se precisar':'');
+  $('bossThreat').textContent=threat||'Atire no alvo ATIVO e prepare a próxima fuga.';
   $('bossThreat').dataset.urgent=String(m.pulses.some(p=>!p.fired&&!p.tracking&&p.at-m.time<900));
   const hint=m.hint(qber);
   if($('bossHint').textContent!==hint)$('bossHint').textContent=hint;

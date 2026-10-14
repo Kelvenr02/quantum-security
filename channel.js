@@ -1,6 +1,6 @@
 /* Regras do canal fictício da missão; os percentuais não são critérios universais de QKD. */
 const channelRules=Object.freeze({
-  limit:11,alert:7.7,max:16,earlyDecay:.18,lateDecay:.08,
+  limit:11,alert:7.7,max:16,earlyDecay:.20,lateDecay:.10,
   recoveryQber:9,criticalGraceMs:2500,contactGraceMs:600,victoryRecovery:1.5,
   bossDrift:Object.freeze([.24,.30,.34,.40,.50,.60,.70,.80]),
   jamWarningMs:1200,jamEarlyQber:2.5,jamLateQber:3,reactionMarginMs:400
