@@ -40,6 +40,7 @@ const test=async(name,fn)=>{await fn();results.push(name);};
     const {audio}=engine();assert.equal(new Set(ORBITAL_PHASE_TRACKS).size,8);
     for(let phase=1;phase<=8;phase++)assert.equal(audio.trackFor('phase',phase),ORBITAL_PHASE_TRACKS[phase-1]);
     assert.equal(audio.trackFor('victory',8),'victory');assert.equal(audio.trackFor('defeat',8),null);
+    assert.equal(audio.trackFor('boss',1),'adventureBoss');assert.equal(audio.trackFor('boss',8),'boss');
   });
   await test('Mudanças rápidas de cena descartam decodificações antigas e não duplicam a música',async()=>{
     const {audio,c}=engine();audio.setScene('phase',1);audio.setScene('phase',8);await settle();

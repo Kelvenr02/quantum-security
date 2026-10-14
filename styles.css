@@ -264,6 +264,20 @@
 }
 
 /* Controle discreto de som, disponível em todas as telas. */
+.shield-status { display:block; font:7px var(--mono); color:#91c7ff; margin-top:9px; letter-spacing:.5px; }
+.boss-hud { position:absolute; top:252px; left:20px; right:20px; z-index:2; padding:12px 15px; border:1px solid #bb9bf455; border-radius:8px; background:#0b1728ec; pointer-events:none; display:grid; grid-template-columns:1fr auto; gap:7px 12px; }
+.boss-hud[hidden],#phaseHud[hidden],#arcade #btnRetry[hidden] { display:none; }
+.boss-hud>div:first-child { display:flex; flex-direction:column; gap:5px; }.boss-hud b { font:500 13px var(--font); color:#deceef; }.boss-hud>span { font:10px var(--mono); color:#c7b4df; align-self:end; }
+.boss-track { grid-column:1/-1; height:4px; background:#ba9bf422; border-radius:3px; overflow:hidden; }.boss-track>div { height:100%; background:linear-gradient(90deg,#9369c7,#d4b6f4); transition:width .12s; }
+.boss-hud p { grid-column:1/-1; margin:0; font:10px/1.5 var(--font); color:#c1d9dd; min-height:15px; }
+#screen:has(#bossHud:not([hidden])) #warning { top:auto; bottom:100px; transform:translateX(-50%); font-size:12px; padding:8px 12px; border-radius:6px; }
+#arcade #btnRetry { margin-bottom:12px; font-size:12px; padding:15px 26px; }#arcade #btnRetry:not([hidden])~#btnStart { font-size:10px; background:transparent; color:#94b1c1; border:1px solid var(--line); padding:12px 20px; box-shadow:none; }
+@media(max-width:760px) { .boss-hud { top:242px; left:10px; right:10px; padding:10px 12px; }.boss-hud b { font-size:12px; }.boss-hud .panel-label { font-size:6px; }.boss-hud p { font-size:9px; }.shield-status { font-size:6px; }.phase-hud { top:242px; } }
+@media(max-height:620px) {
+ .qhud,#hudDisplay { top:55px; padding:8px 12px; }.qhud h2 { margin:4px 0; }.qber-value b { font-size:19px; }.score-display { font-size:20px; margin-top:3px; }#qberBar { margin:4px 0; }#keyStatus { height:14px; }.charge-track { margin:5px 0; }.impact-display { margin-top:5px; padding-top:5px; }.shield-status { margin-top:4px; }
+ .phase-hud,.boss-hud { top:186px; padding:8px 11px; }.phase-hud>small,.boss-hud p { font-size:8px; }.phase-hud .panel-label,.boss-hud .panel-label { display:none; }.boss-hud b { font-size:11px; }.touch-controls { bottom:13px; }.game-bottomline { height:28px; }
+ .boss-hud { padding:6px 10px; gap:4px 8px; }
+}
 .audio-controls { position:fixed; right:16px; bottom:12px; z-index:200; font-family:var(--font); }
 .audio-controls button { cursor:pointer; border:1px solid #80b9c044; border-radius:7px; background:#0b1d2eeb; color:#afcec9; font:11px var(--font); padding:9px 12px; touch-action:manipulation; }
 #audioToggle { display:flex; align-items:center; gap:7px; backdrop-filter:blur(10px); box-shadow:0 4px 18px #0003; }#audioToggle.muted { color:#889aa8; }#audioToggle.muted:before { content:'×'; color:#e6c491; }

@@ -5,6 +5,7 @@ let asteroidSerial = 0, quantumCollected = 0, pickupSerial = 0, phaseWaveCount =
 const flightSpeed = speed => speed * Math.max(.5, Math.min(1.3, height / 800));
 
 function resetQuantumMission() {
+  resetBossCampaign();
   isStageBriefing = false; pickups = []; superpositionUntil = 0;
   nextPickupAt = gameTime+3000; nextInterferenceAt = gameTime+6000;
   interferenceFront = null; asteroidSerial = 0; quantumCollected = 0; pickupSerial = 0; phaseWaveCount = 0;
@@ -22,6 +23,10 @@ function updatePhaseHUD() {
 function enterPhase(nextLevel) {
   gameAudio.stopLoop('regen'); gameAudio.setScene('briefing', nextLevel); gameAudio.sfx('phase');
   level = nextLevel; phaseWaveCount = 0; pickupSerial = level % 2; isStageBriefing = true; cancelAnimationFrame(rafId);
+  phaseCheckpointData={level,score:level>1?missionPhases[level-2].target:0,missed,quantumCollected};
+  isRegen=false;isCompromised=false;keyReadyAt=gameTime;
+  $('btnContinue').textContent='CONTINUAR DEFESA →';
+  $('bossHud').hidden=true;$('phaseHud').hidden=false;
   lasers = []; asteroids = []; clouds = []; spies = []; pickups = []; particles = [];
   interferenceFront = null; superpositionUntil = 0;
   nextAsteroidAt = gameTime+1800; nextCloudAt = gameTime+3500;
@@ -33,7 +38,7 @@ function enterPhase(nextLevel) {
   $('phaseObjective').textContent = phase.objective;
   $('phaseConcept').textContent = phase.concept;
   $('phaseScience').textContent = phase.science;
-  $('phaseCheckpoint').textContent = 'CANHÃO '+Math.round(score/winScore*100)+'% · IMPACTOS '+missed+'/'+maxMisses+' · QBER '+qber.toFixed(1)+'%';
+  $('phaseCheckpoint').textContent = 'GUARDIÕES '+bossesDefeated+'/8 · IMPACTOS '+missed+'/'+maxMisses+' · AO FIM: '+quantumBosses[level-1].name.toUpperCase();
   $('phaseRoute').innerHTML = missionPhases.map((p,i)=>'<span class="'+(i+1<level?'complete':i+1===level?'current':'')+'" title="'+p.name+'" aria-label="Fase '+(i+1)+': '+p.name+'">'+String(i+1).padStart(2,'0')+'</span>').join('');
   updateHUD(); updateQuantumStatus(); drawBackground(0); drawMothership();
   $('phaseOverlay').hidden = false; $('btnContinue').focus();
@@ -41,7 +46,8 @@ function enterPhase(nextLevel) {
 
 function continuePhase() {
   if (!isStageBriefing || !isPlaying) return;
-  gameAudio.setScene('phase', level); if (isRegen) gameAudio.startLoop('regen');
+  if(boss?.status==='briefing')beginBossBattle();else gameAudio.setScene('phase',level);
+  if (isRegen) gameAudio.startLoop('regen');
   isStageBriefing = false; $('phaseOverlay').hidden = true;
   $('pauseBtn').disabled = false; $('btnContinue').blur();
   canvas.focus({preventScroll:true}); bannerUntil = gameTime+2400; lastTs = 0;
@@ -83,6 +89,7 @@ function updateQuantumPickups(dt,shipX) {
 }
 
 function updateQuantumStatus() {
+  if(boss)return;
   let status;
   if (gameTime < superpositionUntil) status='H ATIVO · 3 trilhas · '+((superpositionUntil-gameTime)/1000).toFixed(1)+' s';
   else if (phaseConfig().interference) status='Faixas violetas: prepare uma trilha de fuga. H / + disponíveis.';
@@ -117,6 +124,11 @@ function drawEntangledLinks() {
 }
 
 function drawAsteroidQuantum(a) {
+  if(a.rush) {
+    ctx.save();ctx.strokeStyle='#eeaa7277';ctx.lineWidth=2;
+    for(const offset of [-5,5]){ctx.beginPath();ctx.moveTo(a.x+offset,a.y-a.radius);ctx.lineTo(a.x+offset,a.y-a.radius-25);ctx.stroke();}
+    ctx.restore();
+  }
   if (!a.armored && a.group === null) return;
   ctx.save(); ctx.strokeStyle=a.group !== null?'#91c7ff90':a.hp>1?'#e6c491cc':'#e6c49144'; ctx.lineWidth=a.hitUntil>gameTime?3:1.5;
   ctx.beginPath();ctx.arc(a.x,a.y,a.radius+5,0,Math.PI*2);ctx.stroke();
@@ -128,7 +140,7 @@ function destroyQuantumAsteroid(target) {
   const victims = asteroids.filter(a => a===target || (target.group !== null && a.group===target.group));
   gameAudio.sfx('explosion', { pan: audioPan(target.x) });
   for (const a of victims) {emitDebris(a.x,a.y,a.radius);asteroids.splice(asteroids.indexOf(a),1);}
-  score=Math.min(winScore,score+victims.length*10); updateHUD();
+  score=Math.min(phaseConfig().target,score+victims.length*10); updateHUD();
 }
 
 function updateInterference(dt) {

@@ -68,6 +68,7 @@ class OrbitalAudioEngine {
   trackFor(scene, phase) {
     if (scene === 'phase') return ORBITAL_PHASE_TRACKS[Math.max(0, Math.min(7, phase - 1))];
     if (scene === 'finale') return 'boss';
+    if (scene === 'boss') return phase >= 7 ? 'boss' : 'adventureBoss';
     if (scene === 'victory') return 'victory';
     if (scene === 'defeat') return null;
     return scene === 'menu' ? 'menu' : 'briefing';

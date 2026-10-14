@@ -42,8 +42,9 @@
 
   <div class="game-topline"><span class="game-brand">Q <b>QUBIT</b></span><span class="game-sector">DEFESA ORBITAL / TERRA</span><button id="pauseBtn" onclick="togglePause()" aria-label="Pausar jogo">Ⅱ <span>PAUSAR</span></button></div>
   <div class="qhud"><div class="panel-label">INTEGRIDADE DO CANAL</div><h2 id="linkStatus">Canal quântico: seguro</h2><div id="qberBox"><div class="qber-value"><b id="qberVal">0.0</b><span>% QBER</span><small>LIMITE 11%</small></div><div id="qberBar"><div id="qberFill"></div><div id="qberMark"></div></div><div id="keyStatus"><kbd>R</kbd> Regenerar chave: pronta</div></div></div>
-  <div id="hudDisplay"><div class="panel-label">ENERGIA DO CANHÃO</div><div class="score-display"><span id="scoreVal">0</span><small> / <span id="winVal">1000</span></small></div><div class="charge-track"><div id="chargeFill"></div></div><div class="hud-metrics"><span>FASE <b id="levelVal">1</b><small>/ 8</small></span><span>CARGA <b id="cannonVal">0</b>%</span></div><div class="impact-display"><span class="impact-dot"></span> IMPACTOS <b id="missesVal">0</b><span>/ 12</span></div></div>
+  <div id="hudDisplay"><div class="panel-label">ENERGIA DO CANHÃO</div><div class="score-display"><span id="scoreVal">0</span><small> / <span id="winVal">1000</span></small></div><div class="charge-track"><div id="chargeFill"></div></div><div class="hud-metrics"><span>FASE <b id="levelVal">1</b><small>/ 8</small></span><span>CARGA <b id="cannonVal">0</b>%</span></div><div class="impact-display"><span class="impact-dot"></span> IMPACTOS <b id="missesVal">0</b><span>/ 12</span></div><span id="shieldStatus" class="shield-status">◈ ESCUDO PRONTO</span></div>
   <div id="phaseHud" class="phase-hud"><div><span class="panel-label">OPERAÇÃO EM CURSO</span><b id="phaseName">Órbita de treinamento</b></div><span id="phaseProgress">0 / 100</span><div class="phase-track"><div id="phaseFill"></div></div><small id="quantumStatus">Intercepte asteroides. Monitore o QBER.</small></div>
+  <section id="bossHud" class="boss-hud" hidden aria-label="Desafio final da fase"><div><span class="panel-label">GUARDIÃO QUÂNTICO / DESAFIO FINAL</span><b id="bossName"></b></div><span id="bossHealth"></span><div class="boss-track"><div id="bossFill"></div></div><p id="bossHint"></p></section>
   <div id="phaseOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="phaseTitle"><div class="phase-card"><div class="eyebrow" id="phaseEyebrow"></div><div id="phaseRoute" class="phase-route" aria-label="Progresso da campanha"></div><h2 id="phaseTitle"></h2><p id="phaseObjective"></p><div class="phase-science"><span id="phaseConcept"></span><p id="phaseScience"></p></div><div class="phase-checkpoint" id="phaseCheckpoint"></div><button id="btnContinue" onclick="continuePhase()">CONTINUAR DEFESA →</button><span class="hint"><kbd>ENTER</kbd> para continuar · tempo em espera</span></div></div>
   <div class="game-bottomline"><span><kbd>←</kbd><kbd>→</kbd> MOVER</span><span><span class="status-dot"></span> DISPARO AUTOMÁTICO</span><span><kbd>R</kbd> NOVA CHAVE</span><span><kbd>ESC</kbd> PAUSAR</span></div>
   <div id="pauseOverlay" hidden><div class="pause-card"><div class="eyebrow">COMANDO EM ESPERA</div><h2>Missão pausada.</h2><p>Respire. A Terra ainda está contando com você.</p><button onclick="togglePause()">RETOMAR MISSÃO →</button><span class="hint"><kbd>ESC</kbd> para continuar</span></div></div>
@@ -58,7 +59,7 @@
       O <b>ruído</b> (decoerência) também gera erros, e na prática é difícil distinguir ruído de espião.
       As novas fases usam H, estados de Bell, decoerência e correção de erros como analogias de jogo, sem simular um computador quântico real. <a href="https://learning.quantum.ibm.com/course/basics-of-quantum-information/quantum-circuits" target="_blank" rel="noopener noreferrer">Portas e circuitos</a> · <a href="https://learning.quantum.ibm.com/course/foundations-of-quantum-error-correction/correcting-quantum-errors" target="_blank" rel="noopener noreferrer">Correção de erros — IBM Quantum</a>.
     </p>
-    </details><button id="btnStart" onclick="startGame()">INICIAR DEFESA →</button>
+    </details><button id="btnRetry" hidden onclick="retryPhase()">REPETIR FASE →</button><button id="btnStart" onclick="startGame()">INICIAR DEFESA →</button>
     <div class="hint">ou aperte ENTER</div><button class="review-training" onclick="startIntro()">REFAZER TREINAMENTO</button>
   </div>
 </div>
@@ -70,6 +71,7 @@
 <script src="story.js"></script>
 <script src="graphics.js"></script>
 <script src="phases.js"></script>
+<script src="bosses.js"></script>
 <script src="script.js"></script>
 <script src="quantum.js"></script>
 <script src="presentation.js"></script>

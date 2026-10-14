@@ -4,7 +4,7 @@ const tutorial = (() => {
   const el = id => document.getElementById(id);
   const steps = [
     { name: 'O chamado', title: 'Tenente, a Terra está sob ataque.', story: '2090 · Base de Comando Orbital. O radar acaba de detectar a primeira onda.',
-      lines: [['Íris', 'A nave-mãe está lançando asteroides contra a Terra. Nosso interceptor Q-07 já está em órbita. Precisamos de você nos controles.'], ['Tenente', 'Vou pilotar daqui da base? E o piloto automático?'], ['Íris', 'Sim, por rádio. Eles mudam de tática; precisamos das suas decisões. O sistema cuida dos disparos, e você escolhe onde interceptar. Cada rocha destruída ajuda a carregar o canhão orbital. Aguente até a carga máxima e ele deterá a nave-mãe.']],
+      lines: [['Íris', 'A nave-mãe está lançando asteroides contra a Terra. Nosso interceptor Q-07 já está em órbita. Precisamos de você nos controles.'], ['Tenente', 'Vou pilotar daqui da base? E o piloto automático?'], ['Íris', 'Sim, por rádio. Eles mudam de tática; precisamos das suas decisões. O sistema cuida dos disparos, e você escolhe onde interceptar. Cada rocha destruída ajuda a carregar o canhão orbital. Vença os oito guardiões para liberar o disparo final.']],
       task: 'Sua missão: proteger a Terra e sobreviver até o canhão carregar.', science: '', next: 'ASSUMIR O COMANDO →' },
     { name: 'A chave', title: 'E se o inimigo ouvir?', story: 'Q-07 aguardando conexão · Antes de pilotar, precisamos proteger as ordens.',
       lines: [['Tenente', 'Se os comandos vão pelo rádio, os invasores podem escutar ou mandar ordens falsas?'], ['Íris', 'Por isso usamos cifragem e autenticação com chaves secretas. Um bit vale 0 ou 1. Um qubit pode combinar os estados de 0 e 1 numa superposição; ao medir, sai apenas um resultado.'], ['Íris', 'Nossa distribuição quântica de chaves, ou QKD, usa a ideia do protocolo E91: partículas entrelaçadas compartilham um estado e têm resultados correlacionados. Testamos parte das medições e processamos o restante para obter uma chave compartilhada. Veja um par no painel.']],
@@ -14,7 +14,7 @@ const tutorial = (() => {
       task: 'Ative o Quantum Security para liberar a conexão com o Q-07.', science: '', next: 'TESTAR A NAVE →' },
     { name: 'Decolagem', title: 'A última checagem é sua.', story: 'Simulador conectado · Um único alvo antes de assumir a defesa real.',
       lines: [['Íris', 'Mova com ← → ou A / D; a nave atira sozinha. Desvie das nuvens roxas e dos pulsos espiões amarelos: eles elevam o QBER e não podem ser destruídos.'], ['Tenente', 'E, se o canal piorar, uso R para renovar a chave. Preciso escolher um momento seguro.'], ['Íris', 'Exato: por 2 s você fica parado e sem disparar; a recarga leva 10 s. No protocolo fictício do jogo, passar de 11% de QBER inverte os controles por 4 s. Intercepte o alvo e teste uma renovação.']],
-      task: '', science: 'Na missão: 1.000 pontos em 8 fases. Uma colisão com a nave ou 12 impactos na Terra encerram a defesa. Esc pausa; as novidades aparecem entre as fases.', next: 'INICIAR DEFESA →' }
+      task: '', science: 'Na missão: 1.000 pontos e 8 guardiões. O escudo absorve um golpe; outro sem escudo encerra a defesa, assim como 12 impactos na Terra. Esc pausa. Após uma derrota, você pode repetir a fase.', next: 'INICIAR DEFESA →' }
   ];
   const flightStep = steps.length - 1;
   let step = 0, frame = 0, last = 0, simulation = null;

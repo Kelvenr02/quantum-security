@@ -12,7 +12,7 @@ const cloudGapMin = 60, cloudGapMax = 200;
 
 // Os parâmetros e conceitos de cada fase estão em phases.js.
 const qberLimit = 11, qberMaxView = 16;
-const cloudQber = 3.5, spyQber = 7, qberDecayPerSec = 0.8;
+const cloudQber = 3.5, spyQber = 7, qberDecayPerSec = 0.55;
 const regenDuration = 2000, regenCooldown = 10000;
 const compromisedDuration = 4000, invulDuration = 1000;
 
@@ -91,6 +91,7 @@ resizeCanvas();
 // ---------- Entrada ----------
 window.addEventListener('keydown', e => {
   if (!arcadeActive) return;
+  if(e.code==='Enter' && e.target?.closest?.('button,a,input') && !isStageBriefing)return;
   if (['ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
   // ENTER inicia / reinicia o jogo quando o menu está aberto (e não durante o final)
   if (e.code === 'Enter' && !isPlaying && !finale) {
@@ -121,9 +122,9 @@ function tryRegen() {
 }
 
 // ---------- Fluxo ----------
-function startGame() {
+function startGame(checkpoint = null) {
   if (isPlaying || !arcadeActive) return; // evita dois loops ao mesmo tempo
-  gameAudio.stopEffects(); gameAudio.setPaused('game', false); gameAudio.setScene('phase', 1); gameAudio.sfx('confirm');
+  gameAudio.stopEffects(); gameAudio.setPaused('game', false); gameAudio.setScene('phase', checkpoint?.level || 1); gameAudio.sfx('confirm');
   cancelAnimationFrame(rafId);
   finale = null;
   $('ui').style.display = 'none'; $('warning').style.display = 'none';
@@ -135,6 +136,12 @@ function startGame() {
   lasers = []; asteroids = []; clouds = []; spies = [];
   hatchFlash = Array(numLanes).fill(null); impacts = [];
   resetQuantumMission();
+  if (checkpoint) {
+    level=checkpoint.level;score=checkpoint.score;missed=checkpoint.missed;
+    bossesDefeated=level-1;bossCleared=bossCleared.map((_,i)=>i<level-1);
+    quantumCollected=checkpoint.quantumCollected||0;
+    phaseCheckpointData={...checkpoint};
+  }
   updateHUD(); updateQberUI();
   rafId = requestAnimationFrame(update);
 }
@@ -171,6 +178,7 @@ function showWarning(html, bg, border) {
 function endGame(title, color, html) {
   gameAudio.stopEffects(); gameAudio.setPaused('game', false);
   finale = null; isStageBriefing = false; $('phaseOverlay').hidden = true;
+  boss=null;$('bossHud').hidden=true;$('btnRetry').hidden=true;
   isPlaying = false; isPaused = false; $('pauseOverlay').hidden = true; cancelAnimationFrame(rafId); $('warning').style.display = 'none';
   const t = $('uiTitle'); t.innerText = title; t.style.color = color; t.style.textShadow = `0 0 10px ${color}`;
   $('uiDesc').innerHTML = html;
@@ -188,14 +196,15 @@ function gameOver(reason) {
   endGame("FALHA NA DEFESA", "#ff5555",
     `${reason}<br><br>Pontuação: <b>${score} / ${winScore}</b> · Fase <b>${level} / ${maxLevel}: ${phaseConfig().name}</b><br>Impactos na Terra: <b>${missed} / ${maxMisses}</b>`);
   gameAudio.setScene('defeat'); gameAudio.sfx('explosion', { pan: audioPan((currentLane + .5) * laneWidth) }); gameAudio.sfx('defeat');
+  $('btnRetry').hidden=false;$('btnRetry').textContent='REPETIR FASE '+level+' →';
 }
-// Quando o jogador chega a 1000 pontos, começa o final com o canhão
+// A carga e a vitória no oitavo desafio liberam o canhão.
 function gameWin() { startFinale(); }
 
 // Tela de vitória mostrada depois do final
 function showVictory() {
   endGame("A TERRA ESTÁ SALVA! 🎉", "#55ff55",
-    `<b>O canhão disparou!</b><br><br>Você protegeu a Terra, manteve o canal quântico sob seu controle até a carga completa e a nave-mãe foi destruída.<br><br>Fases concluídas: <b>${maxLevel}</b> · Cápsulas coletadas: <b>${quantumCollected}</b><br>Pontuação: <b>${score}</b> · Impactos: <b>${missed} de ${maxMisses} permitidos</b>`);
+    `<b>O canhão disparou!</b><br><br>Você neutralizou os oito guardiões, protegeu a Terra e liberou o disparo contra a nave-mãe.<br><br>Desafios concluídos: <b>${bossesDefeated} / ${maxLevel}</b> · Cápsulas coletadas: <b>${quantumCollected}</b><br>Pontuação: <b>${score}</b> · Impactos atuais: <b>${missed} de ${maxMisses} permitidos</b>`);
   gameAudio.setScene('victory'); gameAudio.sfx('victory');
 }
 
@@ -330,12 +339,14 @@ function spawnAsteroids() {
   if (gameTime < nextAsteroidAt) return;
   const free = shuffled([...Array(numLanes).keys()].filter(i => !blockedByHazard(i)));
   if (!free.length) return;
-  let count = phaseConfig().entangled && phaseWaveCount === 0 ? 2 : (Math.random() < phaseConfig().pair) ? 2 : 1;
-  count = Math.max(1, Math.min(count, free.length - 1));   // sempre sobra uma trilha livre
+  const p=phaseConfig();
+  let count = p.entangled && phaseWaveCount === 0 ? 2 : p.triple && Math.random()<p.triple ? 3 : Math.random()<p.pair ? 2 : 1;
+  count = Math.max(1, Math.min(count, free.length - 2)); // reserva espaço de manobra no lançamento
   const entangledWave = count === 2 && phaseConfig().entangled && (phaseWaveCount === 0 || Math.random() < .55);
   for (let k = 0; k < count; k++) {
     const armored = !entangledWave && ((phaseWaveCount === 1 && phaseConfig().armor > 0) || Math.random() < phaseConfig().armor);
-    asteroids.push({ id: ++asteroidSerial, x: free[k]*laneWidth + laneWidth/2, y: -30 - k*40, radius: Math.min(32, laneWidth*0.3), speed: flightSpeed(phaseConfig().speed), hp: armored ? 2 : 1, armored, group: null });
+    const rush=!armored && !entangledWave && Math.random()<(p.rush||0);
+    asteroids.push({ id: ++asteroidSerial, x: free[k]*laneWidth + laneWidth/2, y: -30 - k*40, radius: Math.min(32, laneWidth*0.3), speed: flightSpeed(p.speed*(rush?1.22:1)), hp: armored ? 2 : 1, armored, rush, group: null });
     flashHatch(free[k], "#ff9a3c");
   }
   if (entangledWave) {
@@ -360,7 +371,7 @@ function spawnSpies() {            // pulsos espiões: a partir da fase 2
   if (level < 2 || spies.length > 0 || noImpact() || gameTime < nextSpyAt) return;
   const free = [...Array(numLanes).keys()].filter(i => !blockedByHazard(i) && !blockedByAsteroid(i));
   if (!free.length) return;
-  const l = free[Math.floor(Math.random()*free.length)];
+  const l = free.includes(currentLane) && Math.random()<.6 ? currentLane : free[Math.floor(Math.random()*free.length)];
   spies.push({ x: l*laneWidth + laneWidth/2, y: -40, radius: laneWidth*0.22, speed: flightSpeed(spySpeed + (level-2)*.12) });
   flashHatch(l, "#ffd21f");
   nextSpyAt = gameTime + phaseConfig().spyInterval * (.9 + Math.random()*.2);
@@ -488,6 +499,7 @@ function drawLink(shipX) {
 
 // ---------- Desenho: nave do jogador (caça com asas, canhões e dois motores) ----------
 function drawShip(x,color,flicker) {
+  if(gameTime<hullInvulUntil && Math.floor(gameTime/100)%2===0)return;
   if(flicker&&Math.floor(gameTime/150)%2===0)return;
   const shipColor=isRegen?'#99bbef':flicker?'#ef7976':'#6ce8cd';
   drawInterceptor(ctx,x,shipY,shipSize,shipColor,gameTime,flicker);
@@ -513,8 +525,7 @@ function drawBanner() {
 // ---------- Loop ----------
 function update(ts) {
   if (!isPlaying || isPaused || isStageBriefing) return;
-  const newLevel = phaseForScore(score);
-  if (newLevel !== level) { enterPhase(newLevel); return; }
+  if (!boss && score>=phaseConfig().target && !bossCleared[level-1]) { beginBoss(); return; }
   if (!lastTs) lastTs = ts;
   const dt = Math.min((ts - lastTs)/FRAME_MS, 3);
   lastTs = ts; gameTime += dt*FRAME_MS;
@@ -532,15 +543,15 @@ function update(ts) {
   if (!isCompromised && !isRegen) {
     const decay = level >= 5 ? .2 : qberDecayPerSec;
     qber = Math.max(0, qber - decay*dt*FRAME_MS/1000);
-    if (phaseConfig().drift) addQber(phaseConfig().drift*dt*FRAME_MS/1000);
+    if (!boss && phaseConfig().drift) addQber(phaseConfig().drift*dt*FRAME_MS/1000);
   }
   updateQberUI();
 
-  spawnAsteroids(); spawnClouds(); spawnSpies(); spawnQuantumPickup();
+  if (!boss) {spawnAsteroids(); spawnClouds(); spawnSpies(); spawnQuantumPickup();}
   drawBackground(dt);
 
   const shipX = currentLane*laneWidth + laneWidth/2;
-  updateInterference(dt);
+  if(!boss)updateInterference(dt);
   drawEntangledLinks();
   const protectedNow = noImpact();
   if (!isRegen) fireLaser(shipX);
@@ -555,9 +566,15 @@ function update(ts) {
 
   // Lasers (somem ao bater no casco da nave-mãe)
   for (let i = lasers.length-1; i >= 0; i--) {
-    const l = lasers[i]; l.y -= flightSpeed(10)*dt;
+    const l = lasers[i]; l.previousY=l.y; l.y -= flightSpeed(10)*dt;
     drawEnergyBolt(l);
     if (l.y < hullBottom(l.x)) lasers.splice(i, 1);
+  }
+
+  if(boss) {
+    updateBossBattle(dt,shipX);drawMothership();
+    if(isPlaying&&!isStageBriefing)rafId=requestAnimationFrame(update);
+    return;
   }
 
   // Nuvens (ruído)
@@ -584,7 +601,11 @@ function update(ts) {
   for (const a of [...asteroids].reverse()) {
     if (!asteroids.includes(a)) continue;
     a.y += a.speed*dt; drawAsteroid(a); drawAsteroidQuantum(a);
-    if (Math.hypot(shipX-a.x, shipY-a.y) < a.radius+shipSize*.7) { gameOver('A nave defensora foi destruída por um impacto direto!'); return; }
+    if (gameTime>=hullInvulUntil && Math.hypot(shipX-a.x, shipY-a.y) < a.radius+shipSize*.7) {
+      takeHullHit('A nave foi atingida sem escudo de emergência!',shipX);
+      if(!isPlaying)return;
+      asteroids.splice(asteroids.indexOf(a),1);continue;
+    }
     let destroyed = false;
     for (let j = lasers.length-1; j >= 0; j--) {
       const l = lasers[j];
@@ -592,8 +613,7 @@ function update(ts) {
         lasers.splice(j,1); a.hp--;
         if (a.hp <= 0) { destroyQuantumAsteroid(a); destroyed = true; }
         else { a.hitUntil = gameTime+160; gameAudio.sfx('impact', { pan: audioPan(a.x) }); }
-        if (score >= winScore) { gameWin(); return; }
-        if (destroyed && phaseForScore(score) !== level) { enterPhase(phaseForScore(score)); return; }
+        if (destroyed && score>=phaseConfig().target) { beginBoss(); return; }
         break;
       }
     }

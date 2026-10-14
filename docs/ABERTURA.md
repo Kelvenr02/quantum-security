@@ -26,3 +26,5 @@ O áudio existente usa a trilha discreta de história nas três primeiras cenas,
 - A inversão de controles acima de 11%, a renovação de 2 segundos e as cápsulas posteriores são regras e analogias do jogo.
 
 O pitch e as referências científicas permanecem acessíveis na seção opcional da abertura. A ciência é incorporada ao conflito, sem uma apresentação separada do jogo.
+
+A campanha agora inclui oito guardiões. A abertura menciona o objetivo final, o escudo de emergência e a retomada da fase; as regras específicas continuam sendo apresentadas no momento de cada confronto, conforme [DESAFIOS.md](DESAFIOS.md).
