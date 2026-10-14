@@ -103,18 +103,27 @@ window.addEventListener('keydown', e => {
   if (e.code === 'KeyR') tryRegen();
   if (isRegen) return;
   const dir = isCompromised ? -1 : 1;
-  if (e.code === 'ArrowLeft' || e.code === 'KeyA')  currentLane = Math.max(0, Math.min(numLanes-1, currentLane - dir));
-  if (e.code === 'ArrowRight' || e.code === 'KeyD') currentLane = Math.max(0, Math.min(numLanes-1, currentLane + dir));
+  if (e.code === 'ArrowLeft' || e.code === 'KeyA') moveShip(-dir);
+  if (e.code === 'ArrowRight' || e.code === 'KeyD') moveShip(dir);
 });
+
+const audioPan = x => width > 0 ? x / width * 1.2 - .6 : 0;
+function moveShip(direction) {
+  const previous = currentLane;
+  currentLane = Math.max(0, Math.min(numLanes - 1, currentLane + direction));
+  if (previous !== currentLane) gameAudio.sfx('move', { pan: audioPan((currentLane + .5) * laneWidth) });
+}
 
 function tryRegen() {
   if (isRegen || isCompromised || gameTime < keyReadyAt) return;
   isRegen = true; regenEnd = gameTime + regenDuration; keyReadyAt = gameTime + regenCooldown;
+  gameAudio.startLoop('regen');
 }
 
 // ---------- Fluxo ----------
 function startGame() {
   if (isPlaying || !arcadeActive) return; // evita dois loops ao mesmo tempo
+  gameAudio.stopEffects(); gameAudio.setPaused('game', false); gameAudio.setScene('phase', 1); gameAudio.sfx('confirm');
   cancelAnimationFrame(rafId);
   finale = null;
   $('ui').style.display = 'none'; $('warning').style.display = 'none';
@@ -160,6 +169,7 @@ function showWarning(html, bg, border) {
 // Tela final: sempre oferece "Jogar Novamente" (vitória ou derrota).
 // O botão fica bloqueado por 0,8 s para ninguém reiniciar sem querer ao morrer atirando.
 function endGame(title, color, html) {
+  gameAudio.stopEffects(); gameAudio.setPaused('game', false);
   finale = null; isStageBriefing = false; $('phaseOverlay').hidden = true;
   isPlaying = false; isPaused = false; $('pauseOverlay').hidden = true; cancelAnimationFrame(rafId); $('warning').style.display = 'none';
   const t = $('uiTitle'); t.innerText = title; t.style.color = color; t.style.textShadow = `0 0 10px ${color}`;
@@ -177,6 +187,7 @@ function endGame(title, color, html) {
 function gameOver(reason) {
   endGame("FALHA NA DEFESA", "#ff5555",
     `${reason}<br><br>Pontuação: <b>${score} / ${winScore}</b> · Fase <b>${level} / ${maxLevel}: ${phaseConfig().name}</b><br>Impactos na Terra: <b>${missed} / ${maxMisses}</b>`);
+  gameAudio.setScene('defeat'); gameAudio.sfx('explosion', { pan: audioPan((currentLane + .5) * laneWidth) }); gameAudio.sfx('defeat');
 }
 // Quando o jogador chega a 1000 pontos, começa o final com o canhão
 function gameWin() { startFinale(); }
@@ -185,26 +196,38 @@ function gameWin() { startFinale(); }
 function showVictory() {
   endGame("A TERRA ESTÁ SALVA! 🎉", "#55ff55",
     `<b>O canhão disparou!</b><br><br>Você protegeu a Terra, manteve o canal quântico sob seu controle até a carga completa e a nave-mãe foi destruída.<br><br>Fases concluídas: <b>${maxLevel}</b> · Cápsulas coletadas: <b>${quantumCollected}</b><br>Pontuação: <b>${score}</b> · Impactos: <b>${missed} de ${maxMisses} permitidos</b>`);
+  gameAudio.setScene('victory'); gameAudio.sfx('victory');
 }
 
 // ---------- Final: canhão de energia da Terra ----------
 function startFinale() {
+  gameAudio.stopLoop('regen'); gameAudio.setScene('finale');
   isPlaying = false; cancelAnimationFrame(rafId); $('pauseBtn').disabled = true;
   $('warning').style.display = 'none';
   lasers = []; asteroids = []; clouds = []; spies = []; pickups = []; interferenceFront = null; superpositionUntil = 0;
   $('quantumStatus').textContent = 'CANHÃO ORBITAL · CARGA COMPLETA';
   isRegen = false; isCompromised = false; qber = 0; updateQberUI();
-  finale = { t: 0, fromX: currentLane*laneWidth + laneWidth/2, boomed: false, parts: [] };
+  finale = { t: 0, fromX: currentLane*laneWidth + laneWidth/2, boomed: false, chargeSound: false, beamSound: false, parts: [] };
   lastTs = 0;
   rafId = requestAnimationFrame(finaleLoop);
 }
 
 function finaleLoop(ts) {
   if (!finale) return;
+  if (gameAudio.pauses?.has('hidden')) { lastTs = 0; rafId = requestAnimationFrame(finaleLoop); return; }
   if (!lastTs) lastTs = ts;
   const dt = Math.min((ts - lastTs)/FRAME_MS, 3); lastTs = ts;
   gameTime += dt*FRAME_MS; finale.t += dt*FRAME_MS;
   const t = finale.t, cx = width/2, tipY = baseTipY(), top = hullBottom(cx);
+
+  // Som e imagem usam as mesmas marcações, uma vez por evento.
+  if (t >= T_MOVE && t < T_BEAM) {
+    if (!finale.chargeSound) { finale.chargeSound = true; gameAudio.startLoop('charge'); }
+    gameAudio.setLoopPitch('charge', .7 + (t - T_MOVE) / (T_BEAM - T_MOVE) * 1.8);
+  }
+  if (t >= T_BEAM && !finale.beamSound) {
+    finale.beamSound = true; gameAudio.stopLoop('charge'); gameAudio.sfx('cannon'); gameAudio.startLoop('beam');
+  }
 
   // a nave desliza até o canto esquerdo e fica fixa lá
   const k = Math.min(1, t/T_MOVE), ease = k*k*(3-2*k);
@@ -213,6 +236,7 @@ function finaleLoop(ts) {
   // explosão da nave-mãe
   if (t >= T_BOOM && !finale.boomed) {
     finale.boomed = true;
+    gameAudio.stopLoop('beam'); gameAudio.sfx('mothership');
     for (let i = 0; i < 120; i++) {
       const a = Math.random()*Math.PI*2, v = 1 + Math.random()*6;
       finale.parts.push({ x: cx + (Math.random()-.5)*width*0.5, y: top - 10,
@@ -287,7 +311,7 @@ function finaleLoop(ts) {
 // ---------- Ruído e espionagem ----------
 function addQber(v) {
   qber += v;
-  if (qber > qberLimit) { isCompromised = true; compEnd = gameTime + compromisedDuration; clouds = []; spies = []; }
+  if (qber > qberLimit) { if (!isCompromised) gameAudio.sfx('compromised'); isCompromised = true; compEnd = gameTime + compromisedDuration; clouds = []; spies = []; }
 }
 const noImpact = () => isRegen || isCompromised || gameTime < invulUntil;
 
@@ -344,6 +368,7 @@ function spawnSpies() {            // pulsos espiões: a partir da fase 2
 
 function fireLaser(x) {
   if (gameTime - lastShotTime < shotCooldown) return;
+  gameAudio.sfx('shot', { pan: audioPan(x) });
   lasers.push({ x, y: shipY - shipSize, radius: 4 });
   if (gameTime < superpositionUntil) {
     for (const lane of [currentLane-1, currentLane+1]) if (lane >= 0 && lane < numLanes) lasers.push({ x: (lane+.5)*laneWidth, y: shipY-shipSize, radius: 4, quantum: true });
@@ -494,9 +519,10 @@ function update(ts) {
   const dt = Math.min((ts - lastTs)/FRAME_MS, 3);
   lastTs = ts; gameTime += dt*FRAME_MS;
 
-  if (isRegen && gameTime >= regenEnd) { isRegen = false; qber = 0; }
+  if (isRegen && gameTime >= regenEnd) { isRegen = false; qber = 0; gameAudio.stopLoop('regen'); gameAudio.sfx('regenReady'); }
   if (isCompromised && gameTime >= compEnd) {
     isCompromised = false; qber = 2; invulUntil = gameTime + invulDuration;
+    gameAudio.sfx('confirm');
     nextCloudAt = Math.max(nextCloudAt, gameTime + 2500); nextSpyAt = Math.max(nextSpyAt, gameTime + 4000);
   }
   if (isCompromised) showWarning(`⚠️ CANAL COMPROMETIDO!<br>ALIENS NO CONTROLE: COMANDOS INVERTIDOS ${((compEnd-gameTime)/1000).toFixed(1)}s`, 'rgba(255,0,0,.8)', '#f33');
@@ -540,7 +566,7 @@ function update(ts) {
     if (c.sway) c.x = Math.max(c.radius, Math.min(width-c.radius, c.baseX + Math.sin((gameTime-c.born)/900)*laneWidth*.65));
     drawCloud(c);
     if (!noImpact() && Math.hypot(shipX - c.x, shipY - c.y) < c.radius + shipSize*0.7) {
-      clouds.splice(i, 1); addQber(cloudQber); if (isCompromised) break; continue;
+      clouds.splice(i, 1); gameAudio.sfx('noise', { pan: audioPan(c.x) }); addQber(cloudQber); if (isCompromised) break; continue;
     }
     if (c.y > height + 50) clouds.splice(i, 1);
   }
@@ -549,7 +575,7 @@ function update(ts) {
   for (let i = spies.length-1; i >= 0; i--) {
     const p = spies[i]; p.y += p.speed*dt; drawSpy(p);
     if (!noImpact() && Math.hypot(shipX - p.x, shipY - p.y) < p.radius*1.6 + shipSize*0.7) {
-      spies.splice(i, 1); addQber(spyQber); if (isCompromised) break; continue;
+      spies.splice(i, 1); gameAudio.sfx('spy', { pan: audioPan(p.x) }); addQber(spyQber); if (isCompromised) break; continue;
     }
     if (p.y > height + 50) spies.splice(i, 1);
   }
@@ -565,7 +591,7 @@ function update(ts) {
       if (Math.hypot(l.x-a.x, l.y-a.y) < a.radius+l.radius) {
         lasers.splice(j,1); a.hp--;
         if (a.hp <= 0) { destroyQuantumAsteroid(a); destroyed = true; }
-        else a.hitUntil = gameTime+160;
+        else { a.hitUntil = gameTime+160; gameAudio.sfx('impact', { pan: audioPan(a.x) }); }
         if (score >= winScore) { gameWin(); return; }
         if (destroyed && phaseForScore(score) !== level) { enterPhase(phaseForScore(score)); return; }
         break;
@@ -574,6 +600,7 @@ function update(ts) {
     if (destroyed) continue;
     if (a.y-a.radius*.5 > earthTop) {
       asteroids.splice(asteroids.indexOf(a),1); impacts.push({x:a.x,t:gameTime});
+      gameAudio.sfx('earth', { pan: audioPan(a.x) });
       missed++; updateHUD();
       if (missed >= maxMisses) { gameOver('Defesa falhou! '+maxMisses+' asteroides atingiram a Terra.'); return; }
     }

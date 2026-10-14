@@ -2,6 +2,14 @@
 
 Abra index.html no navegador para jogar. O jogo funciona localmente, sem instalação e sem dependências externas.
 
+## Som e música
+
+O áudio começa após o primeiro toque ou tecla. O botão **Som**, disponível em todas as telas, permite silenciar e ajustar separadamente música e efeitos. **M** também alterna o som; as preferências são salvas localmente quando possível.
+
+Cada fase tem uma composição diferente, em volume baixo e com transições suaves. Disparos, impactos, cápsulas, interferências e regeneração acompanham os eventos reais do jogo. A pausa congela o áudio; o canhão usa as mesmas marcações da animação para carga, disparo e explosão.
+
+Efeitos de Kenney e músicas de Juhani Junkala / SubspaceAudio, publicados com licença CC0, estão em `assets/audio/`. Os [créditos e fontes](assets/audio/CREDITS.md) identificam os arquivos utilizados; o [plano de áudio](docs/AUDIO.md) descreve a distribuição das trilhas e a mixagem. O bundle local mantém o funcionamento direto por `index.html`, sem servidor ou download durante a partida.
+
 ## Preparação rápida
 
 Antes da campanha, três momentos apresentam o essencial:
@@ -44,6 +52,7 @@ Acima de 11% de QBER, os controles ficam invertidos por 4 s. Doze impactos na Te
 - script.js: defesa orbital, colisões, pontuação e animação final.
 - quantum.js: briefings de fase, cápsulas, pares conectados e frentes de interferência.
 - training.js: simulador independente do treino rápido.
+- audio.js: mixagem, trilhas por fase, efeitos, pausa e controles de volume.
 - story.js: sequência interativa, narrativa, explicações e transição para a campanha.
 - graphics.js, presentation.js e styles.css: arte, controles e apresentação.
 
@@ -52,6 +61,10 @@ Acima de 11% de QBER, os controles ficam invertidos por 4 s. Doze impactos na Te
 Execute: node tests/gameplay.cjs
 
 Execute também: node tests/training.cjs
+
+Áudio: node tests/audio.cjs
+
+Reconstruir o bundle offline a partir dos arquivos preparados: node tools/build-audio.cjs
 
 Os testes do treinamento verificam intercepção, novas tentativas, regeneração, pausa e reinício. As duas suítes são executadas no GitHub Actions.
 

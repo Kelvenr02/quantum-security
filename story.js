@@ -45,7 +45,11 @@ const tutorial = (() => {
   }
   function enter(index) {
     step = index; last = 0; manualPause = false; feedback = ''; activated = false;
-    simulation = index === 2 ? new TrainingSimulation() : null;
+    gameAudio.stopEffects(); gameAudio.setPaused('training', false); gameAudio.setScene(index === 2 ? 'tutorial' : 'story');
+    simulation = index === 2 ? new TrainingSimulation((name, options) => {
+      if (name === 'regenStart') gameAudio.startLoop('regen');
+      else { if (name === 'regenReady') gameAudio.stopLoop('regen'); gameAudio.sfx(name, options); }
+    }) : null;
     el('trainingPauseNotice').hidden = true;
     say(index === 0 ? 'Meta: 1.000 pontos. Evite colisões com a nave e 12 impactos na Terra.' : index === 1 ? 'O Quantum Security acompanha os erros para ajudar a decidir quando uma nova chave é necessária.' : simulation.message);
     render(); el('trainingTitle').focus({ preventScroll: true });
@@ -54,6 +58,7 @@ const tutorial = (() => {
   function action(action) {
     if (!introActive || manualPause || step !== 1 || action !== 'activate' || activated) return;
     activated = true;
+    gameAudio.sfx('confirm');
     say('Quantum Security ativo. Na missão, observe o QBER e use R quando precisar renovar a chave.');
     render(); el('trainingNext').focus({ preventScroll: true });
   }
@@ -82,10 +87,10 @@ const tutorial = (() => {
     if (!document.hidden && simulation && !manualPause) simulation.update(last ? timestamp - last : 0);
     last = timestamp; draw(); sync(); frame = requestAnimationFrame(loop);
   }
-  function pause() { if (!introActive || !simulation) return; manualPause = !manualPause; simulation.paused = manualPause; last = 0; el('trainingPauseNotice').hidden = !manualPause; sync(); }
+  function pause() { if (!introActive || !simulation) return; manualPause = !manualPause; simulation.paused = manualPause; gameAudio.setPaused('training', manualPause); last = 0; el('trainingPauseNotice').hidden = !manualPause; sync(); }
   function move(direction) { if (simulation && introActive) { simulation.move(direction); sync(); draw(); } }
-  function next() { if (!introActive || !completed() || manualPause) return; if (step < steps.length - 1) enter(step + 1); else { stop(); startDefense(); startGame(); } }
-  function stop() { introActive = false; cancelAnimationFrame(frame); frame = 0; last = 0; }
+  function next() { if (!introActive || !completed() || manualPause) return; if (step < steps.length - 1) { enter(step + 1); gameAudio.sfx('ui'); } else { stop(); startDefense(); startGame(); } }
+  function stop() { introActive = false; cancelAnimationFrame(frame); frame = 0; last = 0; gameAudio.stopEffects(); gameAudio.setPaused('training', false); }
   function start() {
     if (typeof isPlaying !== 'undefined' && (isPlaying || finale)) return;
     stop(); arcadeActive = false;
@@ -96,7 +101,7 @@ const tutorial = (() => {
   el('trainingNext').addEventListener('click', next);
   el('trainingBack').addEventListener('click', () => { if (introActive && step > 0) enter(step - 1); });
   el('trainingRestart').addEventListener('click', () => { if (introActive) enter(0); });
-  el('trainingHome').addEventListener('click', event => { event.preventDefault(); stop(); el('intro').hidden = true; el('intro').style.display = 'none'; el('title').style.display = ''; window.dispatchEvent(new Event('resize')); el('titleBtn').focus(); });
+  el('trainingHome').addEventListener('click', event => { event.preventDefault(); stop(); gameAudio.setScene('menu'); el('intro').hidden = true; el('intro').style.display = 'none'; el('title').style.display = ''; window.dispatchEvent(new Event('resize')); el('titleBtn').focus(); });
   el('trainingPause').addEventListener('click', pause);
   el('trainingLeft').addEventListener('click', () => move(-1)); el('trainingRight').addEventListener('click', () => move(1));
   el('trainingRegen').addEventListener('click', () => { if (simulation) { simulation.regenerate(); sync(); } });

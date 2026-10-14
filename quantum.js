@@ -20,6 +20,7 @@ function updatePhaseHUD() {
 }
 
 function enterPhase(nextLevel) {
+  gameAudio.stopLoop('regen'); gameAudio.setScene('briefing', nextLevel); gameAudio.sfx('phase');
   level = nextLevel; phaseWaveCount = 0; pickupSerial = level % 2; isStageBriefing = true; cancelAnimationFrame(rafId);
   lasers = []; asteroids = []; clouds = []; spies = []; pickups = []; particles = [];
   interferenceFront = null; superpositionUntil = 0;
@@ -40,6 +41,7 @@ function enterPhase(nextLevel) {
 
 function continuePhase() {
   if (!isStageBriefing || !isPlaying) return;
+  gameAudio.setScene('phase', level); if (isRegen) gameAudio.startLoop('regen');
   isStageBriefing = false; $('phaseOverlay').hidden = true;
   $('pauseBtn').disabled = false; $('btnContinue').blur();
   canvas.focus({preventScroll:true}); bannerUntil = gameTime+2400; lastTs = 0;
@@ -72,6 +74,7 @@ function updateQuantumPickups(dt,shipX) {
     ctx.fillStyle=color; ctx.font='600 15px Consolas,monospace'; ctx.textAlign='center'; ctx.fillText(p.type==='correction'?'+':'H',0,5); ctx.restore();
     if (Math.hypot(shipX-p.x,shipY-p.y)<p.radius+shipSize*.7) {
       quantumCollected++;
+      gameAudio.sfx(p.type === 'correction' ? 'correction' : 'hadamard', { pan: audioPan(p.x) });
       if (p.type==='correction') { qber=Math.max(0,qber-5); keyReadyAt=Math.max(gameTime,keyReadyAt-3000); }
       else superpositionUntil=gameTime+6000;
       pickups.splice(i,1); updateQberUI();
@@ -123,6 +126,7 @@ function drawAsteroidQuantum(a) {
 
 function destroyQuantumAsteroid(target) {
   const victims = asteroids.filter(a => a===target || (target.group !== null && a.group===target.group));
+  gameAudio.sfx('explosion', { pan: audioPan(target.x) });
   for (const a of victims) {emitDebris(a.x,a.y,a.radius);asteroids.splice(asteroids.indexOf(a),1);}
   score=Math.min(winScore,score+victims.length*10); updateHUD();
 }
@@ -132,6 +136,7 @@ function updateInterference(dt) {
   if (!interferenceFront && gameTime >= nextInterferenceAt) {
     const lanes=shuffled([...Array(numLanes).keys()]).slice(0,4);
     interferenceFront={lanes,releaseAt:gameTime+1800,y:95,passed:false};
+    gameAudio.sfx('interference');
     nextInterferenceAt=gameTime+(level===8?9000:11000);
   }
   const front=interferenceFront; if (!front) return;

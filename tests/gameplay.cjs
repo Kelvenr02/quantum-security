@@ -20,7 +20,8 @@ function makeGame(viewWidth = 1100, viewHeight = 800) {
     window:{innerWidth:viewWidth,innerHeight:viewHeight,devicePixelRatio:1,addEventListener:(type,fn)=>(listeners[type] ||= []).push(fn)},
     document:{hidden:false,getElementById:id=>{assert.ok(elements.has(id),'Elemento ausente: '+id);return elements.get(id)},createElement:()=>element(''),addEventListener:noop},
     seededRandom:()=>()=>.5,makeSpaceBackdrop:()=>({}),drawGlow:noop,drawDebris:noop,drawInterceptor:noop,drawAsteroid:noop,drawEnergyBolt:noop,drawQuantumCloud:noop,drawSpyPulse:noop,
-    emitDebris:noop,spaceBackdrop:null,particles:[],introActive:false,renderScene:noop
+    emitDebris:noop,spaceBackdrop:null,particles:[],introActive:false,renderScene:noop,
+    gameAudio:{sfx:noop,setScene:noop,setPaused:noop,stopEffects:noop,startLoop:noop,stopLoop:noop,setLoopPitch:noop}
   };
   const context = vm.createContext(sandbox);
   for (const file of scripts) vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context,{filename:file});
@@ -102,6 +103,11 @@ test('Meta inicia a animação original do canhão e termina em vitória',()=>{
   const g=makeGame();g.run('level=8;score=990;asteroids=[{id:1,x:550,y:250,radius:25,speed:0,hp:1,armored:false,group:null}];lasers=[{x:550,y:250,radius:4}];update(100)');
   assert.equal(g.run('score'),1000);assert.equal(g.run('isPlaying'),false);assert.equal(g.run('finale!==null'),true);
   g.run('finale.t=T_END;finaleLoop(200)');assert.equal(g.run('finale'),null);assert.match(g.elements.get('uiTitle').innerText,/TERRA ESTÁ SALVA/);
+});
+test('Janela inativa congela a animação final junto com o áudio',()=>{
+  const g=makeGame();g.run('startFinale();gameAudio.pauses=new Set(["hidden"]);lastTs=100;finaleLoop(1000)');
+  assert.equal(g.run('finale.t'),0);assert.equal(g.run('lastTs'),0);
+  g.run('gameAudio.pauses.clear();finaleLoop(1100);finaleLoop(1120)');assert.equal(g.run('finale.t'),20);
 });
 test('Reiniciar limpa os recursos e a progressão da campanha',()=>{
   const g=makeGame();g.run('level=7;score=750;superpositionUntil=99999;quantumCollected=6;isPlaying=false;startGame()');
