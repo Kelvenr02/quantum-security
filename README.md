@@ -2,23 +2,17 @@
 
 Abra index.html no navegador para jogar. O jogo funciona localmente, sem instalação e sem dependências externas.
 
-## Treinamento interativo
+## Preparação rápida
 
-Antes da campanha, a história, os conceitos e os controles são apresentados em sete desafios curtos, sem uma sequência de diálogos para avançar:
+Antes da campanha, três momentos apresentam o essencial:
 
-1. Conectar equipamentos QKD, o programa Quantum Security e o rádio com cifragem e autenticação.
-2. Alternar um bit, aplicar a porta H, observar interferência e medir um qubit.
-3. Comparar amostras de pares entrelaçados, simular espionagem e substituir uma chave rejeitada.
-4. Movimentar a nave nas sete trilhas e interceptar três asteroides com disparo automático.
-5. Experimentar ruído, QBER, inversão de comandos e regeneração da chave.
-6. Recolher cápsulas H e + e interceptar pares conectados e asteroides blindados.
-7. Escapar de uma frente de interferência e iniciar diretamente a campanha.
+1. **História:** a Terra está sob ataque; você pilota o interceptor da base e carrega o canhão orbital.
+2. **Quantum Security:** uma explicação curta de QKD, qubits, entrelaçamento e QBER; um botão ativa o sistema de comunicação.
+3. **Treino rápido:** mover a nave, destruir um asteroide com disparo automático e pressionar R para renovar a chave.
 
-As etapas avançam somente após a ação proposta. Os botões também funcionam por toque; setas/A/D, R e Esc funcionam no simulador. A pausa congela a simulação e é ativada ao trocar de janela. Voltar e Recomeçar permitem repetir os exercícios; impactos de treino dão outra tentativa. Pontos, erros e recursos do treinamento não são transferidos para a missão.
+O treino permite novas tentativas, pausa e controles por toque. Sua pontuação e seus erros não passam para a campanha. Recursos avançados são explicados nos briefings das fases. Informações adicionais sobre a ciência e o pitch ficam em uma seção opcional.
 
-O Quantum Security segue o pitch do produto: uma proposta de software para integrar equipamentos QKD, acompanhar o canal e gerenciar chaves validadas. QKD não exige um computador quântico universal. O experimento de amostras é didático: seus bits públicos são descartados, e um protocolo real precisa de verificações adicionais, comunicação clássica autenticada e processamento das chaves.
-
-A apresentação orbital, o diálogo com a Dr. Íris, a defesa da Terra, os disparos automáticos, o QBER e o final com o canhão foram preservados. A campanha agora contém oito fases:
+A Dr. Íris acompanha a preparação e apresenta as novidades das oito fases:
 
 | Fase | Objetivo acumulado | Novo desafio |
 | --- | ---: | --- |
@@ -49,7 +43,7 @@ Acima de 11% de QBER, os controles ficam invertidos por 4 s. Doze impactos na Te
 - phases.js: objetivos, parâmetros de dificuldade e conceitos das oito fases.
 - script.js: defesa orbital, colisões, pontuação e animação final.
 - quantum.js: briefings de fase, cápsulas, pares conectados e frentes de interferência.
-- training.js: modelos independentes do laboratório de qubits e do simulador de treino.
+- training.js: simulador independente do treino rápido.
 - story.js: sequência interativa, narrativa, explicações e transição para a campanha.
 - graphics.js, presentation.js e styles.css: arte, controles e apresentação.
 
@@ -59,7 +53,7 @@ Execute: node tests/gameplay.cjs
 
 Execute também: node tests/training.cjs
 
-Os testes do treinamento verificam estados quânticos simplificados, intercepções, novas tentativas, inversão, regeneração, pausa, cápsulas e interferência. As duas suítes são executadas no GitHub Actions.
+Os testes do treinamento verificam intercepção, novas tentativas, regeneração, pausa e reinício. As duas suítes são executadas no GitHub Actions.
 
 Os testes usam as funções reais de jogo e uma interface simulada para verificar progressão, colisões, regeneração, recursos, pausa, redimensionamento e a campanha completa. A interface também foi conferida no Chrome em tamanho de computador e em 390 × 844.
 
