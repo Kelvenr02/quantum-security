@@ -32,6 +32,7 @@ Cada fase recebe uma composição diferente. As transições usam sobreposição
 - Canal: ruído e espionagem têm sinais diferentes. Um sinal avisa a transição de seguro para instável/crítico; o alerta de comprometimento ocorre na entrada da penalidade, uma vez por episódio.
 - Chave: um som contínuo acompanha a regeneração e termina no mesmo evento que libera a nave. Uma confirmação indica a nova chave; outro sinal marca o término da recarga de R, sem repetir a cada quadro.
 - Recursos: H e + têm confirmações distintas; o apoio do chefe sinaliza a liberação ao terminar o aviso de 900 ms. Consumo de escudo tem um sinal próprio. A frente de interferência mantém seu aviso.
+- Chefes: a entrada usa uma sequência ascendente própria (`bossEntry`), diferente do som de canal comprometido. Mudanças de estágio usam o efeito de transição; a trilha mantém sua mixagem.
 - Final: carga, disparo e explosão são acionados pelo relógio da animação, com marcações para impedir repetição entre frames.
 - Pausa e janela inativa: o contexto de áudio é suspenso; sons e música retomam de onde pararam, sem reproduzir eventos atrasados.
 

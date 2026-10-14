@@ -1,5 +1,36 @@
 # Auditoria do plano original e da integração
 
+## Correções aplicadas após a auditoria — 14/10/2026
+
+O relatório abaixo é o registro histórico do commit auditado. Esta revisão, sobre a base `ae6108f`, corrige os defeitos de código apontados e preserva o ajuste leve de dificuldade e os briefings em três passos.
+
+| Achado | Correção e evidência atual |
+| --- | --- |
+| Vitória parada na Tríade | A/B usam corredores distintos desde o primeiro ciclo. A formação alterna núcleos próximos e separados, com previsão azul durante a pressão. H exige sair da posição inicial para coletar. Nenhuma vitória em 576 confrontos estacionários. |
+| Recuperar e atacar na mesma faixa | Chefe 5 e estágio H final têm alvos separados da faixa verde, fora até do alcance lateral de H. A faixa permanece estável durante o ciclo e anuncia a próxima posição por 2 s. Recuperação de 34 pp/s e perda de 14/16 pp/s permitem investir e retornar; dano continua exigindo pelo menos 50%. |
+| Suprimentos convenientes | H e + chegam por um corredor seguro anunciado, fora da posição da nave. A seleção prefere evitar alvos e zonas de recuperação. A travessia cabe no aviso e na queda; permanece o limite de uma cápsula por ciclo. |
+| Quadro da missão | A legenda inicial agora diz “1.000 de carga”. Pontos de destruição continuam separados. |
+| Sinalização | Meteoros mostram a linha “DIVIDE AQUI” no limiar real de fragmentação. Nuvens móveis mostram uma seta e o contorno da projeção horizontal em 600 ms, calculados com a mesma função do movimento. |
+| Áudio | Entrada de chefe usa `bossEntry`, uma sequência ascendente distinta do alerta de canal comprometido. Música, volumes e pausas preservados. |
+| Métricas | Diagnóstico schema 2 guarda acertos e dano por chefe, estágio, ciclo e janela, inclusive aberturas sem dano. O golpe que troca o estágio pertence à janela anterior; retomadas ficam em novas amostras e a tentativa anterior permanece no histórico da sessão. Não há evento por quadro. |
+| Estratégias | A matriz distingue não usar R de ignorar o canal, inclui renovação imediata no alerta e uma política que nunca escolhe drones. Regressões verificam essas decisões; a varredura estacionária também entrou no GitHub Actions. |
+
+### Validação desta correção
+
+- **167 verificações de regras e integração aprovadas**, incluindo seis campanhas completas, conservação de recursos, retomadas, pausas e 3.072 rotas físicas de fuga.
+- **576 confrontos estacionários**: oito chefes × nove trilhas × duas telas × dois estados de escudo × com/sem R. Limite de 180 s por confronto, disparos/cápsulas/ruído reais: **zero vitórias, 560 derrotas e 16 confrontos sem conclusão**. Isso impede a brecha conhecida; não afirma que toda posição parada necessariamente recebe um golpe.
+- **58 campanhas na matriz ampliada**, com dados e histórico por abertura em [auditoria-correcao-resultados.json](auditoria-correcao-resultados.json). Equilibrado: **20/20 vitórias**, 539–624 s de ação, 27–34 usos de R, 2–8 impactos líquidos. Tríade: 22,6–41,1 s; chefe 5: 24,8–34,7 s; final: 58,5–73 s.
+- Ignorar de fato o canal perdeu os quatro casos nas fases 4–5. Renovar imediatamente no alerta perdeu os quatro casos nas fases 6–8: R imobiliza e precisa de uma oportunidade segura. Não escolher drones ainda permitiu quatro vitórias, com 8–11 drones escapando; a fonte não é um bloqueio artificial da progressão. Essas amostras não provam uma estratégia universalmente melhor.
+- Chrome automatizado: reprodução antiga da Tríade derrotada sem movimento, R ou escudo em quatro telas; Tríade, chefe 5 e chefe final vencidos em **12 confrontos isolados**, com pausas e avisos conferidos. Briefings dos oito chefes, teclado e retomada conferidos em 1.440 × 900, 390 × 844, 844 × 390 e 760 × 360. Capturas inspecionadas em computador, celular e paisagem.
+
+### Adaptações preservadas e limite da conclusão
+
+O final mantém Bell + QBER, H + coerência e síndrome + interferência; não foi acrescentado rastreamento ao primeiro estágio. O alerta de QBER permanece no painel. A música muda por fase/confronto e os estágios usam efeito de transição, sem intensificação adicional da trilha. São escolhas de integração explicitadas, não itens marcados como implementados conforme a proposta literal.
+
+A duração atual é de aproximadamente 9–10 min e 24 s de ação nos pilotos equilibrados; leitura e pausas ficam fora desse tempo. As referências iniciais eram provisórias e não motivaram corte automático de encontros ou vida. **Partidas humanas com teclado e toque continuam pendentes**, portanto não se conclui sobre dificuldade percebida ou diversão apenas pelas simulações.
+
+## Relatório original — preservado para comparação
+
 Revisão de 14/10/2026 sobre o commit `ef3dc06`, branch `feat/desafios-quanticos`. A auditoria compara o plano original fornecido pelo usuário com o comportamento implementado; não altera as regras do jogo.
 
 **Resultado: o núcleo da campanha está integrado e funcional, mas o plano não foi cumprido integralmente.** A conclusão anterior de que as seis etapas estavam implementadas descreve os blocos técnicos; não comprova todos os requisitos específicos do plano. Esta auditoria identifica brechas, adaptações e cobertura ainda incompleta.

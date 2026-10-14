@@ -70,8 +70,9 @@ test('Bell alterna lados no mesmo ciclo, compartilha dano e limita rajadas',()=>
   m.hit(n.id,0,n.lane);advance(m,300);m.hit(n.id,0,n.lane);advance(m,300);assert.equal(m.hit(n.id,0,n.lane),false);
 });
 test('Devorador anuncia mudanças de zona, mede posição física e exige 50% de coerência',()=>{
-  const m=new QuantumBoss(5);at(m,1200,m.zone[0]);assert.ok(m.nextZone);const next=[...m.nextZone.lanes];
-  at(m,3100,m.zone[0]);assert.deepEqual(m.zone,next);
+  const m=new QuantumBoss(5);at(m,m.period-1900,m.zone[0]);assert.ok(m.nextZone);const next=[...m.nextZone.lanes];
+  advance(m,m.period-m.elapsed,m.zone[0]);assert.deepEqual(m.zone,next);
+  at(m,3100,m.zone[0]);
   m.coherence=49;assert.equal(m.targets().some(n=>n.open),false);
   advance(m,200,m.zone[0]);assert.ok(m.coherence>=50);assert.equal(m.targets().some(n=>n.open),true);
   m.hp=[10];m.prepareRound(4);assert.equal(m.zone.length,1);assert.equal(m.pulses.length,3);
@@ -132,12 +133,52 @@ test('Previsões mostram somente a mecânica do guardião correspondente',()=>{
     if(phase!==3)assert.equal(m.nextTriadCenter,null);
   }
 });
-test('Apoio H é lançado no centro útil à formação, inclusive no estágio de coerência',()=>{
-  for(const phase of [3,8]){
+test('Suprimentos exigem desvio e chegam por um corredor anunciado e alcançável',()=>{
+  for(const phase of [3,6,8])for(let initial=0;initial<9;initial++){
     const g=makeGame();g.run('level='+phase+';beginBoss();continuePhase();');
-    if(phase===8)g.run('boss.model.hp=[24];boss.model.prepareRound(4)');
-    g.run('pickups=[];bossSupply()');assert.equal(g.run('pickups[0].type'),'hadamard');assert.equal(g.run('laneOf(pickups[0])'),g.run('boss.model.triadCenter'));
+    g.run('shipPilot.reset('+initial+');currentLane='+initial);
+    if(phase===8)g.run('boss.model.hp=[24];boss.model.prepareRound('+initial+')');
+    g.run('pickups=[];bossSupply()');
+    assert.equal(g.run('pickups[0].type'),phase===6?'correction':'hadamard');
+    assert.equal(g.run('laneOf(pickups[0])===occupiedShipLane()'),false);
+    assert.equal(g.run('boss.model.pulses[0].lanes.includes(laneOf(pickups[0]))'),false);
+    assert.ok(g.run('Math.abs(laneOf(pickups[0])-occupiedShipLane())*150+400<900+(shipY-pickups[0].y)/pickups[0].speed*FRAME_MS'));
   }
+});
+
+test('Coerência separa recuperação e ataque, inclusive com H, e permite investir e voltar',()=>{
+  for(const lanes of [7,9])for(const phase of [5,8])for(let round=0;round<5;round++){
+    const m=new QuantumBoss(phase,0,lanes);if(phase===8)m.hp=[24];m.round=round;m.prepareRound(0);
+    const zone=m.zone[0],target=m.attackLane;
+    assert.ok(m.targets().every(n=>m.zone.every(l=>Math.abs(n.lane-l)>1)),'H não ataca permanecendo na zona');
+    at(m,2600,zone);assert.equal(m.coherence,100);
+    advance(m,Math.abs(target-zone)*150,target);const reserve=m.coherence;
+    assert.ok(reserve>=80,'Há reserva para travessia e investida');
+    for(let i=0;i<3;i++){assert.equal(m.hit(m.targets().find(n=>n.open).id,0,m.targets().find(n=>n.open).lane),true);advance(m,300,target);}
+    assert.ok(m.coherence>=50);advance(m,Math.abs(target-zone)*150,zone);const before=m.coherence;
+    advance(m,900,zone);assert.ok(m.coherence>before,'Retorno permite recuperar sem redefinir o canal');
+  }
+});
+
+test('Métricas guardam aberturas sem dano e atribuem dano ao estágio anterior à mudança',()=>{
+  const g=makeGame();g.run('level=8;beginBoss();continuePhase();boss.model.time=2800;boss.model.pulses.forEach(p=>p.fired=true);updateBossBattle(0,shipCenterX())');
+  assert.equal(g.run('campaignMetrics.segment.openings[0].damage'),0);
+  g.run('boss.model.hp=[25];qber=0;let node=boss.model.targets().find(n=>n.open);lasers=[{x:(node.lane+.5)*laneWidth,y:bossArenaY(),previousY:bossArenaY()+1}];updateBossBattle(0,shipCenterX())');
+  assert.equal(g.run('boss.model.stage'),1);
+  assert.equal(g.run('campaignMetrics.segment.openings[0].stage'),1);
+  assert.equal(g.run('campaignMetrics.segment.openings[0].damage'),1);
+  assert.equal(g.run('campaignMetrics.segment.openings[0].hits'),1);
+  g.run('gameOver("teste");retryCheckpoint();continuePhase();boss.model.time=2800;boss.model.pulses.forEach(p=>p.fired=true);updateBossBattle(0,shipCenterX())');
+  assert.equal(g.run('window.quantumDiagnostics.previous().at(-1).phases[8].boss.openings[0].damage'),1);
+  assert.equal(g.run('campaignMetrics.segment.openings.length'),1);
+  assert.equal(g.run('campaignMetrics.segment.openings[0].damage'),0);
+  assert.equal(g.run('campaignMetrics.segment.openings[0].attempt'),1);
+  assert.equal(g.run('window.quantumDiagnostics.snapshot().schemaVersion'),2);
+});
+
+test('Entrada do chefe tem som próprio e não emite comprometimento do canal',()=>{
+  const g=makeGame();g.run('let cues=[];gameAudio.sfx=name=>cues.push(name);beginBoss();continuePhase()');
+  assert.equal(g.run('cues.includes("bossEntry")'),true);assert.equal(g.run('cues.includes("compromised")'),false);
 });
 test('R carregado para a entrada preserva 400 ms de reação antes da primeira salva',()=>{
   for(let phase=1;phase<=8;phase++){

@@ -1,5 +1,11 @@
 # Balanceamento final — revisão de 14/10/2026
 
+## Fechamento dos defeitos da auditoria
+
+A revisão atual corrigiu a vitória parada da Tríade, separou recuperação/ataque no chefe 5 e no estágio H final e reposicionou os suprimentos. As instruções acompanham as novas regras. As velocidades reduzidas, recuperação passiva e avisos adiantados do ajuste leve continuam ativos.
+
+Validação: **167 verificações + 576 confrontos estacionários**, sem vitória parada. A matriz ampliada agora tem **58 cenários**: equilibrado venceu 20/20, em 539–624 s, com 27–34 usos de R e 2–8 impactos líquidos. Os novos casos diferenciam ausência de R, ignorar todo o canal, renovar ao entrar no alerta e nunca escolher drones. Veja os [dados atuais](auditoria-correcao-resultados.json) e a [auditoria atualizada](AUDITORIA-PLANEJAMENTO.md), com resultados, adaptações mantidas e limites humanos. Os registros das seções seguintes são históricos.
+
 ## Ajuste leve posterior à auditoria
 
 A pedido do usuário, foram alterados somente parâmetros para oferecer um pouco mais de margem ao iniciante:

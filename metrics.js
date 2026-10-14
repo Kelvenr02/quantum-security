@@ -1,7 +1,7 @@
 /* Diagnóstico agregado em memória; não envia nem grava dados do jogador. */
 class CampaignMetrics {
   constructor(arena,startPhase=1) {
-    this.data={schemaVersion:1,arena:{...arena},startPhase,outcome:'playing',activeMs:0,
+    this.data={schemaVersion:2,arena:{...arena},startPhase,outcome:'playing',activeMs:0,
       counts:{},qber:{peak:0,gained:{},removed:{}},phases:{},events:[]};
     this.previousPosition=null; this.setContext(startPhase,'wave');
   }
@@ -39,6 +39,15 @@ class CampaignMetrics {
   event(type,details={}) {
     if(this.data.events.length>=128)this.data.events.shift();
     this.data.events.push({type,phase:this.phase,mode:this.mode,atMs:this.data.activeMs,...details});
+  }
+  bossOpening(details,damage=0) {
+    if(!details)return;
+    const rows=this.segment.openings??(this.segment.openings=[]);
+    let row=rows.at(-1);
+    if(!row||['attempt','stage','round','window'].some(key=>row[key]!==details[key])){
+      row={...details,hits:0,damage:0};rows.push(row);
+    }
+    if(damage>0){row.hits++;row.damage+=damage;}
   }
   finish(outcome,details={}) {
     if(this.data.outcome!=='playing')return;

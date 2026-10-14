@@ -35,9 +35,9 @@ Cada briefing separa o objetivo de três passos práticos: identificar o alvo, c
 | --- | --- | --- | --- |
 | 1 | Sentinela da Chave | Validar um relé por ciclo, com QBER <8%; B aparece após o primeiro relé | Verificação e descarte de chaves inseguras |
 | 2 | Observador Fantasma | Rastreio fixa a mira; escolher ✓ entre três sondas; outra varredura durante a pressão | Medição e perturbação |
-| 3 | Tríade Hadamard | Laterais e centro abrem em momentos distintos; H explora 500 ms de sobreposição; formação muda durante a pressão | Superposição como recurso de jogo |
+| 3 | Tríade Hadamard | Corredores A/B distintos; formação próxima/separada com aviso azul; H explora aberturas e exige coleta fora do alvo | Superposição como recurso de jogo |
 | 4 | Gêmeos de Bell | Trocar de lado no mesmo ciclo, com até três acertos por janela (dois na pressão) | Estado conjunto e correlações |
-| 5 | Devorador de Coerência | Seguir a próxima zona anunciada e sustentar pelo menos 50% de coerência; faixa estreita e C na pressão | Preservação da coerência sob ruído |
+| 5 | Devorador de Coerência | Recuperar na faixa verde, sair para atacar com ≥50% e retornar; próxima zona anunciada; C na pressão | Preservação da coerência sob ruído |
 | 6 | Guardião da Síndrome | Ler + a cada ciclo; preparar a próxima indicação durante a pressão | Síndromes identificam certos erros |
 | 7 | Interferômetro | Alternar corredores A/B e atacar − entre salvas; C e novo deslocamento na pressão | Reforço e cancelamento de amplitudes |
 | 8 | Núcleo da Nave-Mãe | Bell com QBER <9%; H com coerência; síndrome com A/B/C | Combinação de operações e controle de erros |
@@ -46,7 +46,7 @@ Os números das barras de vida foram preservados; no Bell final, cada acerto rem
 
 As ondas comuns param durante a luta. Os guardiões usam relógio próprio que congela em pausas/briefings. Cada salva deixa pelo menos duas trilhas livres e avisa por pelo menos 2 s (o rastreio da sonda se fixa antes dessa contagem). Os corredores de salvas sucessivas podem ser distintos: não há garantia de uma posição segura durante o ciclo inteiro. A/B ficam separadas por 1,8 s; B/C por 2 s. Rotas verificadas em sete e nove trilhas admitem a travessia e 400 ms de reação.
 
-O núcleo pode ficar vulnerável antes da próxima salva, pedindo uma escolha entre continuar atirando e antecipar a fuga. Marcas se distinguem por letras/cores, com destaque no ataque mais próximo; corredores imediatos têm sinal verde. Contagens também aparecem no painel. Zonas futuras e mudança dos núcleos têm contorno azul. H é lançado no centro útil da Tríade e do estágio de coerência final; a luta continua vencível sem coletá-lo. + continua nos confrontos de correção/finais.
+O núcleo pode ficar vulnerável antes da próxima salva, pedindo uma escolha entre continuar atirando e antecipar a fuga. Marcas se distinguem por letras/cores, com destaque no ataque mais próximo; corredores imediatos têm sinal verde. Contagens também aparecem no painel. Zonas futuras e mudança dos núcleos têm contorno azul. H e + chegam por corredores seguros anunciados, fora da nave e preferencialmente separados do alvo; recolher exige uma escolha de percurso. A luta continua vencível sem H. Na coerência, a faixa verde recupera 34 pp/s e fica estável durante o ciclo; fora dela, a perda é de 14 pp/s (16 na pressão). Os núcleos ficam separados até dos tiros laterais disparados da zona. O próximo ciclo muda a faixa com aviso de 2 s.
 
 Insistir parado por pelo menos 600 ms numa sonda falsa ou módulo errado pode devolver 0,8 ou 0,6 pp de QBER, com intervalo mínimo de 900 ms. O modelo considera a posição física; disparos em trânsito e tiros laterais de H não causam esse ruído de leitura. R descarta o contato, sem proteger do dano físico.
 
@@ -76,12 +76,10 @@ R representa descartar o bloco anterior e preparar/validar outro no protocolo fi
 
 ## Verificação e alcance do balanceamento
 
-`tests/bosses.cjs` tem 27 casos e cobre vulnerabilidades, escudos, salvas, janelas, coerência, fases do núcleo, pausa, retomada e ausência de ondas comuns durante confrontos. `tests/resources.cjs` acrescenta 21 casos de duração/coleta, escudo e reparos, restauração exata após derrotas repetidas, estágios finais, Enter, retorno às ondas, sinais sonoros e prioridade visual. Os testes anteriores continuam cobrindo colisões, campanha, treinamento, narrativa e áudio.
+A validação atual soma **167 verificações de regras/integração e 576 confrontos estacionários**. `tests/bosses.cjs` cobre 30 casos de combate, abertura, coerência, suprimentos, áudio e métricas; `tests/resources.cjs` mantém os 21 casos de recursos/retomadas. `tests/fairness.cjs` tem 12 casos, incluindo 3.072 rotas e as novas políticas do piloto. `tests/stationary.cjs` verifica todos os chefes, nove posições, duas telas, com/sem escudo e R; não houve vitória parada em até 180 s.
 
-A validação final soma **162 verificações**. `tests/balance.cjs` conclui seis campanhas com colisões ativas, incluindo 844 × 390 e 760 × 360; `tests/fairness.cjs` cobre a geometria, limpeza de encontros, rotação e 3.072 rotas com leitura em 400/600 ms a 30/60 fps. O piloto não identifica a sonda verdadeira antes da varredura.
+A matriz de 58 campanhas teve 20/20 conclusões equilibradas em 539–624 s, usando R 27–34 vezes. Não usar R ainda evita ruído e compensa inversões; ignorar o canal remove essas respostas e perdeu os quatro novos casos. Renovar imediatamente no alerta também perdeu quatro casos por escolher momentos inseguros; R não concede imunidade. Ignorar emissores remove drones das prioridades mesmo sem meteoros, permitindo disparos incidentais. Os quatro casos venceram com 8–11 drones escapando.
 
-A matriz de 46 cenários compara cinco telas, quatro sementes, prioridades de alvos, atraso na leitura, decisões mais espaçadas, comandos perdidos, imobilidade e uso/ausência de R. O piloto equilibrado concluiu as 20 combinações em 540–604 s de ação, usando R 27–33 vezes. Priorizar meteoros ou drones também produziu caminhos viáveis; atrasos e comandos perdidos provocaram derrotas em parte das amostras. Ficar parado perdeu na primeira fase.
+O histórico por abertura fica em `quantumDiagnostics.snapshot().phases[fase].boss.openings`: tentativa, estágio, ciclo, janela, limites de tempo, acertos e dano, incluindo zero. Retomar cria uma nova amostra; a anterior continua em `quantumDiagnostics.previous()`, limitado às cinco últimas amostras da sessão.
 
-Na comparação pareada com compensação precisa de inversões, ainda foi possível vencer sem R. Isso custou 48 comprometimentos e aproximadamente 192 s de inversão, contra 10 episódios e 22–27 s com R. O chefe final passou de aproximadamente 104 s sem R para 63–64 s com R. O jogo não exige uma tecla para autorizar a vitória: a estratégia tem um custo observável.
-
-Esses pilotos consultam o estado interno e não representam jogadores humanos. A dificuldade sentida e a diversão ainda dependem de partidas de pessoas. O [relatório completo](BALANCEAMENTO.md) registra metodologia, resultados de derrota, durações e limites das conclusões; os [dados por cenário](balanceamento-resultados.json) permitem conferir as comparações.
+Esses pilotos consultam o estado interno e não representam jogadores humanos. Os [dados atuais](auditoria-correcao-resultados.json), o [balanceamento](BALANCEAMENTO.md) e a [auditoria](AUDITORIA-PLANEJAMENTO.md) distinguem resultados, adaptações e a validação humana ainda pendente.

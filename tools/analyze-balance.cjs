@@ -2,6 +2,13 @@
 const fs=require('node:fs');
 const {makeGame}=require('../tests/gameplay.cjs');
 const {flyCampaign}=require('../tests/balance.cjs');
+const controllerPolicies=Object.freeze({
+  balanced:'Evita ruído conforme QBER, compensa inversões e usa R nos respiros.',
+  'canal-sem-R':'Desativa somente R; ainda evita ruído e compensa inversões.',
+  'ignora-canal':'Não usa R, não evita nuvens/sondas/frentes por risco ao canal e não compensa inversões. Ainda desvia de dano físico.',
+  'renova-no-alerta':'Usa R na primeira decisão com QBER >= 7.7 e recarga disponível, mesmo fora dos respiros.',
+  'ignora-emissores':'Nunca escolhe drones como alvo, mesmo sem meteoros. Disparos incidentais continuam possíveis.'
+});
 
 function scenarios() {
   const cases=[];
@@ -19,6 +26,11 @@ function scenarios() {
     for(const manage of [true,false])add(manage?'inversao-com-R':'inversao-sem-R',1600,900,seed,{reactionMs:300,compensate:false},manage);
   }
   for(const [width,height]of [[1600,900],[390,700]])add('imovel',width,height,519,{idle:true});
+  for(const [width,height]of [[1600,900],[390,700]])for(const seed of [42,519]){
+    add('ignora-canal',width,height,seed,{channel:'ignore'});
+    add('renova-no-alerta',width,height,seed,{channel:'alert'});
+    add('ignora-emissores',width,height,seed,{strategy:'ignoreEmitters'});
+  }
   return cases;
 }
 function runScenario(config) {
@@ -42,9 +54,9 @@ if(require.main===module) {
     const row=runScenario(config);rows.push(row);
     process.stderr.write(`${rows.length}: ${row.name} ${row.width}×${row.height} seed=${row.seed}: ${row.won?'vitória':'fase '+row.lastPhase+' / '+(row.failure?.kind||'limite de tempo')} (${row.seconds}s)\n`);
   }
-  const report={schemaVersion:1,description:'Controladores determinísticos com acesso ao estado interno; resultados não estimam habilidade ou sucesso humano.',
+  const report={schemaVersion:2,description:'Controladores determinísticos com acesso ao estado interno; resultados não estimam habilidade ou sucesso humano.',controllerPolicies,
     maxActionSeconds:900,summary:summarize(rows),runs:rows};
   if(output){fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report.summary,null,2));}
   else console.log(JSON.stringify(report,null,2));
 }
-module.exports={scenarios,runScenario,summarize};
+module.exports={scenarios,runScenario,summarize,controllerPolicies};

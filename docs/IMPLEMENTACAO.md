@@ -1,5 +1,7 @@
 # Revisão da dificuldade — execução por fases
 
+Este documento preserva o histórico das seis etapas. As correções posteriores da Tríade, coerência, suprimentos, sinalização e validação estão no início da [auditoria atualizada](AUDITORIA-PLANEJAMENTO.md); seus valores substituem os das etapas históricas abaixo.
+
 A implementação avança uma fase por vez. Ao concluir cada fase, o trabalho para e aguarda o usuário responder **Continue** antes de iniciar a seguinte. Os parâmetros são pontos iniciais de balanceamento; simulações verificam viabilidade e partidas humanas verificam o desafio e a diversão.
 
 ## Fase 1 — Arena, controles e métricas — concluída

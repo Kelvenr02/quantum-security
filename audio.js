@@ -21,6 +21,7 @@ const ORBITAL_CUES = Object.freeze({
   correction: { notes: [392, 587, 784], gain: .09, interval: .2, duration: .3 },
   regenReady: { notes: [330, 494, 660], gain: .075, interval: .2, duration: .3 },
   compromised: { notes: [220, 207, 220, 207], gain: .10, interval: .4, duration: .5, duck: .7 },
+  bossEntry: { notes: [196, 247, 294, 392], gain: .10, interval: .4, duration: .5, duck: .4 },
   interference: { notes: [196, 294, 196], gain: .075, interval: .5, duration: .36, duck: .4 },
   defeat: { notes: [392, 330, 262, 196], gain: .11, interval: .5, duration: .7 },
   victory: { notes: [523, 659, 784, 1047], gain: .12, interval: .5, duration: .65 }

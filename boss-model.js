@@ -22,7 +22,7 @@ const quantumBosses = [
     instructions:[
       'Mire nos núcleos ATIVOS: os dois das pontas abrem antes do núcleo do meio.',
       'Recolha a cápsula H que cai. Ela faz a nave atirar também nas duas trilhas vizinhas.',
-      'Os contornos azuis mostram para onde os núcleos vão mudar. Prepare o movimento e desvie de A/B.'
+      'Os núcleos se juntam e se separam. Siga os contornos azuis e troque de corredor entre A e B.'
     ],
     science:'H pode preparar uma superposição de estados. Três alvos e disparos simultâneos são uma metáfora de jogo, não a leitura simultânea de resultados de um qubit.' },
   { name:'Gêmeos de Bell', concept:'Entrelaçamento · H + CNOT', hp:[16,16],
@@ -36,9 +36,9 @@ const quantumBosses = [
   { name:'Devorador de Coerência', concept:'Interação com o ambiente', hp:[20],
     objective:'Destrua o núcleo C com coerência de 50% ou mais.',
     instructions:[
-      'Fique na faixa verde para recuperar coerência. Abaixo de 50%, seus tiros não causam dano.',
-      'Dentro da faixa, alinhe a nave com o núcleo C quando ele estiver ATIVO.',
-      'O contorno azul mostra a próxima faixa verde. Acompanhe a mudança e desvie de A/B/C.'
+      'Na faixa verde, carregue a coerência até perto de 100%. Abaixo de 50%, seus tiros não causam dano.',
+      'Saia da faixa para mirar no C ATIVO. A coerência cai: faça uma investida e volte para recuperar.',
+      'Desvie de A/B/C. O contorno azul anuncia a faixa verde do próximo ciclo.'
     ],
     science:'Interações com o ambiente podem degradar coerência. A zona de estabilização representa controle do ruído; não é uma região física que restaura automaticamente estados quânticos.' },
   { name:'Guardião da Síndrome', concept:'Correção de erros · auxiliares', hp:[5,5,5],
@@ -61,7 +61,7 @@ const quantumBosses = [
     objective:'Vença os 3 estágios da nave-mãe.',
     instructions:[
       '1º estágio: mire no BELL ATIVO com QBER abaixo de 9%. Use R no RESPIRO se precisar renovar.',
-      '2º estágio: siga a faixa verde para ter 50% de coerência ou mais. Mire nos H ATIVOS e recolha a cápsula H.',
+      '2º estágio: recupere coerência na faixa verde; saia para atacar os H com 50% ou mais e volte. Recolha H.',
       '3º estágio: mire no módulo + ATIVO. Troque de trilha para escapar de A, B e C.'
     ],
     science:'Sistemas quânticos combinam preparação, operações, medições e controle de erros. O combate reúne analogias desses recursos; não executa um algoritmo ou protocolo quântico real.' }
@@ -92,7 +92,10 @@ class QuantumBoss {
   get syndrome(){return this.phase===6||(this.phase===8&&this.stage===2);}
   get hadamard(){return this.phase===3||(this.phase===8&&this.stage===1);}
   get zone(){return [...this.zonePlans].reverse().find(z=>this.elapsed>=z.at)?.lanes||this.zonePlans[0].lanes;}
-  get nextZone(){return this.stabilizing?this.zonePlans.find(z=>this.elapsed>=z.announceAt&&this.elapsed<z.at):undefined;}
+  get nextZone(){
+    const plan=this.stabilizing?this.zonePlans.find(z=>this.elapsed>=z.announceAt&&this.elapsed<z.at):undefined;
+    return plan&&this.enraged?{...plan,lanes:[plan.lanes[0]]}:plan;
+  }
   get openingStart(){return this.windows[0][0];}
   get openingEnd(){return this.windows.at(-1)[1];}
   get windowIndex(){return this.windows.findIndex(([from,to])=>this.elapsed>=from&&this.elapsed<to);}
@@ -100,8 +103,19 @@ class QuantumBoss {
   get recoveryStart(){return Math.max(...this.pulses.map(p=>p.at-this.roundStart))+450;}
   get selection(){return this.pressure&&this.elapsed>=4600?this.selections[1]:this.selections[0];}
   get nextSelection(){return this.syndrome&&this.pressure&&this.elapsed>=3300&&this.elapsed<4600?this.selections[1]:null;}
-  get triadCenter(){return this.phase===8?this.zone[0]:this.pressure&&this.elapsed>=4400?this.centers[1]:this.centers[0];}
-  get nextTriadCenter(){return this.phase===3&&this.pressure&&this.elapsed>=2400&&this.elapsed<4400?this.centers[1]:null;}
+  get attackLane(){
+    const left=Math.min(...this.zone),right=Math.max(...this.zone);
+    const gap=this.hadamard?3:2;
+    return left<(this.laneCount-1)/2?Math.min(this.laneCount-2,right+gap):Math.max(1,left-gap);
+  }
+  get triadCenter(){return this.phase===8?this.attackLane:this.triadPlans[this.pressure&&this.elapsed>=4400?1:0];}
+  get nextTriadCenter(){return this.phase===3&&this.pressure&&this.elapsed>=2400&&this.elapsed<4400?this.triadPlans[1]:null;}
+  formation(center,spread){
+    const step=spread?2:1,mid=Math.max(step,Math.min(this.laneCount-1-step,center));
+    return [mid-step,mid,mid+step];
+  }
+  get triadLanes(){return this.formation(this.triadCenter,this.phase===3&&(this.round+(this.pressure&&this.elapsed>=4400?1:0))%2===1);}
+  get nextTriadLanes(){return this.nextTriadCenter===null?null:this.formation(this.nextTriadCenter,(this.round+1)%2===1);}
   prepareRound(playerLane) {
     // Mudanças de comportamento ficam para o ciclo seguinte, com novos avisos.
     this.pressure=this.phase===8||this.enraged;this.slotHits={};this.lastFeedback=-1000;
@@ -111,14 +125,23 @@ class QuantumBoss {
     const first=this.lane(this.round%2?5:1),second=this.lane(this.round%2?1:5),middle=this.lane(3);
     this.centers=[first,second,middle];
     if(this.phase===1)this.centers=[this.lane([1,5,3][Math.max(0,this.relay)]),this.opposite(this.lane([1,5,3][Math.max(0,this.relay)]))];
-    if(this.phase===3){const center=this.lane([3,2,4][this.round%3]);this.centers=[center,this.clamp(center+(center<=middle?2:-2))];}
+    if(this.phase===3){
+      const center=this.lane([3,2,4][this.round%3]);this.triadPlans=[center,this.clamp(center+(center<=middle?2:-2))];
+      // A e B exigem corredores distintos, mesmo antes da metade da vida.
+      this.centers=[first,second];
+    }
     if(this.syndrome)this.centers=[this.lane([1,3,5][this.selections[0]]),this.lane([1,3,5][this.selections[1]]),middle];
-    const zoneCenter=this.lane([1,4,2,5,3][this.round%5]);
+    const zoneAt=round=>{
+      let center=this.lane([1,4,2,5,3][round%5]);
+      // Em sete trilhas, o centro não deixa espaço para três alvos separados de H.
+      if(this.hadamard&&center<4&&this.laneCount-1-center<4)center--;
+      return center;
+    };
+    const zoneCenter=zoneAt(this.round);
     const zoneLanes=center=>this.pressure?[center]:[center,this.clamp(center+(center<middle?1:-1))];
     this.zonePlans=[{at:0,announceAt:0,lanes:zoneLanes(zoneCenter)},
-      {at:3100,announceAt:1100,lanes:zoneLanes(this.opposite(zoneCenter))}];
-    if(this.pressure)this.zonePlans.push({at:5100,announceAt:3100,lanes:zoneLanes(middle)});
-    if(this.stabilizing)this.centers=this.zonePlans.map(z=>z.lanes[0]);
+      {at:this.period,announceAt:this.period-2000,lanes:zoneLanes(zoneAt(this.round+1))}];
+    if(this.stabilizing)this.centers=[this.zone[0],this.attackLane,this.zone[0]];
     this.windows=this.bell?[[2600,4050],[4650,6550]]:
       this.phase===7?[[2600,3650],[4450,6550]]:
       this.phase===2?(this.pressure?[[3000,4200],[4800,6700]]:[[3000,5800]]):
@@ -130,7 +153,7 @@ class QuantumBoss {
       announceAt:this.roundStart+Math.max(0,at-2400),lanes:this.lanes.filter(l=>!this.corridor(center).includes(l)),fired:false});
     add(this.centers[0],this.warning,'A');
     if(this.phase===2){const p=this.pulses[0];p.lockAt=this.roundStart+650;p.announceAt=this.roundStart;p.lanes=this.corridor(playerLane);p.tracking=true;}
-    const double=this.stabilizing||this.bell||this.phase===7||this.pressure;
+    const double=this.phase===3||this.stabilizing||this.bell||this.phase===7||this.pressure;
     if(double)add(this.centers[1],this.warning+1800,'B');
     if((this.stabilizing||this.phase===7||(this.phase===8&&this.stage===2))&&this.pressure)add(this.centers[2],this.warning+3800,'C');
     this.events.push({type:'round',pressure:this.pressure,stage:this.stage});
@@ -149,7 +172,8 @@ class QuantumBoss {
     if(this.stabilizing){
       const position=player.position??player.lane;
       this.inZone=position>=Math.min(...this.zone)-.4&&position<=Math.max(...this.zone)+.4;
-      this.coherence=Math.max(0,Math.min(100,this.coherence+(this.inZone?26:this.pressure?-26:-20)*elapsed/1000));
+      // Reserva para uma travessia, investida e retorno; recuperar não permite atirar no alvo.
+      this.coherence=Math.max(0,Math.min(100,this.coherence+(this.inZone?34:this.pressure?-16:-14)*elapsed/1000));
     }
     for(const pulse of this.pulses){
       if(pulse.tracking){pulse.lanes=this.corridor(player.lane);if(this.time>=pulse.lockAt){pulse.tracking=false;this.events.push({type:'lock'});}}
@@ -165,8 +189,7 @@ class QuantumBoss {
       const real=(this.round+(this.pressure&&this.elapsed>=4400?1:0))%3,revealed=this.elapsed>=2400;
       nodes=[1,3,5].map((lane,i)=>({id:i===real?0:-1,lane:this.lane(lane),hp:this.health,open:open&&i===real,label:revealed?(i===real?'✓':'×'):'?',decoy:revealed&&i!==real}));
     }else if(this.hadamard){
-      const center=this.triadCenter;
-      nodes=[0,1,2].map(i=>({id:this.phase===8?0:i,lane:this.clamp(center-1+i),hp:this.phase===8?this.health:this.hp[i],
+      nodes=this.triadLanes.map((lane,i)=>({id:this.phase===8?0:i,lane,hp:this.phase===8?this.health:this.hp[i],
         open:open&&coherent&&(this.phase===8||(i===1?this.elapsed>=4000:this.elapsed<4500)),label:'H'}));
     }else if(this.bell){
       const side=(this.round+(this.elapsed>=4400?1:0))%2,cap=this.pressure?2:3;
@@ -177,7 +200,7 @@ class QuantumBoss {
         open:open&&i===this.selection&&(this.phase!==8||(this.slotHits[this.windowIndex]||0)<3),label:this.phase!==8&&this.hp[i]<=0?'✓':i===this.selection?'+':'○',decoy:i!==this.selection}));
     }else{
       const index=this.phase===7?(this.pressure&&this.elapsed>=5400?2:this.elapsed>=4200?1:0):0;
-      nodes=[{id:0,lane:this.stabilizing?this.zone[0]:this.centers[index],hp:this.health,open:open&&coherent,label:this.phase===7?'−':'C'}];
+      nodes=[{id:0,lane:this.stabilizing?this.attackLane:this.centers[index],hp:this.health,open:open&&coherent,label:this.phase===7?'−':'C'}];
     }
     return nodes.map(n=>({...n,open:n.open&&n.hp>0}));
   }
@@ -210,7 +233,7 @@ class QuantumBoss {
         (this.pressure&&this.elapsed<4400?' · nova varredura em '+((4400-this.elapsed)/1000).toFixed(1)+' s':'');
     }
     if(this.stabilizing)return (this.phase===8?'2/3 · ':'')+'COERÊNCIA '+Math.round(this.coherence)+'% · '+
-      (this.coherence<50?'fique na faixa verde até 50%.':'fique na faixa verde; mire no '+(this.hadamard?'H':'C')+' ATIVO.')+
+      ((this.inZone?this.coherence<90:this.coherence<65)?'recupere na faixa verde até perto de 100%.':'mire no '+(this.hadamard?'H':'C')+' ATIVO fora da faixa; depois volte.')+
       (this.nextZone?' Muda em '+((this.nextZone.at-this.elapsed)/1000).toFixed(1)+' s.':'');
     if(this.syndrome){
       if(this.phase!==8&&this.hp[this.selection]<=0)return 'MÓDULO CORRIGIDO · desvie até aparecer outro +.';

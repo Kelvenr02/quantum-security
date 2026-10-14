@@ -64,6 +64,18 @@ function makeCloud(lane,y) {
   return {x, baseX:x, y, radius:Math.min(38,laneWidth*.35), speed:flightSpeed(cloudSpeed+(level-1)*.08), born:gameTime, sway:!!phaseConfig().movingClouds};
 }
 
+function cloudXAt(c,at) {
+  return c.sway?Math.max(c.radius,Math.min(width-c.radius,c.baseX+Math.sin((at-c.born)/900)*laneWidth*.65)):c.x;
+}
+function drawCloudForecast(c) {
+  if(!c.sway)return;
+  const futureX=cloudXAt(c,gameTime+600),direction=Math.sign(futureX-c.x);
+  ctx.save();ctx.strokeStyle='#bb9bf488';ctx.lineWidth=1;ctx.setLineDash([3,5]);
+  ctx.beginPath();ctx.moveTo(c.x,c.y);ctx.lineTo(futureX,c.y);ctx.stroke();ctx.setLineDash([]);
+  if(Math.abs(futureX-c.x)>4){ctx.beginPath();ctx.moveTo(futureX-direction*5,c.y-4);ctx.lineTo(futureX,c.y);ctx.lineTo(futureX-direction*5,c.y+4);ctx.stroke();}
+  ctx.beginPath();ctx.arc(futureX,c.y,c.radius*.45,0,Math.PI*2);ctx.stroke();ctx.restore();
+}
+
 // Seleciona uma trilha alcançável e evita riscos já visíveis no instante de coleta.
 function pickupLanes() {
   const distance=(shipY+30)/flightSpeed(2.8),arrival=distance*FRAME_MS,origin=occupiedShipLane();
@@ -166,7 +178,12 @@ function drawAsteroidQuantum(a) {
     ctx.restore();
   }
   if(a.splittable){
-    ctx.save();ctx.strokeStyle='#eeaa72';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(a.x-5,a.y-a.radius);ctx.lineTo(a.x+5,a.y);ctx.lineTo(a.x-5,a.y+a.radius);ctx.stroke();
+    ctx.save();ctx.strokeStyle='#eeaa7277';ctx.lineWidth=1;ctx.setLineDash([5,5]);
+    const left=Math.max(3,a.x-laneWidth*.45),right=Math.min(width-3,a.x+laneWidth*.45);
+    ctx.beginPath();ctx.moveTo(left,a.splitY);ctx.lineTo(right,a.splitY);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#eeaa72';ctx.font='8px Consolas,monospace';ctx.textAlign='center';
+    ctx.fillText('DIVIDE AQUI',Math.max(37,Math.min(width-37,a.x)),a.splitY+(height<620?12:-6));
+    ctx.strokeStyle='#eeaa72';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(a.x-5,a.y-a.radius);ctx.lineTo(a.x+5,a.y);ctx.lineTo(a.x-5,a.y+a.radius);ctx.stroke();
     ctx.font='9px Consolas,monospace';ctx.textAlign='center';ctx.fillStyle='#eeaa72';ctx.fillText('FRAGMENTÁVEL',Math.max(38,Math.min(width-38,a.x)),a.y-a.radius-12);ctx.restore();
   }
   if (!a.armored && a.group === null) return;

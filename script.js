@@ -624,8 +624,8 @@ function update(ts) {
     const holdY=shipY-16;
     if(c.sway&&!c.heldAt&&c.y+c.speed*dt>=holdY){c.y=holdY;c.heldAt=gameTime;}
     else if(!c.heldAt||gameTime-c.heldAt>=1200)c.y+=c.speed*dt;
-    if (c.sway) c.x = Math.max(c.radius, Math.min(width-c.radius, c.baseX + Math.sin((gameTime-c.born)/900)*laneWidth*.65));
-    drawCloud(c);
+    if (c.sway) c.x = cloudXAt(c,gameTime);
+    drawCloud(c);drawCloudForecast(c);
     if (!noImpact() && shipTouches(c,previousY,previousShipX,shipX,c.radius+shipSize*.7,previousX)) {
       clouds.splice(i, 1); campaignMetrics?.count('cloudContacts');gameAudio.sfx('noise', { pan: audioPan(c.x) }); addQber(cloudQber,'cloud'); if (isCompromised) break; continue;
     }

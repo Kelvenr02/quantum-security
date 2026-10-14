@@ -24,6 +24,7 @@ function beginBoss(retrying=false) {
   if(!isRegen){shipPilot.reset(occupiedShipLane());currentLane=shipPilot.lane;}
   if(!retrying)campaignMetrics?.event('waveEnd',{score,qber});campaignMetrics?.setContext(level,'boss');
   boss={model:new QuantumBoss(level,occupiedShipLane(),numLanes),status:'briefing',wonAt:0,hullContacts:0};
+  campaignMetrics?.count('bossAttempts');boss.attempt=campaignMetrics?.segment.counts.bossAttempts||1;
   isStageBriefing=true;cancelAnimationFrame(rafId);
   lasers=[];asteroids=[];drones=[];scout=null;clouds=[];spies=[];pickups=[];particles=[];interferenceFront=null;
   updateShieldHUD();bossCheckpointData=captureCheckpoint('boss');
@@ -46,7 +47,11 @@ function bossSupply() {
   if(pickups.length||boss.supplyRound===m.round)return;
   boss.supplyRound=m.round;
   const type=phase===6||(phase===8&&m.stage!==1)?'correction':'hadamard';
-  const lane=type==='hadamard'?m.triadCenter:m.syndrome?m.lane([1,3,5][m.selection]):m.centers[0];
+  const targets=m.targets().map(n=>n.lane);
+  const safe=m.lanes.filter(l=>!m.pulses[0].lanes.includes(l));
+  const choices=safe.filter(l=>!targets.includes(l)&&(!m.stabilizing||!m.zone.includes(l))&&l!==occupiedShipLane());
+  const candidates=choices.length?choices:safe.filter(l=>l!==occupiedShipLane());
+  const lane=(candidates.length?candidates:safe).sort((a,b)=>Math.abs(a-occupiedShipLane())-Math.abs(b-occupiedShipLane()))[0];
   const radius=Math.min(17,laneWidth*.3);
   pickups.push({type,x:(lane+.5)*laneWidth,y:shipY-(height<620?65:140),radius,speed:flightSpeed(2.8),releaseAt:gameTime+resourceRules.bossBeaconMs});
   campaignMetrics?.count('pickupsSpawned');
@@ -55,7 +60,7 @@ function bossSupply() {
 function beginBossBattle() {
   campaignMetrics?.event('bossStart',{qber});
   protectBossRegen(boss.model);
-  boss.status='fighting';gameAudio.setScene('boss',level);gameAudio.sfx('compromised');
+  boss.status='fighting';gameAudio.setScene('boss',level);gameAudio.sfx('bossEntry');
   $('bossHud').hidden=false;$('phaseHud').hidden=true;updateBossHUD();
 }
 function updateBossHUD() {
@@ -90,6 +95,9 @@ function updateBossBattle(dt,shipX) {
     }
   }
   updateBossChannel();
+  const opening=m.opening?{attempt:boss.attempt,stage:m.stage+1,round:m.round,window:m.windowIndex,
+    fromMs:m.roundStart+m.windows[m.windowIndex][0],toMs:m.roundStart+m.windows[m.windowIndex][1]}:null;
+  campaignMetrics?.bossOpening(opening);
   targetLoop: for(const node of m.targets(qber)) {
     const x=(node.lane+.5)*laneWidth,y=bossArenaY(),radius=Math.min(34,laneWidth*.38);
     for(let i=lasers.length-1;i>=0;i--) {
@@ -99,6 +107,7 @@ function updateBossBattle(dt,shipX) {
         const before=m.health,previousStage=m.stage;
         if(m.hit(node.id,qber,node.lane)){
           campaignMetrics?.count('bossHits');campaignMetrics?.count('bossDamage',before-m.health);gameAudio.sfx('impact',{pan:audioPan(x)});
+          campaignMetrics?.bossOpening(opening,before-m.health);
           if(m.stage!==previousStage){
             boss.channelPulse=null;boss.jamRound=-1;gameAudio.sfx('phase');campaignMetrics?.event('bossStage',{stage:m.stage+1});
             // Um disparo em voo pode mudar o estágio enquanto R imobiliza a nave.
@@ -140,6 +149,8 @@ function drawBoss() {
   ctx.save();
   if(m.stabilizing && !m.complete) {
     for(const lane of m.zone) {ctx.fillStyle='#6ce8cd0d';ctx.fillRect(lane*laneWidth,y+40,laneWidth,earthTop-y-40);ctx.strokeStyle='#6ce8cd60';ctx.strokeRect(lane*laneWidth+3,shipY-45,laneWidth-6,90);}
+    ctx.fillStyle='#9de8d5';ctx.font=(height<620?'8':'10')+'px Consolas,monospace';ctx.textAlign='center';
+    ctx.fillText('RECUPERAR',(m.zone[0]+.5)*laneWidth,shipY-50);
   }
   const upcoming=m.pulses.filter(p=>m.time>=p.announceAt&&p.at-m.time>=-450);
   const nearest=upcoming.find(p=>!p.fired);
@@ -176,7 +187,7 @@ function drawBoss() {
   }
   if(m.nextTriadCenter!==null){
     ctx.strokeStyle='#91c7ff77';ctx.setLineDash([3,5]);
-    for(const offset of [-1,0,1]){const x=(m.nextTriadCenter+offset+.5)*laneWidth;ctx.beginPath();ctx.arc(x,y,radius+4,0,Math.PI*2);ctx.stroke();}
+    for(const lane of m.nextTriadLanes){const x=(lane+.5)*laneWidth;ctx.beginPath();ctx.arc(x,y,radius+4,0,Math.PI*2);ctx.stroke();}
     ctx.setLineDash([]);
   }
   for(const n of nodes) {

@@ -102,4 +102,26 @@ test('Imobilidade não completa a campanha, mesmo com disparos automáticos e R 
   }
 });
 
+test('Ignorar o canal não evita ruído nem compensa inversões; renovar no alerta é imediato',()=>{
+  for(const qber of [0,10]){
+    const g=makeGame();g.run('qber='+qber+';clouds=[makeCloud(4,shipY-30)]');
+    g.run('('+flyCampaign.toString()+')(519,1,true,{channel:"ignore"})');
+    assert.equal(g.run('currentLane'),4);assert.equal(g.run('isRegen'),false);
+  }
+  for(const channel of ['ignore','alert']){
+    const g=makeGame();g.run('qber=8;isCompromised=true;compEnd=10000;clouds=[];asteroids=[{x:6.5*laneWidth,y:0,radius:10,hp:1,speed:1,group:null}]');
+    g.run('('+flyCampaign.toString()+')(519,1,true,{channel:'+JSON.stringify(channel)+'})');
+    if(channel==='ignore')assert.equal(g.run('currentLane'),3,'Comando invertido não é compensado');
+    else assert.equal(g.run('isRegen'),true,'R começa sem aguardar respiro');
+  }
+});
+
+test('Ignorar emissores remove drones das prioridades mesmo sem meteoros no campo',()=>{
+  for(const strategy of ['balanced','ignoreEmitters']){
+    const g=makeGame();g.run('const originalReset=resetEncounters;resetEncounters=(...args)=>{originalReset(...args);drones=[{x:6.5*laneWidth,y:200,radius:13,hp:2,expiresAt:6500,noisePerSecond:.7}];}');
+    g.run('('+flyCampaign.toString()+')(519,1,true,{strategy:'+JSON.stringify(strategy)+'})');
+    assert.equal(g.run('currentLane'),strategy==='balanced'?5:4);
+  }
+});
+
 console.log(JSON.stringify({passed:results.length,tests:results},null,2));

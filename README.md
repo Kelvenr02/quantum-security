@@ -52,6 +52,8 @@ Em paisagem baixa, a velocidade considera o espaço disponível acima da base. G
 
 Os confrontos substituem as ondas comuns durante a luta. Cada salva tem pelo menos 2 segundos de aviso e deixa duas ou mais trilhas livres. Os corredores mudam entre A/B e, em alguns confrontos, C. Aberturas podem coincidir com a preparação do próximo ataque: escolha entre atirar mais e iniciar a fuga. As explicações da Dr. Íris e as pausas congelam o tempo.
 
+Na Tríade, A/B exigem trocar de corredor, os núcleos alternam formações próximas/separadas e a cápsula H exige desvio. No chefe 5 e no estágio H final, recupere coerência na faixa verde, saia para atacar e volte antes de cair abaixo de 50%. A linha “DIVIDE AQUI” marca a fragmentação dos meteoros; setas nas nuvens móveis mostram sua projeção lateral.
+
 Os oito chefes têm padrões próprios: relés validados por ciclo; sondas com nova varredura; núcleos H com aberturas distintas; Bell alternando lados; zonas de coerência anunciadas; síndromes que mudam; rotas A/B/C; e três combinações na nave-mãe. A pressão muda com o avanço da luta, preservando avisos já emitidos.
 
 Antes de cada chefe, o briefing mostra o objetivo e três passos para vencer, com os mesmos símbolos usados na arena. Durante a luta, o painel indica o alvo, as contagens de A/B/C e os motivos de bloqueio. A explicação científica pode ser expandida no briefing.
@@ -116,15 +118,17 @@ Campanha com pilotagem simulada e colisões reais: node tests/balance.cjs
 
 Margens de reação, rotação e ritmo: node tests/fairness.cjs
 
-Matriz de 46 cenários e comparação de estratégias: node tools/analyze-balance.cjs --output tmp/balanceamento.json
+Vitórias estacionárias: node tests/stationary.cjs
+
+Matriz de 58 cenários e comparação de estratégias: node tools/analyze-balance.cjs --output tmp/balanceamento.json
 
 Reconstruir o bundle offline a partir dos arquivos preparados: node tools/build-audio.cjs
 
 Os testes do treinamento verificam intercepção, novas tentativas, regeneração, pausa e reinício. Os da abertura cobrem ações obrigatórias, releitura, medição com resultado zero, retorno ao menu e início único da campanha. Todas as suítes são executadas no GitHub Actions.
 
-As suítes somam 162 verificações e incluem seis campanhas de regressão. A matriz ampliada teve 20 conclusões em 20 combinações de tela/semente com o piloto equilibrado; atrasos, perdas de comando e outras estratégias também foram comparados. Os controladores consultam o estado interno: demonstram viabilidade e detectam regressões, sem medir a dificuldade ou a diversão para uma pessoa. Consulte [resultados, durações e limites da análise](docs/BALANCEAMENTO.md).
+As suítes somam 167 verificações e incluem seis campanhas de regressão, além de 576 confrontos estacionários sem vitória. A matriz atual de 58 cenários teve 20 conclusões em 20 combinações de tela/semente com o piloto equilibrado, em 539–624 s; as políticas de ignorar o canal, renovar no alerta e ignorar emissores também foram comparadas. Os controladores consultam o estado interno: demonstram viabilidade e detectam regressões, sem medir a dificuldade ou a diversão para uma pessoa. Consulte [resultados, durações e limites da análise](docs/BALANCEAMENTO.md).
 
-Para analisar uma partida no console: `quantumDiagnostics.snapshot()` ou `quantumDiagnostics.export()`. O diagnóstico distingue impactos recebidos de reparos e registra QBER, regeneração, movimento e ameaças por fase/chefe. Os registros não são enviados nem persistidos. Consulte o [detalhamento das métricas e validações](docs/IMPLEMENTACAO.md).
+Para analisar uma partida no console: `quantumDiagnostics.snapshot()` ou `quantumDiagnostics.export()`. O diagnóstico distingue impactos recebidos de reparos e registra QBER, regeneração, movimento, ameaças e dano/acertos por abertura de chefe (incluindo oportunidades sem dano). Os registros não são enviados nem persistidos. Consulte o [detalhamento das métricas e validações](docs/IMPLEMENTACAO.md).
 
 ## Contexto científico
 

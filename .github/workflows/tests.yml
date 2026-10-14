@@ -22,7 +22,7 @@ jobs:
           node-version: '24'
       - name: Verificar a sintaxe dos scripts
         run: |
-          for file in arena.js channel.js resources.js encounters.js metrics.js audio.js training.js story.js graphics.js phases.js boss-model.js bosses.js script.js quantum.js presentation.js tools/build-audio.cjs tools/analyze-balance.cjs tests/fairness.cjs tests/resources.cjs tests/encounters.cjs tests/channel.cjs tests/arena.cjs tests/gameplay.cjs tests/bosses.cjs tests/balance.cjs tests/training.cjs tests/story.cjs tests/audio.cjs; do
+          for file in arena.js channel.js resources.js encounters.js metrics.js audio.js training.js story.js graphics.js phases.js boss-model.js bosses.js script.js quantum.js presentation.js tools/build-audio.cjs tools/analyze-balance.cjs tests/stationary.cjs tests/fairness.cjs tests/resources.cjs tests/encounters.cjs tests/channel.cjs tests/arena.cjs tests/gameplay.cjs tests/bosses.cjs tests/balance.cjs tests/training.cjs tests/story.cjs tests/audio.cjs; do
             node --check "$file"
           done
       - name: Verificar as mecânicas e a campanha
@@ -43,6 +43,8 @@ jobs:
         run: node tests/balance.cjs
       - name: Verificar margens de reação, rotação e ritmo
         run: node tests/fairness.cjs
+      - name: Impedir vitórias estacionárias em todos os chefes
+        run: node tests/stationary.cjs
       - name: Verificar a abertura e a transição para a missão
         run: node tests/story.cjs
       - name: Verificar o áudio e os arquivos locais
