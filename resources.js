@@ -3,6 +3,7 @@ const resourceRules=Object.freeze({hadamardMs:5000,hadamardMaxMs:7000,correction
   waveEarlyMs:8500,waveLateMs:8000,bossBeaconMs:900,repair:1,cleanRepair:1});
 let bossCheckpointData=null,lastFailure=null,lastReward=null,combatNotice=null;
 let lastHUDChannel='safe',lastHUDReady=true;
+let developerReviveState=null;
 
 function captureCheckpoint(kind='wave') {
   return Object.freeze({kind,level,score,combatScore,missed,quantumCollected,seed:campaignSeed,
@@ -25,6 +26,7 @@ function protectBossRegen(m) {
 }
 function resetResourceFeedback() {
   combatNotice=null;lastFailure=null;lastReward=null;
+  developerReviveState=null;$('btnDevRevive').hidden=true;
   lastHUDChannel=channelStateName();lastHUDReady=!isRegen&&gameTime>=keyReadyAt;
   $('phaseFeedback').hidden=true;$('bossFeedback').hidden=true;$('retrySummary').hidden=true;
 }
@@ -53,6 +55,29 @@ function retryCheckpoint() {
   startGame(saved);phaseCheckpointData=wave;
   beginBoss(true);
   campaignMetrics?.event('checkpointRetry',{kind:'boss'});
+}
+function developerRevive() {
+  if(isPlaying||finale||!lastFailure||!developerReviveState||$('btnDevRevive').disabled)return;
+  const saved=developerReviveState,cause=lastFailure.cause;
+  developerReviveState=null;boss=saved.boss;lastFailure=null;
+  missed=0;hullShield=1;isRegen=false;isCompromised=false;regenEnd=0;compEnd=0;keyReadyAt=gameTime;
+  hullInvulUntil=gameTime+3000;invulUntil=gameTime+3000;criticalGraceUntil=gameTime+3000;
+  if(campaignMetrics){
+    campaignMetrics.data.outcome='playing';campaignMetrics.data.developerAssisted=true;
+    campaignMetrics.count('developerRevives');campaignMetrics.event('developerRevive',{cause});
+  }
+  setQber(0,'developerRevive');clearMovementInput();
+  isPlaying=true;isPaused=false;isStageBriefing=false;combatNotice=null;
+  lastHUDChannel='safe';lastHUDReady=true;
+  $('ui').style.display='none';$('btnDevRevive').hidden=true;
+  $('btnRetry').hidden=true;$('btnRetryPhase').hidden=true;$('retrySummary').hidden=true;
+  $('pauseOverlay').hidden=true;$('phaseOverlay').hidden=true;
+  $('pauseBtn').disabled=false;$('pauseBtn').innerHTML='Ⅱ <span>PAUSAR</span>';
+  $('bossHud').hidden=!boss;$('phaseHud').hidden=!!boss;
+  gameAudio.stopEffects();gameAudio.setPaused('game',false);gameAudio.setScene(boss?'boss':'phase',level);gameAudio.sfx('confirm');
+  updateShieldHUD();updateHUD();refreshCombatHUD();if(boss)updateBossHUD();
+  notifyCombat('DESENVOLVEDOR · renascido com proteção por 3 s',2);
+  canvas.focus({preventScroll:true});lastTs=0;cancelAnimationFrame(rafId);rafId=requestAnimationFrame(update);
 }
 function defeatAdvice(cause) {
   if(cause.kind==='earth')return 'Priorize os meteoros mais próximos da Terra. Drones e ruído podem esperar se um impacto encerrar a missão.';

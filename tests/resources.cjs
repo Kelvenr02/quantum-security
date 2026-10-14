@@ -118,4 +118,33 @@ test('Derrota explica risco físico e mostra exatamente os recursos da retomada'
   assert.match(g.elements.get('uiDesc').innerHTML,/salva C.*R não protege/);assert.match(g.elements.get('retrySummary').textContent,/7\/12 impactos.*escudo 0.*QBER 8.0%.*4.2 s/);
   assert.equal(g.run('lastFailure.mode'),'boss');assert.equal(g.run('campaignMetrics.data.outcome'),'defeat');
 });
+test('Renascimento de desenvolvedor preserva chefe, dano e relógio sem reiniciar a fase',()=>{
+  const g=makeGame();g.run('level=8;score=1000;combatScore=777;beginBoss();continuePhase();boss.model.hp=[18];boss.model.time=3700;let savedBoss=boss;gameOver("teste",{kind:"bossSalvo",attack:"B"})');
+  assert.equal(g.elements.get('btnDevRevive').hidden,false);g.run('developerRevive()');
+  assert.equal(g.run('isPlaying&&boss===savedBoss'),true);assert.equal(g.run('boss.model.health'),18);
+  assert.equal(g.run('boss.model.time'),3700);assert.equal(g.run('boss.model.stage'),1);
+  assert.equal(g.run('level'),8);assert.equal(g.run('score'),1000);assert.equal(g.run('combatScore'),777);
+  assert.equal(g.elements.get('bossHud').hidden,false);assert.equal(g.frames.size,1);
+  g.run('developerRevive()');assert.equal(g.frames.size,1);assert.equal(g.run('campaignMetrics.data.counts.developerRevives'),1);
+});
+
+test('Renascimento recupera Terra, escudo e canal e preserva o progresso das ondas',()=>{
+  const g=makeGame();g.run('level=5;resetEncounters();score=500;let director=encounterDirector;encounterDirector.resolved=3;gameTime=9000;missed=12;hullShield=0;qber=13;isCompromised=true;keyReadyAt=20000;gameOver("teste",{kind:"earth"});developerRevive()');
+  assert.equal(g.run('isPlaying&&boss===null&&encounterDirector===director'),true);assert.equal(g.run('encounterDirector.resolved'),3);
+  assert.equal(g.run('score'),500);assert.equal(g.run('gameTime'),9000);assert.equal(g.run('missed'),0);
+  assert.equal(g.run('hullShield'),1);assert.equal(g.run('qber'),0);assert.equal(g.run('isCompromised||isRegen'),false);
+  assert.equal(g.run('keyReadyAt'),9000);assert.equal(g.run('hullInvulUntil'),12000);
+  assert.equal(g.run('campaignMetrics.data.outcome'),'playing');assert.equal(g.run('campaignMetrics.data.developerAssisted'),true);
+  g.run('takeHullHit("ainda protegido",100)');assert.equal(g.run('hullShield'),1);
+});
+
+test('Renascimento só aparece na derrota, aceita usos repetidos e some ao reiniciar ou vencer',()=>{
+  const g=makeGame();assert.equal(g.elements.get('btnDevRevive').hidden,true);
+  g.run('developerRevive()');assert.equal(g.run('campaignMetrics.data.developerAssisted'),undefined);
+  for(let i=0;i<2;i++){g.run('gameOver("teste");developerRevive()');assert.equal(g.run('isPlaying'),true);}
+  assert.equal(g.run('campaignMetrics.data.counts.developerRevives'),2);
+  g.run('gameOver("teste");startGame()');assert.equal(g.elements.get('btnDevRevive').hidden,true);
+  g.run('showVictory();developerRevive()');assert.equal(g.run('isPlaying'),false);assert.equal(g.elements.get('btnDevRevive').hidden,true);
+});
+
 console.log(JSON.stringify({passed:results.length,tests:results},null,2));

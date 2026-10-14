@@ -370,3 +370,7 @@
 .phase-card .boss-controls { display:grid; gap:4px; margin:0 0 18px; padding:11px 13px; border-left:2px solid #6ce8cd70; background:#081a2380; font:11px/1.5 var(--font); color:#a5c2ca; }
 #bossInstructions[hidden],#bossControls[hidden] { display:none!important; }
 @media(max-width:760px) { .boss-instructions { font-size:12px; }.phase-card .boss-controls { font-size:10px; } }
+#arcade #btnDevRevive { margin-top:16px; padding:14px 20px; background:#af2938; border:1px solid #f78b94; color:#fff; box-shadow:none; font-size:11px; }
+#arcade #btnDevRevive:not(:disabled):hover { background:#c33746; }
+#btnDevRevive[hidden] { display:none!important; }
+#ui:has(#btnRetry:not([hidden])) #btnDevRevive { order:5; }

@@ -76,7 +76,7 @@ R representa descartar o bloco anterior e preparar/validar outro no protocolo fi
 
 ## Verificação e alcance do balanceamento
 
-A validação atual soma **167 verificações de regras/integração e 576 confrontos estacionários**. `tests/bosses.cjs` cobre 30 casos de combate, abertura, coerência, suprimentos, áudio e métricas; `tests/resources.cjs` mantém os 21 casos de recursos/retomadas. `tests/fairness.cjs` tem 12 casos, incluindo 3.072 rotas e as novas políticas do piloto. `tests/stationary.cjs` verifica todos os chefes, nove posições, duas telas, com/sem escudo e R; não houve vitória parada em até 180 s.
+A validação atual soma **170 verificações de regras/integração e 576 confrontos estacionários**. `tests/bosses.cjs` cobre 30 casos de combate, abertura, coerência, suprimentos, áudio e métricas; `tests/resources.cjs` tem 24 casos de recursos/retomadas, incluindo o renascimento de desenvolvedor. `tests/fairness.cjs` tem 12 casos, incluindo 3.072 rotas e as novas políticas do piloto. `tests/stationary.cjs` verifica todos os chefes, nove posições, duas telas, com/sem escudo e R; não houve vitória parada em até 180 s.
 
 A matriz de 58 campanhas teve 20/20 conclusões equilibradas em 539–624 s, usando R 27–34 vezes. Não usar R ainda evita ruído e compensa inversões; ignorar o canal remove essas respostas e perdeu os quatro novos casos. Renovar imediatamente no alerta também perdeu quatro casos por escolher momentos inseguros; R não concede imunidade. Ignorar emissores remove drones das prioridades mesmo sem meteoros, permitindo disparos incidentais. Os quatro casos venceram com 8–11 drones escapando.
 

@@ -240,6 +240,7 @@ function endGame(title, color, html) {
   gameAudio.stopEffects(); gameAudio.setPaused('game', false);
   finale = null; isStageBriefing = false; $('phaseOverlay').hidden = true;
   boss=null;$('bossHud').hidden=true;$('btnRetry').hidden=true;$('btnRetryPhase').hidden=true;$('retrySummary').hidden=true;
+  developerReviveState=null;$('btnDevRevive').hidden=true;
   isPlaying = false; isPaused = false; $('pauseOverlay').hidden = true; cancelAnimationFrame(rafId); $('warning').style.display = 'none';
   const t = $('uiTitle'); t.innerText = title; t.style.color = color; t.style.textShadow = `0 0 10px ${color}`;
   $('uiDesc').innerHTML = html;
@@ -249,18 +250,20 @@ function endGame(title, color, html) {
     `Acima do limite, a chave é descartada e refeita. As fases também exploram <b>H, estados de Bell, decoerência, síndromes e interferência</b> por meio de mecânicas fictícias. O entrelaçamento real não transmite informação mais rápido que a luz.`;
   const b = $('btnStart');
   b.innerText = "Jogar Novamente"; b.disabled = true; b.blur();
-  $('btnRetry').disabled=true;$('btnRetryPhase').disabled=true;
-  setTimeout(() => { b.disabled = false;$('btnRetry').disabled=false;$('btnRetryPhase').disabled=false; }, 800);
+  $('btnRetry').disabled=true;$('btnRetryPhase').disabled=true;$('btnDevRevive').disabled=true;
+  setTimeout(() => { b.disabled = false;$('btnRetry').disabled=false;$('btnRetryPhase').disabled=false;$('btnDevRevive').disabled=false; }, 800);
   $('missionInstructions').hidden = true; $('pauseBtn').disabled = true;
   $('ui').style.display = 'flex';
 }
 function gameOver(reason,cause={}) {
+  const reviveBoss=boss;
   const mode=boss?'boss':'wave';lastFailure={mode,cause,reason};
   campaignMetrics?.finish('defeat',{reason,cause,mode,score,combatScore,missed,qber,shield:hullShield});
   endGame('FALHA NA DEFESA','#ff5555',reason+'<br><small>'+defeatAdvice(cause)+'</small><br><br>'+
     'Pontos: <b>'+combatScore+'</b> · Carga: <b>'+score+' / '+winScore+'</b> · Fase <b>'+level+' / '+maxLevel+': '+phaseConfig().name+'</b><br>Impactos na Terra: <b>'+missed+' / '+maxMisses+'</b>');
   gameAudio.setScene('defeat');gameAudio.sfx('explosion',{pan:audioPan(shipCenterX())});gameAudio.sfx('defeat');
   showRetryOptions(mode);$('btnStart').innerText='RECOMEÇAR CAMPANHA';$('menuHint').textContent='ENTER retoma do ponto salvo · Recomeçar campanha volta ao início';
+  developerReviveState={boss:reviveBoss};$('btnDevRevive').hidden=false;
 }
 // A carga e a vitória no oitavo desafio liberam o canhão.
 function gameWin() { startFinale(); }

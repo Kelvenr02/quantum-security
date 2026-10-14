@@ -77,6 +77,8 @@ H acrescenta **5 s** de disparos em três trilhas, com duração restante limita
 
 Na derrota durante o chefe, **Retomar no chefe** restaura o estado da entrada: impactos, escudo, canal, recarga, H, posição e pontos. O chefe reinicia inteiro, incluindo seus estágios; novas tentativas não acumulam recursos ou reparos. **Refazer a fase inteira** restaura o início das ondas. Enter escolhe a retomada disponível; **Recomeçar campanha** volta ao início. Esses pontos ficam somente na memória da sessão, sem gravação após fechar a página.
 
+Na derrota, o botão vermelho **DESENVOLVEDOR · RENASCER** continua exatamente do ponto interrompido, preservando a vida restante do chefe e o progresso das ondas. Restaura os impactos da Terra para zero, escudo e canal, libera R e concede 3 s de proteção à nave. Pode ser usado novamente em outras mortes; o diagnóstico marca a partida como `developerAssisted` e registra `developerRevives`. As opções normais de retomada continuam disponíveis.
+
 ## Organização
 
 - arena.js: geometria das nove trilhas e pilotagem compartilhada.
@@ -126,7 +128,7 @@ Reconstruir o bundle offline a partir dos arquivos preparados: node tools/build-
 
 Os testes do treinamento verificam intercepção, novas tentativas, regeneração, pausa e reinício. Os da abertura cobrem ações obrigatórias, releitura, medição com resultado zero, retorno ao menu e início único da campanha. Todas as suítes são executadas no GitHub Actions.
 
-As suítes somam 167 verificações e incluem seis campanhas de regressão, além de 576 confrontos estacionários sem vitória. A matriz atual de 58 cenários teve 20 conclusões em 20 combinações de tela/semente com o piloto equilibrado, em 539–624 s; as políticas de ignorar o canal, renovar no alerta e ignorar emissores também foram comparadas. Os controladores consultam o estado interno: demonstram viabilidade e detectam regressões, sem medir a dificuldade ou a diversão para uma pessoa. Consulte [resultados, durações e limites da análise](docs/BALANCEAMENTO.md).
+As suítes somam 170 verificações e incluem seis campanhas de regressão, além de 576 confrontos estacionários sem vitória. A matriz atual de 58 cenários teve 20 conclusões em 20 combinações de tela/semente com o piloto equilibrado, em 539–624 s; as políticas de ignorar o canal, renovar no alerta e ignorar emissores também foram comparadas. Os controladores consultam o estado interno: demonstram viabilidade e detectam regressões, sem medir a dificuldade ou a diversão para uma pessoa. Consulte [resultados, durações e limites da análise](docs/BALANCEAMENTO.md).
 
 Para analisar uma partida no console: `quantumDiagnostics.snapshot()` ou `quantumDiagnostics.export()`. O diagnóstico distingue impactos recebidos de reparos e registra QBER, regeneração, movimento, ameaças e dano/acertos por abertura de chefe (incluindo oportunidades sem dano). Os registros não são enviados nem persistidos. Consulte o [detalhamento das métricas e validações](docs/IMPLEMENTACAO.md).
 
