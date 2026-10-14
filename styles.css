@@ -222,14 +222,46 @@
  .training-guide { order:3; }.training-workbench { order:4; }.training-science { order:5; margin-top:0; }.training-mission-goal { order:6; }
 }
 
-/* Preparação curta: três momentos e um único exercício. */
-.training-route { grid-template-columns:repeat(3,1fr); max-width:650px; }
+/* Quatro cenas curtas; a conversa acompanha as ações no console. */
+.training-route { grid-template-columns:repeat(4,1fr); max-width:800px; }
+.training-layout { grid-template-columns:minmax(0,1.05fr) minmax(0,1.2fr); }
+.training-brief>p { font-size:12px; margin-bottom:20px; }
+#trainingTitle:focus { outline:none; }
+.story-conversation { display:grid; gap:15px; margin:0 0 21px; }
+.story-turn { border-left:2px solid #6ce8cd50; padding-left:13px; }
+.story-turn b { font:8px var(--mono); letter-spacing:1px; color:#83cabc; }
+.story-turn p { margin:6px 0 0; font:13px/1.65 var(--font); color:#c1d5df; }
+.story-turn.story-pilot { border-color:#c4ace048; margin-left:18px; }
+.story-pilot b { color:#c4ace0; }.story-pilot p { color:#a9b7d0; }
+.story-pair { text-align:center; padding:9px 0; }
+.pair-stations { display:flex; align-items:center; justify-content:space-around; gap:12px; margin:28px 0 20px; }
+.pair-stations>div { display:grid; justify-items:center; gap:10px; }
+.pair-stations span { font:10px var(--mono); color:#a8c8cf; letter-spacing:2px; }
+.pair-stations b { display:grid; place-items:center; border:1px solid #baaae080; border-radius:50%; width:83px; height:83px; background:radial-gradient(#7d5bb350,#22324a); color:#e1cff4; font:36px var(--mono); box-shadow:0 0 24px #ad8ce022,inset 0 0 20px #ae96df33; }
+.pair-stations small { font:10px var(--font); color:#8fadb9; }
+.pair-stations i { font-size:28px; font-style:normal; color:#9c8fb7; }
+.pair-stations.measured b { border-color:#6ce8cd80; color:var(--cyan); background:#6ce8cd12; box-shadow:0 0 24px #6ce8cd20; }
+.pair-caption { min-height:48px; font:12px/1.7 var(--font); color:#adc3cf; margin:0 0 20px; }
+#intro .story-pair button { width:100%; font-size:10px; padding:15px 12px; }
+.story-channel-status { display:flex; gap:12px; justify-content:space-between; padding:14px 10px; margin:0 0 20px; background:#071321; border:1px solid #7895a830; border-radius:6px; font:8px var(--mono); color:#9bacbf; }
+.story-channel-status b { font-weight:400; }.story-channel-status.online { border-color:#6ce8cd50; color:#a2decd; }
 .mission-scene { height:330px; position:relative; overflow:hidden; background:radial-gradient(circle at 75% 25%,#8bcbd6 1px,transparent 2px) 0 0/73px 67px,radial-gradient(circle at 30% 50%,#456b7e 1px,transparent 2px) 0 0/97px 83px; border-radius:9px; }
 .mission-earth { position:absolute; left:calc(50% - 125px); top:230px; width:250px; height:250px; border-radius:50%; background:radial-gradient(ellipse at 36% 25%,#6ca798 0 8%,transparent 9%),radial-gradient(ellipse at 64% 18%,#497f77 0 12%,transparent 13%),radial-gradient(circle at 30% 25%,#438fa1,#163a55 45%,#091525 75%); box-shadow:0 0 45px #6ce8cd30,inset 0 4px 10px #a9ecea60; }
 .mission-earth-label { position:absolute; bottom:12px; width:100%; text-align:center; font:8px var(--mono); color:#a9ced1; letter-spacing:1px; }.mission-mothership { position:absolute; top:35px; left:calc(50% - 105px); width:210px; height:30px; background:linear-gradient(#617a8f,#142636); border-radius:50%; box-shadow:0 5px 20px #b99ae730; border-bottom:2px solid #b9a3e3; }.mission-mothership span { display:block; margin-top:-21px; text-align:center; color:#a590ba; font:8px var(--mono); letter-spacing:2px; }.incoming-rock { position:absolute; width:24px; height:24px; border-radius:35% 55% 40% 50%; background:linear-gradient(120deg,#a9bac4,#405364); }.rock-one { left:32%; top:110px; animation:trainingRock 4s ease-in-out infinite; }.rock-two { right:27%; top:135px; width:17px; height:17px; animation:trainingRock 4s 1s ease-in-out infinite; }.mission-interceptor { position:absolute; top:165px; left:calc(50% - 12px); color:var(--cyan); font-size:35px; text-shadow:0 0 20px #6ce8cd80; }.mission-interceptor span { display:block; position:absolute; left:35px; top:24px; white-space:nowrap; color:#83bdb8; font:7px var(--mono); letter-spacing:1px; }
 .security-overview { padding:10px 0; }.security-overview .connection-map { margin:20px 0 35px; }.security-flow { display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:28px; }.security-flow span { flex:1; font:11px/1.5 var(--font); text-align:center; color:#90afbc; }.security-flow b { display:block; font-size:13px; color:#c2e5de; font-weight:500; margin-bottom:7px; }.security-flow i { color:#649c9b; font-style:normal; }#intro .security-overview button { width:100%; padding:15px 12px; font-size:10px; }.security-note { font:11px/1.7 var(--font); color:#88aab7; margin:18px 0 0; text-align:center; }
 @keyframes trainingRock { 50% { transform:translateY(20px) rotate(40deg); } }
+@media(max-width:900px) { .training-layout { grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); } }
 @media(max-width:700px) { .training-route { max-width:none; }.training-route>span { flex-direction:row; justify-content:center; font-size:10px; }.mission-scene { height:260px; }.mission-earth { top:170px; }.mission-mothership { top:30px; }.rock-one { top:85px; }.rock-two { top:100px; }.mission-interceptor { top:118px; }.mission-interceptor span { left:-60px; top:42px; }.security-flow { gap:7px; }.security-flow span { font-size:10px; }.security-flow b { font-size:11px; }.training-layout { min-height:0; }.training-mode { display:none; } }
+@media(max-width:700px) {
+ .training-layout { grid-template-columns:1fr; }
+ .training-route>span { flex-direction:column; gap:6px; font-size:9px; }
+ .training-brief>p { margin-bottom:0; }
+ .story-conversation { order:3; gap:13px; margin:1px 0; }
+ .story-turn p { font-size:13px; line-height:1.6; }
+ .training-guide { order:4; }.training-workbench { order:5; }.training-science { order:6; }.training-mission-goal { order:7; }
+ .story-channel-status { font-size:7px; gap:7px; }
+ .training-footer { padding-bottom:45px; }
+}
 
 /* Controle discreto de som, disponível em todas as telas. */
 .audio-controls { position:fixed; right:16px; bottom:12px; z-index:200; font-family:var(--font); }

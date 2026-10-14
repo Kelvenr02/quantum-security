@@ -10,13 +10,16 @@ Cada fase tem uma composição diferente, em volume baixo e com transições sua
 
 Efeitos de Kenney e músicas de Juhani Junkala / SubspaceAudio, publicados com licença CC0, estão em `assets/audio/`. Os [créditos e fontes](assets/audio/CREDITS.md) identificam os arquivos utilizados; o [plano de áudio](docs/AUDIO.md) descreve a distribuição das trilhas e a mixagem. O bundle local mantém o funcionamento direto por `index.html`, sem servidor ou download durante a partida.
 
-## Preparação rápida
+## História e preparação
 
-Antes da campanha, três momentos apresentam o essencial:
+Antes da campanha, quatro cenas retomam a conversa entre a Dr. Íris e o Tenente:
 
-1. **História:** a Terra está sob ataque; você pilota o interceptor da base e carrega o canhão orbital.
-2. **Quantum Security:** uma explicação curta de QKD, qubits, entrelaçamento e QBER; um botão ativa o sistema de comunicação.
-3. **Treino rápido:** mover a nave, destruir um asteroide com disparo automático e pressionar R para renovar a chave.
+1. **O chamado:** o ataque, a pilotagem remota e a defesa até o canhão carregar.
+2. **A chave:** o risco de interceptação leva à explicação de bits, qubits, superposição, medição e E91. Medir um par ilustrativo mostra um resultado por lado.
+3. **O canal:** QBER, espionagem e ruído dentro da história; ativação do Quantum Security e distinção entre QKD, gestão das chaves e rádio.
+4. **Decolagem:** mover a nave, destruir um asteroide com disparo automático e pressionar R para renovar a chave.
+
+Cada cena mostra uma conversa curta completa. Não há avanço por fala, espera de animação ou questionário. O par é uma ilustração em software, não uma simulação física ou geração real de chaves. A leitura segue o ritmo do jogador, com Voltar e Recomeçar disponíveis. Veja as escolhas narrativas em [docs/ABERTURA.md](docs/ABERTURA.md).
 
 O treino permite novas tentativas, pausa e controles por toque. Sua pontuação e seus erros não passam para a campanha. Recursos avançados são explicados nos briefings das fases. Informações adicionais sobre a ciência e o pitch ficam em uma seção opcional.
 
@@ -62,11 +65,13 @@ Execute: node tests/gameplay.cjs
 
 Execute também: node tests/training.cjs
 
+Abertura e transição: node tests/story.cjs
+
 Áudio: node tests/audio.cjs
 
 Reconstruir o bundle offline a partir dos arquivos preparados: node tools/build-audio.cjs
 
-Os testes do treinamento verificam intercepção, novas tentativas, regeneração, pausa e reinício. As duas suítes são executadas no GitHub Actions.
+Os testes do treinamento verificam intercepção, novas tentativas, regeneração, pausa e reinício. Os da abertura cobrem ações obrigatórias, releitura, medição com resultado zero, retorno ao menu e início único da campanha. Todas as suítes são executadas no GitHub Actions.
 
 Os testes usam as funções reais de jogo e uma interface simulada para verificar progressão, colisões, regeneração, recursos, pausa, redimensionamento e a campanha completa. A interface também foi conferida no Chrome em tamanho de computador e em 390 × 844.
 

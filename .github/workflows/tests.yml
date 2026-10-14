@@ -22,12 +22,14 @@ jobs:
           node-version: '24'
       - name: Verificar a sintaxe dos scripts
         run: |
-          for file in audio.js training.js story.js graphics.js phases.js script.js quantum.js presentation.js tools/build-audio.cjs tests/gameplay.cjs tests/training.cjs tests/audio.cjs; do
+          for file in audio.js training.js story.js graphics.js phases.js script.js quantum.js presentation.js tools/build-audio.cjs tests/gameplay.cjs tests/training.cjs tests/story.cjs tests/audio.cjs; do
             node --check "$file"
           done
       - name: Verificar as mecânicas e a campanha
         run: node tests/gameplay.cjs
       - name: Verificar o treinamento interativo
         run: node tests/training.cjs
+      - name: Verificar a abertura e a transição para a missão
+        run: node tests/story.cjs
       - name: Verificar o áudio e os arquivos locais
         run: node tests/audio.cjs
