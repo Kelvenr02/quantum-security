@@ -1,0 +1,58 @@
+[
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Tenente! Ainda bem que chegou. A frota alienígena acabou de atacar a Terra, e a nossa nave defensora já está em órbita."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Me avisaram no caminho. Pelo que entendi, eu vou pilotar essa nave, certo?"
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Certo, mas daqui da base, por rádio. Você comanda tudo à distância."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Por rádio? Isso me preocupa, Doutora. E se os alienígenas escutarem os comandos ou mandarem ordens falsas para a nave?"
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "É exatamente a preocupação certa: eles podem tentar. Por isso cada comando precisa ser trancado com uma chave secreta, que só a Terra e a nave conheçam. E a física quântica permite criar essa chave."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Física quântica? Confesso que sempre achei isso coisa de filme."
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Calma, é mais simples do que parece. Pense numa moeda: um bit comum é uma moeda parada na mesa, cara ou coroa. Um qubit é uma moeda girando no ar: só sabemos o lado quando ela cai e é medida."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Até aí eu acompanho. E como isso vira uma chave?"
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Com partículas entrelaçadas. Imagine duas moedas que sempre caem iguais, mesmo muito longe uma da outra. Cada uma, sozinha, parece sorteio, mas os resultados combinam. Esses resultados iguais e aleatórios formam a nossa chave. É só uma analogia: a física real é mais sutil."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Então ninguém precisa mandar a chave pelo rádio."
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Exatamente: ela nasce nos dois lados ao mesmo tempo."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "E se um espião tentar espiar essas partículas?"
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Aí a física nos ajuda: espiar é medir, e medir perturba, como parar a moeda no ar. Os resultados deixam de combinar, e a gente percebe. Vamos testar tudo isso no console?"
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Vamos nessa, estou pronto!"
+  ]
+]

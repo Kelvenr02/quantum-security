@@ -39,7 +39,7 @@ const {pathToFileURL}=require('node:url');
    await page.evaluate(()=>{boss.model.hp=boss.model.hp.map(()=>0);updateBossBattle(0,shipCenterX());gameTime+=1500;updateBossBattle(0,shipCenterX());cancelAnimationFrame(rafId);});
   }
   assert.equal(await page.evaluate(()=>gameMode()),'ending');await page.evaluate(()=>showVictory());assert.equal(await page.evaluate(()=>gameMode()),'victory');
-  const doc=await page.evaluate(()=>quantumDiagnostics.snapshot());assert.equal(doc.build.version,'0.8.0');assert.equal(doc.campaign.developerAssisted,true);assert.equal(doc.campaign.developerRevives,1);
+  const doc=await page.evaluate(()=>quantumDiagnostics.snapshot());assert.equal(doc.build.version,require('../../config.js').GameBuild.version);assert.equal(doc.campaign.developerAssisted,true);assert.equal(doc.campaign.developerRevives,1);
   assert.deepEqual(doc.inputMethods,['keyboard','touch']);assert.equal(doc.state.preferences.keys.regen,'KeyK');assert.equal(doc.configuration.rules.regenMs,2000);assert.equal(doc.state.guardians,8);
   assert.equal(await page.evaluate(()=>localStorage.getItem(CampaignSaveStore.key)),null);assert.match(await page.locator('#campaignResult').textContent(),/ASSISTIDA/);assert.deepEqual(errors,[]);
   runs.push({width,height,build:doc.build,campaign:doc.campaign,inputs:doc.inputMethods,guardians:doc.state.guardians});await context.close();console.log(`${width}x${height}: eight phase transitions, controls, pause, revival, final stages, reports OK`);

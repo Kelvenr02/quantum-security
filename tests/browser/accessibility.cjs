@@ -39,9 +39,9 @@ const {pathToFileURL}=require('node:url');
   await page.keyboard.press('Escape');await page.locator('#pauseResume').focus();await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.closest('[role="dialog"]').id),'pauseOverlay');
   fs.mkdirSync(path.resolve('tmp/accessibility-check'),{recursive:true});await page.screenshot({path:path.resolve(`tmp/accessibility-check/pause-${width}x${height}.png`)});
   // Training uses the same mapping, suspends for settings and respects an existing pause.
-  await page.evaluate(()=>{isPlaying=false;isPaused=false;$('pauseOverlay').hidden=true;$('arcade').style.display='none';startIntro();});
+  await page.evaluate(()=>{isPlaying=false;isPaused=false;$('pauseOverlay').hidden=true;$('arcade').style.display='none';startIntro();tutorial.beginPreparation();});
   await page.locator('#trainingNext').click();await page.locator('[data-training-action="measure"]').click();await page.locator('#trainingNext').click();await page.locator('[data-training-action="activate"]').click();await page.locator('#trainingNext').click();
-  assert.match(await page.locator('#trainingDialogue').textContent(),/J \/ L/);assert.match(await page.locator('#trainingDialogue').textContent(),/uso K/);
+  assert.match(await page.locator('#trainingQuickSteps').textContent(),/J \/ L/);assert.match(await page.locator('#trainingQuickSteps').textContent(),/K: renovar/);
   await page.evaluate(()=>openSettings());await page.clock.runFor(2200);assert.equal(await page.locator('#trainingPauseNotice').isVisible(),true);
   await page.keyboard.press('Escape');assert.equal(await page.locator('#trainingPauseNotice').isVisible(),false);
   await page.keyboard.press('Escape');await page.evaluate(()=>openSettings());await page.keyboard.press('Escape');assert.equal(await page.locator('#trainingPauseNotice').isVisible(),true);

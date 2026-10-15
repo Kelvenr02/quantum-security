@@ -11,7 +11,7 @@ const output=path.resolve(__dirname,'../../tmp/feedback-check');
     const page=await browser.newPage({viewport:{width,height},hasTouch:width!==1600}),errors=[];
     page.on('pageerror',e=>errors.push(e.message));await page.clock.install({time:new Date('2026-10-15T12:00:00Z')});await page.clock.pauseAt(new Date('2026-10-15T12:00:00Z'));
     await page.goto(pathToFileURL(path.resolve(__dirname,'../../index.html')).href);
-    await page.evaluate(()=>startIntro());
+    await page.evaluate(()=>{startIntro();tutorial.beginPreparation();});
     await page.locator('#trainingNext').click();await page.locator('[data-training-action="measure"]').click();
     await page.locator('#trainingNext').click();await page.locator('[data-training-action="activate"]').click();await page.locator('#trainingNext').click();
     await page.keyboard.press('ArrowLeft');await page.clock.runFor(1200);

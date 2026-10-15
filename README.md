@@ -20,16 +20,11 @@ Efeitos de Kenney e músicas de Juhani Junkala / SubspaceAudio, publicados com l
 
 ## História e preparação
 
-Antes da campanha, quatro cenas retomam a conversa entre a Dr. Íris e o Tenente:
+A abertura é uma conversa dedicada entre a Dr. Íris e o Tenente, com as **14 falas originais** da versão `code-20261015-065106`, preservadas integralmente. Uma fala aparece por vez, com o personagem em destaque e botões para avançar ou voltar. Enter também avança; não há passagem automática nem espera de digitação.
 
-1. **O chamado:** o ataque, a pilotagem remota e a defesa até o canhão carregar.
-2. **A chave:** o risco de interceptação leva à explicação de bits, qubits, superposição, medição e E91. Medir um par ilustrativo mostra um resultado por lado.
-3. **O canal:** QBER, espionagem e ruído dentro da história; ativação do Quantum Security e distinção entre QKD, gestão das chaves e rádio.
-4. **Decolagem:** mover a nave, destruir um asteroide com disparo automático e pressionar R para renovar a chave.
+Depois da conversa, a preparação apresenta a missão, uma demonstração de medição, a ativação do Quantum Security e o **guia rápido com treino** de interceptar, desviar e renovar. Explicações científicas complementares ficam em **A ciência por trás desta cena · opcional**, recolhidas por padrão, e nos laboratórios/briefings da campanha. O guia continua visível e acompanha as teclas configuradas. Veja os detalhes em [docs/ABERTURA.md](docs/ABERTURA.md).
 
-Cada cena mostra uma conversa curta completa. Não há avanço por fala, espera de animação ou questionário. O par é uma ilustração em software, não uma simulação física ou geração real de chaves. A leitura segue o ritmo do jogador, com Voltar e Recomeçar disponíveis. Veja as escolhas narrativas em [docs/ABERTURA.md](docs/ABERTURA.md).
-
-O treino permite novas tentativas, pausa e controles por toque. Sua pontuação e seus erros não passam para a campanha. Recursos avançados são explicados nos briefings das fases. Informações adicionais sobre a ciência e o pitch ficam em uma seção opcional.
+## Campanha e guardiões
 
 A Dr. Íris acompanha a preparação e apresenta as novidades das oito fases:
 
@@ -142,7 +137,7 @@ Reconstruir o bundle offline a partir dos arquivos preparados: node tools/build-
 
 Os testes do treinamento verificam intercepção, novas tentativas, regeneração, pausa e reinício. Os da abertura cobrem ações obrigatórias, releitura, medição com resultado zero, retorno ao menu e início único da campanha. O GitHub Actions está configurado para executar regras e interface em jobs separados. A configuração da fase 8 foi validada localmente; sua primeira execução remota depende do próximo push.
 
-As suítes Node somam 253 verificações e incluem seis campanhas de regressão e uma campanha adicional validando os salvamentos, além de 576 confrontos estacionários sem vitória. A matriz da fase 4 teve 20 conclusões nas 20 combinações de tela/semente com o piloto equilibrado, em 558–645 s; as políticas de ignorar o canal, renovar no alerta e ignorar emissores também foram comparadas. Os controladores consultam o estado interno: demonstram viabilidade e detectam regressões, sem medir a dificuldade ou a diversão para uma pessoa. Consulte [resultados, durações e limites da análise](docs/BALANCEAMENTO.md).
+As suítes Node somam 254 verificações e incluem seis campanhas de regressão e uma campanha adicional validando os salvamentos, além de 576 confrontos estacionários sem vitória. A matriz da fase 4 teve 20 conclusões nas 20 combinações de tela/semente com o piloto equilibrado, em 558–645 s; as políticas de ignorar o canal, renovar no alerta e ignorar emissores também foram comparadas. Os controladores consultam o estado interno: demonstram viabilidade e detectam regressões, sem medir a dificuldade ou a diversão para uma pessoa. Consulte [resultados, durações e limites da análise](docs/BALANCEAMENTO.md).
 
 Para exportar tentativas da rodada, use `quantumDiagnostics.playtest()` e consolide os arquivos com `node tools/summarize-playtest.cjs arquivo.json`. O export inclui até 20 tentativas anteriores ainda em memória; exporte antes de fechar.
 

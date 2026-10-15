@@ -1,5 +1,5 @@
 /* Shared gameplay values. Presentation preferences never change these rules. */
-const GameBuild=Object.freeze({version:'0.8.0',rulesVersion:1});
+const GameBuild=Object.freeze({version:'0.8.1',rulesVersion:1});
 const GameRules=Object.freeze({
   phases:8,charge:1000,maxImpacts:12,frameMs:1000/60,maxStepMs:50,
   shotCooldownMs:300,regenMs:2000,regenCooldownMs:10000,compromisedMs:4000,

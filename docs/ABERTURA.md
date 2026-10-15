@@ -1,30 +1,25 @@
-# Abertura da missão
+# Abertura da missão — revisão narrativa 0.8.1
 
-A versão inicial tinha 32 falas e depois repetia conteúdo em resumo e instruções. A abertura de três etapas resumia bem os controles, mas perdia o diálogo entre o Tenente e Íris e a relação entre pilotagem remota, risco de interceptação e chaves quânticas.
+## Primeiro, a conversa original
 
-Esta revisão preserva essa relação em quatro cenas e doze falas curtas. A história, a ciência e o tutorial acontecem na mesma sequência. O objetivo é uma leitura de aproximadamente três a quatro minutos com o treino, dependendo do ritmo do jogador; não há temporizador para avançar.
+O início tem uma cena exclusiva de diálogo, anterior ao console de preparação. As 14 falas de `C:\Users\kelve\Downloads\code-20261015-065106\index.html` foram preservadas integralmente, incluindo a identificação de quem fala e a ordem. A cópia de referência para regressão fica em `tests/fixtures/opening-dialogue.json`.
 
-| Cena | Função na história | Participação do jogador |
-| --- | --- | --- |
-| O chamado | Apresentar ataque, papéis dos personagens e canhão orbital | Observar a ameaça e assumir o comando |
-| A chave | Relacionar rádio e ordens falsas à necessidade de chaves; introduzir qubits e E91 | Medir um par ilustrativo e observar um resultado por lado |
-| O canal | Explicar o monitoramento do QBER e o papel do Quantum Security | Ativar a conexão e conferir o estado do canal |
-| Decolagem | Fazer a última checagem de pilotagem antes da primeira onda | Uma intercepção e uma renovação de chave |
+A conversa começa com o ataque à Terra e a chegada do Tenente. A pilotagem remota por rádio leva à preocupação com comandos falsos e à apresentação de uma chave secreta. Íris usa as analogias originais para introduzir qubits, entrelaçamento e medição; o Tenente encerra aceitando testar o console.
 
-## Ritmo e interação
+O cenário usa uma janela orbital, a Terra e personagens vetoriais de corpo inteiro, mantendo o uniforme camuflado do Tenente e o cabelo claro/jaleco de Íris da referência. Rostos, mãos, roupas e acessórios têm detalhes próprios. Os SVGs são locais e preservam nitidez no computador e no celular; o personagem que fala recebe destaque sem animação contínua.
 
-As três falas de cada cena aparecem juntas, sem animação de digitação, avanço individual ou narração forçada. O Tenente faz perguntas que surgem da missão; Íris explica somente o que aquela situação exige. Duas ações no painel materializam a preparação da conexão; o treino permanece com um alvo. Voltar e Recomeçar permitem rever a história e repetir as ações. As novidades das fases continuam nos seus próprios briefings.
+Apenas uma fala aparece por vez. O personagem que fala fica em destaque; Próxima fala, Fala anterior e Enter permitem controlar o ritmo. Não há avanço automático, digitação obrigatória, tarefas intercaladas ou painel científico concorrendo com a conversa. A abertura oferece acessibilidade e retorno ao menu; reiniciar a história retorna à primeira fala. A campanha salva não é sobrescrita apenas por ler a abertura.
 
-O áudio existente usa a trilha discreta de história nas três primeiras cenas, confirmação nas ações e a trilha de treino na última. A transição para a campanha inicia sua trilha e seu estado normalmente; pontuação e QBER de treino não são carregados.
+## Depois, preparação e guia rápido
 
-## Limites científicos
+A última fala conduz à preparação em quatro etapas: missão e canhão orbital; medição de um par ilustrativo; ativação do Quantum Security; guia rápido e treino. A conversa não é repetida em cartões no console. As etapas de medição, ativação e treino continuam exigindo suas ações, sem permitir pular a preparação apenas com Enter.
 
-- O qubit pode estar em superposição, mas uma medição produz um único resultado clássico.
-- O par mostrado é uma ilustração de correlação numa configuração compatível, com resultados iguais. Não representa todos os estados, bases ou testes do E91. Um par não gera uma chave segura; a narrativa informa que são necessários muitos pares, verificações e processamento.
-- QBER elevado pode indicar perturbação por espionagem ou ruído. Não identifica sozinho a causa e não equivale a provar que uma chave foi roubada.
-- Quantum Security é a proposta acadêmica de monitoramento e gestão; equipamentos QKD produzem as chaves. A comunicação dos comandos continua clássica, cifrada e autenticada. QKD não exige computador quântico universal nem envia mensagens instantâneas.
-- A inversão de controles acima de 11%, a renovação de 2 segundos e as cápsulas posteriores são regras e analogias do jogo.
+O guia tem quatro pontos: movimento/disparo automático; faixas, canal e recursos; custo/recarga de renovação; objetivo, escudo, limite de impactos e pausa/retomada. Usa os parâmetros compartilhados e as teclas escolhidas pelo jogador. O treino mantém nove trilhas, intercepção, desvio da salva e renovação em posição segura. Erros permitem tentar novamente; o treino não transfere recursos à campanha.
 
-O pitch e as referências científicas permanecem acessíveis na seção opcional da abertura. A ciência é incorporada ao conflito, sem uma apresentação separada do jogo.
+## Ciência complementar separada
 
-A campanha agora inclui oito guardiões. A abertura menciona o objetivo final, o escudo de emergência e a retomada da fase; as regras específicas continuam sendo apresentadas no momento de cada confronto, conforme [DESAFIOS.md](DESAFIOS.md).
+As falas históricas usam simplificações e foram mantidas conforme solicitado. A consulta opcional da preparação esclarece que qubits não são moedas em rotação e que as correlações não criam uma chave instantaneamente nem enviam informação à distância. São necessárias muitas medições, comparação pelo canal clássico e processamento.
+
+As consultas preservam bits/qubits, superposição, medição, entrelaçamento, E91, QBER, espionagem/ruído e o papel do produto. Cada consulta começa recolhida. Abrir com Enter/Espaço não avança a preparação; realizar a ação mantém a consulta aberta. O par em software é ilustrativo e não gera uma chave segura. QBER sozinho não identifica espionagem. Equipamentos QKD produzem as chaves; Quantum Security é a proposta acadêmica de monitoramento/gestão; os comandos continuam clássicos, cifrados e autenticados. Uma chave nova não elimina a fonte de ruído.
+
+H, Bell, coerência, síndrome e interferência permanecem nos briefings e laboratórios. O pitch e as referências continuam disponíveis na seção de ciência/produto. Leitura ampliada, teclas configuradas, áudio, retomadas e todas as regras de combate são preservados.

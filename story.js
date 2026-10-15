@@ -1,23 +1,73 @@
-/* Quatro cenas: a ameaça dá sentido à ciência e a ciência prepara a pilotagem. */
+/* Diálogo original antes da preparação, ciência opcional e guia rápido. */
 let introActive = false;
+const openingDialogue = [
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Tenente! Ainda bem que chegou. A frota alienígena acabou de atacar a Terra, e a nossa nave defensora já está em órbita."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Me avisaram no caminho. Pelo que entendi, eu vou pilotar essa nave, certo?"
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Certo, mas daqui da base, por rádio. Você comanda tudo à distância."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Por rádio? Isso me preocupa, Doutora. E se os alienígenas escutarem os comandos ou mandarem ordens falsas para a nave?"
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "É exatamente a preocupação certa: eles podem tentar. Por isso cada comando precisa ser trancado com uma chave secreta, que só a Terra e a nave conheçam. E a física quântica permite criar essa chave."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Física quântica? Confesso que sempre achei isso coisa de filme."
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Calma, é mais simples do que parece. Pense numa moeda: um bit comum é uma moeda parada na mesa, cara ou coroa. Um qubit é uma moeda girando no ar: só sabemos o lado quando ela cai e é medida."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Até aí eu acompanho. E como isso vira uma chave?"
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Com partículas entrelaçadas. Imagine duas moedas que sempre caem iguais, mesmo muito longe uma da outra. Cada uma, sozinha, parece sorteio, mas os resultados combinam. Esses resultados iguais e aleatórios formam a nossa chave. É só uma analogia: a física real é mais sutil."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Então ninguém precisa mandar a chave pelo rádio."
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Exatamente: ela nasce nos dois lados ao mesmo tempo."
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "E se um espião tentar espiar essas partículas?"
+  ],
+  [
+    "DR. ÍRIS · CIENTISTA QUÂNTICA",
+    "Aí a física nos ajuda: espiar é medir, e medir perturba, como parar a moeda no ar. Os resultados deixam de combinar, e a gente percebe. Vamos testar tudo isso no console?"
+  ],
+  [
+    "TENENTE · VOCÊ",
+    "Vamos nessa, estou pronto!"
+  ]
+];
 const tutorial = (() => {
   const el = id => document.getElementById(id);
   const steps = [
-    { name: 'O chamado', title: 'Tenente, a Terra está sob ataque.', story: '2090 · Base de Comando Orbital. O radar acaba de detectar a primeira onda.',
-      lines: [['Íris', 'A nave-mãe está lançando asteroides contra a Terra. Nosso interceptor Q-07 já está em órbita. Precisamos de você nos controles.'], ['Tenente', 'Vou pilotar daqui da base? E o piloto automático?'], ['Íris', 'Sim, por rádio. Eles mudam de tática; precisamos das suas decisões. O sistema cuida dos disparos, e você escolhe onde interceptar. O canhão carrega enquanto você resolve três encontros em cada setor; cada destruição rende pontos. Vença os oito guardiões para liberar o disparo final.']],
-      task: 'Sua missão: proteger a Terra e sobreviver até o canhão carregar.', science: '', next: 'ASSUMIR O COMANDO →' },
-    { name: 'A chave', title: 'E se o inimigo ouvir?', story: 'Q-07 aguardando conexão · Antes de pilotar, precisamos proteger as ordens.',
-      lines: [['Tenente', 'Se os comandos vão pelo rádio, os invasores podem escutar ou mandar ordens falsas?'], ['Íris', 'Por isso usamos cifragem e autenticação com chaves secretas. Um bit vale 0 ou 1. Um qubit pode combinar os estados de 0 e 1 numa superposição; ao medir, sai apenas um resultado.'], ['Íris', 'Nossa distribuição quântica de chaves, ou QKD, usa a ideia do protocolo E91: partículas entrelaçadas compartilham um estado e têm resultados correlacionados. Testamos parte das medições e processamos o restante para obter uma chave compartilhada. Veja um par no painel.']],
-      task: 'Meça o par de demonstração e observe os resultados na Terra e na nave.', science: '', next: 'PROTEGER O CANAL →' },
-    { name: 'O canal', title: 'Uma chave. Dois lados seguros.', story: 'Quantum Security · Central de gestão e monitoramento das chaves.',
-      lines: [['Tenente', 'E como vamos perceber uma tentativa de roubar a chave?'], ['Íris', 'Espionar as partículas pode alterar suas correlações. Verificamos os erros pelo QBER, a taxa de erro dos bits comparados. Ruído e decoerência — perda de propriedades quânticas pela interação com o ambiente — também geram erros. Um alerta não prova espionagem.'], ['Íris', 'O Quantum Security monitora o canal e gerencia as chaves produzidas pelos equipamentos QKD. Se as verificações falham, descartamos aquela chave. A chave validada protege seus comandos, que continuam viajando pelo rádio.']],
-      task: 'Ative o Quantum Security para liberar a conexão com o Q-07.', science: '', next: 'TESTAR A NAVE →' },
-    { name: 'Decolagem', title: 'A última checagem é sua.', story: 'Simulador conectado · Intercepte, desvie e renove antes de assumir a defesa.',
-      lines: [['Íris', 'Mova nas nove trilhas com ← → ou A / D; segure para continuar. A nave atira sozinha. Desvie das nuvens roxas e dos pulsos espiões amarelos: eles elevam o QBER e não podem ser destruídos.'], ['Tenente', 'E, se o canal piorar, uso R para renovar a chave. Preciso escolher um momento seguro.'], ['Íris', 'Sim: R prende a nave e suspende os tiros por 2 s; recarrega em 10 s e não protege de ataques. Intercepte o alvo, saia das faixas A e renove numa posição livre ou no RESPIRO. Acima de 11% de QBER, os comandos invertem por até 4 s; R disponível pode interromper.']],
-      task: '', science: 'Na missão: três encontros por fase, carga de 1.000 e 8 guardiões. O escudo absorve um golpe; outro sem escudo encerra a defesa, assim como 12 impactos na Terra. Esc pausa. Após uma derrota, você pode repetir a fase.', next: 'INICIAR DEFESA →' }
+    {name:'A missão',title:'Antes da primeira onda.',story:'Conversa concluída · Prepare a conexão e confira os controles.',lines:[],task:'Defenda a Terra pelos oito setores e vença seus guardiões para carregar o canhão orbital.',science:'A conversa original usa analogias: um qubit não é uma moeda em rotação. As correlações não criam uma chave instantaneamente nem transmitem informação à distância; são necessárias muitas medições, comparações pelo canal clássico e processamento.',next:'PREPARAR A CHAVE →'},
+    {name:'A chave',title:'Uma demonstração do canal.',story:'Equipamentos QKD · Um par ilustrativo antes de preparar a conexão.',lines:[],task:'Meça o par de demonstração e observe os resultados.',science:'Um bit vale 0 ou 1. Um qubit pode estar em superposição, mas cada medição fornece um resultado. O par mostrado é uma ilustração de correlações em uma configuração compatível. E91 envolve muitos pares, verificações e processamento; este par sozinho não gera uma chave segura.',next:'ATIVAR A CONEXÃO →'},
+    {name:'Quantum Security',title:'Conexão com o Q-07.',story:'Quantum Security · Monitoramento e gestão das chaves da missão.',lines:[],task:'Ative o Quantum Security para liberar os comandos do interceptor.',science:'QBER mede os erros dos bits comparados. Espionagem e ruído podem elevar essa taxa; um alerta não identifica sozinho a causa. Quantum Security é uma proposta acadêmica de monitoramento e gestão das chaves produzidas por equipamentos QKD. As ordens continuam viajando por rádio clássico, cifradas e autenticadas. Uma chave nova não elimina a fonte de ruído.',next:'GUIA RÁPIDO E TREINO →'},
+    {name:'Guia rápido',title:'Teste antes de assumir a defesa.',story:'Simulador conectado · Intercepte, desvie e renove sem risco.',lines:[],task:'',science:'H, Bell, coerência, síndrome e interferência são explicados nos briefings e experimentos opcionais. As cápsulas, a inversão e os poderes da nave são analogias jogáveis, não um equipamento quântico real.',next:'INICIAR DEFESA →'}
   ];
   const flightStep = steps.length - 1;
-  let step = 0, frame = 0, last = 0, simulation = null;
+  let step = 0, frame = 0, last = 0, simulation = null, dialogueIndex = -1;
   let activated = false, measured = null, feedback = '', backdrop = null, manualPause = false, flightFocused=false;
   function say(text) { feedback = text; el('trainingFeedback').textContent = controlText(text); }
   function completed() { return step === 0 || (step === 1 ? measured !== null : step === 2 ? activated : !!simulation?.complete); }
@@ -43,7 +93,7 @@ const tutorial = (() => {
     el('trainingTitle').textContent = steps[step].title;
     el('trainingStory').textContent = steps[step].story;
     const conversation = el('trainingDialogue');
-    conversation.replaceChildren();
+    conversation.replaceChildren();conversation.hidden=!steps[step].lines.length;
     for (const [speaker, text] of steps[step].lines) {
       const turn = document.createElement('div');
       turn.className = 'story-turn' + (speaker === 'Tenente' ? ' story-pilot' : '');
@@ -59,12 +109,20 @@ const tutorial = (() => {
     el('trainingFlight').hidden = step !== flightStep; area.hidden = step === flightStep;
     el('trainingFlightControls').hidden = step !== flightStep;
     el('trainingMissionGoal').hidden = step !== 0;
+    el('trainingQuickGuide').hidden = step !== flightStep;
+    el('trainingQuickSteps').innerHTML = [
+      'Mova com ← → ou A / D; segure para atravessar as nove trilhas. A nave atira sozinha.',
+      'Saia das faixas A/B/C antes de zerar. Nuvens e pulsos elevam QBER; acima de '+GameRules.channel.limit+'%, os comandos podem inverter. H amplia tiros; + ajuda o canal.',
+      describeRegeneration('R')+' Procure uma posição livre ou o RESPIRO.',
+      'Resolva três encontros e vença o guardião de cada setor. '+GameRules.maxImpacts+' impactos na Terra encerram a missão; o escudo absorve um golpe. Esc pausa. Na derrota, tente novamente.'
+    ].map(text=>'<li>'+controlText(text)+'</li>').join('');
     if (step === 0) area.innerHTML = '<div class="mission-scene" aria-label="Uma nave-mãe ameaça a Terra; o interceptor a protege"><div class="mission-mothership"><span>NAVE-MÃE</span></div><i class="incoming-rock rock-one"></i><i class="incoming-rock rock-two"></i><div class="mission-interceptor">▲<span>VOCÊ / INTERCEPTOR</span></div><div class="mission-earth"></div><span class="mission-earth-label">TERRA / ÚLTIMA LINHA DE DEFESA</span></div>';
     if (step === 1) area.innerHTML = '<div class="story-pair"><div class="panel-label">UM PAR ENTRELAÇADO / ILUSTRAÇÃO</div><div class="pair-stations ' + (measured !== null ? 'measured' : '') + '"><div><span>TERRA</span><b>' + (measured ?? '?') + '</b><small>' + (measured !== null ? 'Resultado local' : 'Qubit A') + '</small></div><i aria-hidden="true">⟷</i><div><span>Q-07</span><b>' + (measured ?? '?') + '</b><small>' + (measured !== null ? 'Resultado local' : 'Qubit B') + '</small></div></div><p class="pair-caption">' + (measured !== null ? 'Nesta ilustração, o par produz bits iguais. Uma chave exige muitos pares, testes e processamento.' : 'Cada medição dará 0 ou 1. O “?” indica que ainda não medimos; não representa o estado completo do qubit.') + '</p><button type="button" data-training-action="measure" ' + (measured !== null ? 'disabled' : '') + '>' + (measured !== null ? '✓ PAR MEDIDO' : 'MEDIR UM PAR') + '</button><p class="security-note">Medições e correlações são ilustradas pelo jogo. Entrelaçamento não transmite mensagens instantâneas.</p></div>';
     if (step === 2) area.innerHTML = '<div class="security-overview"><div class="connection-map"><div class="station-node">TERRA<span>BASE DE COMANDO</span></div><div class="link-path ' + (activated ? 'online' : '') + '"><span>' + (activated ? 'CANAL PREPARADO' : 'CANAL EM ESPERA') + '</span></div><div class="station-node">NAVE<span>INTERCEPTOR Q-07</span></div></div><div class="security-flow"><span><b>QKD</b>Cria as chaves</span><i>→</i><span><b>Quantum Security</b>Monitora e gerencia</span><i>→</i><span><b>Rádio</b>Leva os comandos</span></div><div class="story-channel-status ' + (activated ? 'online' : '') + '"><span>' + (activated ? '✓ CHAVE VALIDADA' : 'AGUARDANDO ATIVAÇÃO') + '</span><b>' + (activated ? 'QBER 3,2% · EXEMPLO' : 'CONEXÃO BLOQUEADA') + '</b></div><button type="button" data-training-action="activate" ' + (activated ? 'disabled' : '') + '>' + (activated ? '✓ QUANTUM SECURITY ATIVO' : 'ATIVAR QUANTUM SECURITY') + '</button><p class="security-note">QKD usa equipamentos quânticos próprios. Esta comunicação não exige um computador quântico universal.</p></div>';
     sync();
   }
   function enter(index) {
+    el('trainingScienceDetails').open=false;
     step = index; last = 0; manualPause = false; feedback = ''; activated = false; measured = null;flightFocused=false;
     gameAudio.stopEffects(); gameAudio.setPaused('training', false); gameAudio.setScene(index === flightStep ? 'tutorial' : 'story');
     simulation = index === flightStep ? new TrainingSimulation((name, options) => {
@@ -73,7 +131,7 @@ const tutorial = (() => {
       else { if (name === 'regenReady') gameAudio.stopLoop('regen'); gameAudio.sfx(name, options); }
     }) : null;
     el('trainingPauseNotice').hidden = true;
-    say(['Íris: segure a defesa até o canhão completar a carga. Eu acompanho o canal com você.', 'Íris: superposição e entrelaçamento também são recursos da computação quântica. Aqui os usamos para distribuir chaves.', 'Íris: a física ajuda a verificar a chave; cifragem e autenticação protegem as ordens.', simulation?.message][index]);
+    say(['Íris: segure a defesa até o canhão completar a carga. Eu acompanho o canal com você.', 'Íris: confira a demonstração. Depois liberamos a conexão com o Q-07.', 'Íris: Quantum Security aguardando ativação. O Q-07 está pronto para receber suas ordens.', simulation?.message][index]);
     render(); el('trainingTitle').focus({ preventScroll: true });
     if (window.innerWidth <= 700) el('trainingStep').scrollIntoView({ block: 'start' });
   }
@@ -114,6 +172,7 @@ const tutorial = (() => {
   }
   function loop(timestamp) {
     if (!introActive) return;
+    if(dialogueIndex>=0){frame=requestAnimationFrame(loop);return;}
     if (!document.hidden && simulation && !manualPause) simulation.update(last ? timestamp - last : 0);
     last = timestamp; draw(); sync(); frame = requestAnimationFrame(loop);
   }
@@ -122,18 +181,36 @@ const tutorial = (() => {
   function revealFlight(){
     if(!flightFocused&&!manualPause&&window.innerWidth<=700){el('trainingFlight').scrollIntoView({block:'center'});flightFocused=true;}
   }
-  function next() { if (!introActive || !completed() || manualPause) return; if (step < steps.length - 1) { enter(step + 1); gameAudio.sfx('ui'); } else { stop(); startDefense(); startGame(); } }
-  function stop() { simulation?.clearInput();introActive = false; cancelAnimationFrame(frame); frame = 0; last = 0; gameAudio.stopEffects(); gameAudio.setPaused('training', false); }
+  function next() { if(dialogueIndex>=0)return; if (!introActive || !completed() || manualPause) return; if (step < steps.length - 1) { enter(step + 1); gameAudio.sfx('ui'); } else { stop(); startDefense(); startGame(); } }
+  function stop() { simulation?.clearInput();dialogueIndex=-1;el('storyPrelude').hidden=true;introActive = false; cancelAnimationFrame(frame); frame = 0; last = 0; gameAudio.stopEffects(); gameAudio.setPaused('training', false); }
   function start() {
     if (typeof isPlaying !== 'undefined' && (isPlaying || finale)) return;
     stop(); arcadeActive = false;
     el('title').style.display = 'none'; el('arcade').style.display = 'none'; el('intro').hidden = false; el('intro').style.display = 'flex';
-    introActive = true; enter(0); frame = requestAnimationFrame(loop);
+    introActive = true; simulation=null;showDialogue(0);el('openingLine').focus({preventScroll:true}); frame = requestAnimationFrame(loop);
   }
+  function showDialogue(index){
+    dialogueIndex=Math.max(0,Math.min(openingDialogue.length-1,index));simulation=null;
+    el('storyPrelude').hidden=false;el('trainingPreparation').hidden=true;
+    const [speaker,line]=openingDialogue[dialogueIndex];
+    el('openingSpeaker').textContent=speaker;el('openingLine').textContent=line;
+    el('openingCount').textContent=(dialogueIndex+1)+' / '+openingDialogue.length;
+    el('openingProgress').max=openingDialogue.length;el('openingProgress').value=dialogueIndex+1;
+    el('openingBack').disabled=dialogueIndex===0;
+    el('openingNext').textContent=dialogueIndex===openingDialogue.length-1?'IR PARA A PREPARAÇÃO →':'PRÓXIMA FALA →';
+    el('storyPrelude').dataset.speaker=speaker.startsWith('TENENTE')?'pilot':'scientist';
+    gameAudio.setScene('story');
+  }
+  function beginPreparation(){if(!introActive)return;dialogueIndex=-1;el('storyPrelude').hidden=true;el('trainingPreparation').hidden=false;enter(0);}
+  function advanceDialogue(){if(!introActive||dialogueIndex<0)return;gameAudio.sfx('ui');if(dialogueIndex===openingDialogue.length-1)beginPreparation();else showDialogue(dialogueIndex+1);}
+  function returnHome(){stop();gameAudio.setScene('menu');el('intro').hidden=true;el('intro').style.display='none';el('title').style.display='';window.dispatchEvent(new Event('resize'));el('titleBtn').focus();}
+  el('openingNext').addEventListener('click',advanceDialogue);
+  el('openingBack').addEventListener('click',()=>{if(introActive&&dialogueIndex>0)showDialogue(dialogueIndex-1);});
+  el('openingHome').addEventListener('click',returnHome);
   el('trainingExperiment').addEventListener('click', event => { const target = event.target.closest('[data-training-action]'); if (target && !target.disabled) action(target.dataset.trainingAction); });
   el('trainingNext').addEventListener('click', next);
   el('trainingBack').addEventListener('click', () => { if (introActive && step > 0) enter(step - 1); });
-  el('trainingRestart').addEventListener('click', () => { if (introActive) enter(0); });
+  el('trainingRestart').addEventListener('click', () => { if (introActive) {dialogueIndex=-1;enter(0);} });
   el('trainingHome').addEventListener('click', event => { event.preventDefault(); stop(); gameAudio.setScene('menu'); el('intro').hidden = true; el('intro').style.display = 'none'; el('title').style.display = ''; window.dispatchEvent(new Event('resize')); el('titleBtn').focus(); });
   el('trainingPause').addEventListener('click', pause);
   for(const [id,direction] of [['trainingLeft',-1],['trainingRight',1]]) {
@@ -151,6 +228,14 @@ const tutorial = (() => {
     if(event.ctrlKey||event.metaKey||event.altKey||event.target.closest('input,select,textarea'))return;
     if(typeof quickGuideOpen!=='undefined'&&quickGuideOpen)return;
     if (!introActive) { if (event.code === 'Enter' && el('title').style.display !== 'none' && !event.defaultPrevented && !event.target.closest('button, a')) { event.preventDefault(); start(); } return; }
+    if(dialogueIndex>=0){
+      if(event.code==='Enter'){
+        if(event.repeat)event.preventDefault();
+        else if(!event.target.closest('button,a,summary')){event.preventDefault();advanceDialogue();}
+      }
+      return;
+    }
+    if (event.target.closest('summary')&&(event.code==='Enter'||event.code==='Space'))return;
     if (event.target.closest('button, a') && (event.code === 'Enter' || event.code === 'Space')) return;
     if (event.code === 'Escape' && !event.repeat) { event.preventDefault(); pause(); }
     if (movementDirection(event.code) && simulation) { event.preventDefault();revealFlight();simulation.press('key:'+event.code,movementDirection(event.code)); }
@@ -160,7 +245,7 @@ const tutorial = (() => {
   document.addEventListener('keyup',event=>simulation?.release('key:'+event.code));
   window.addEventListener('blur', () => { if (introActive && simulation && !manualPause) pause(); });
   document.addEventListener('visibilitychange', () => { last = 0; if (document.hidden && introActive && simulation && !manualPause) pause(); });
-  return { start, stop, refreshControls(){render();el('trainingFeedback').textContent=controlText(feedback);}, suspendForSettings(){const resume=!!(introActive&&simulation&&!manualPause);if(resume)pause();return resume;},resumeFromSettings(){if(introActive&&simulation&&manualPause)pause();} };
+  return { start, stop, beginPreparation, refreshControls(){if(dialogueIndex>=0)return;render();el('trainingFeedback').textContent=controlText(feedback);}, suspendForSettings(){const resume=!!(introActive&&simulation&&!manualPause);if(resume)pause();return resume;},resumeFromSettings(){if(introActive&&simulation&&manualPause)pause();} };
 })();
 function startIntro() { tutorial.start(); }
 function restartStory() { startIntro(); }

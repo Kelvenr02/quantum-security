@@ -57,6 +57,7 @@ jobs:
           path: |
             tmp/browser-tests/
             tmp/layout-check*/
+            tmp/story-check/
             tmp/feedback-check/
             tmp/continuity-check/
             tmp/progression-check/

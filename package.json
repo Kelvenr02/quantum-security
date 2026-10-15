@@ -1,6 +1,6 @@
 {
   "name": "operacao-qubit",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": true,
   "description": "Testes de desenvolvimento; o jogo continua abrindo por index.html sem npm.",
   "scripts": {
