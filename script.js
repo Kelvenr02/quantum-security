@@ -3,9 +3,9 @@ const $ = id => document.getElementById(id);
 const canvas = $('game'), ctx = canvas.getContext('2d');
 
 // ---------- Configuração ----------
-const FRAME_MS = 1000/60;
-const numLanes = OrbitalArena.lanes, winScore = 1000, maxMisses = 12, maxLevel = missionPhases.length;
-const shotCooldown = 300;
+const FRAME_MS = GameRules.frameMs;
+const numLanes = OrbitalArena.lanes, winScore = GameRules.charge, maxMisses = GameRules.maxImpacts, maxLevel = missionPhases.length;
+const shotCooldown = GameRules.shotCooldownMs;
 let shipSize = 25;
 const cloudSpeed = 3.5, spySpeed = 3.5;
 const cloudGapMin = 60, cloudGapMax = 200;
@@ -13,8 +13,8 @@ const cloudGapMin = 60, cloudGapMax = 200;
 // Os parâmetros e conceitos de cada fase estão em phases.js.
 const qberLimit = channelRules.limit, qberMaxView = channelRules.max;
 const cloudQber = 3.5, spyQber = 7;
-const regenDuration = 2000, regenCooldown = 10000;
-const compromisedDuration = 4000;
+const regenDuration = GameRules.regenMs, regenCooldown = GameRules.regenCooldownMs;
+const compromisedDuration = GameRules.compromisedMs;
 
 // Cenário
 const earthVisible = 80;             // altura da Terra visível na base da tela (px)
@@ -38,11 +38,21 @@ let hatchFlash = [], impacts = [];
 let finale = null;                   // diferente de null enquanto o final está rodando
 let campaignMetrics=null;
 const previousCampaigns=[];
+let campaignRandom=new CampaignRandom();
+let arenaBounds={top:0,warningY:180};
+function refreshArenaBounds() {
+  const canvasTop=canvas.getBoundingClientRect?.().top||0;
+  const fallback=height<=620?(width>=height?90:210):width<=900?250:170;
+  const bottoms=[$('channelHud'),$('hudDisplay'),$('phaseHud'),$('bossHud')].filter(Boolean)
+    .filter(el=>!el.hidden).map(el=>el.getBoundingClientRect?.()).filter(r=>r?.height>0).map(r=>r.bottom-canvasTop);
+  const top=(bottoms.length?Math.max(...bottoms):fallback)+6;
+  arenaBounds={top,warningY:Math.min(shipY-60,top+16)};
+}
 const shipPilot=new LanePilot(numLanes,lane=>{
   campaignMetrics?.count('laneChanges');
   gameAudio.sfx('move',{pan:audioPan((lane+.5)*laneWidth)});
 });
-const movementKeys={ArrowLeft:-1,KeyA:-1,ArrowRight:1,KeyD:1};
+
 function syncShipPilot() { if(shipPilot.lane!==currentLane)shipPilot.reset(currentLane); }
 function shipPosition() { syncShipPilot();return shipPilot.position; }
 function shipCenterX() { return (shipPosition()+.5)*laneWidth; }
@@ -57,16 +67,21 @@ function shipTouches(entity,previousY,previousShipX,shipX,radius,previousEntityX
   const t=Math.max(0,Math.min(1,-(x*dx+y*dy)/(dx*dx+dy*dy||1)));
   return Math.hypot(x+dx*t,y+dy*t)<radius;
 }
+function gameMode(){return resolveGameMode({arcade:arcadeActive,playing:isPlaying,paused:isPaused,briefing:isStageBriefing,finale:!!finale,boss:!!boss,failure:!!lastFailure,victory:campaignMetrics?.data.outcome==='victory',training:introActive,settings:settingsOpen});}
+function combatRunning(){return ['wave','boss'].includes(gameMode());}
+function runtimePreferences(){return {keys:{...accessPreferences.keys},reading:accessPreferences.reading,effects:accessPreferences.effects,reducedEffects:reducedEffects()};}
 function clearMovementInput() { shipPilot.clear(); }
-function pressMovement(token,direction) {
-  if(!isPlaying||isPaused||isStageBriefing||isRegen)return;
+function pressMovement(token,direction,source=null) {
+  if(!combatRunning()||isRegen)return;
+  campaignMetrics?.input(source||(token.startsWith('key:')?'keyboard':token.startsWith('pointer:')?'touch':token.startsWith('button:')?'button':'simulation'));
   syncShipPilot();shipPilot.press(token,direction,isCompromised);currentLane=shipPilot.lane;
 }
 function setQber(value,source) {const next=Math.max(0,Math.min(qberMaxView,value));campaignMetrics?.qberChange(source,qber,next);qber=next;}
 window.quantumDiagnostics=Object.freeze({
-  snapshot:()=>campaignMetrics?.snapshot({score,combatScore,level,missed,qber,channel:channelStateName(),guardians:bossesDefeated})??null,
+  snapshot:()=>campaignMetrics?.snapshot({score,combatScore,level,missed,qber,channel:channelStateName(),guardians:bossesDefeated,mode:gameMode(),viewport:{width,height},preferences:runtimePreferences(),goals:phaseGoals?.snapshot(),variant:encounterDirector?.variant})??null,
   previous:()=>JSON.parse(JSON.stringify(previousCampaigns)),
-  export:()=>JSON.stringify(window.quantumDiagnostics.snapshot(),null,2)
+  export:()=>JSON.stringify(window.quantumDiagnostics.snapshot(),null,2),
+  playtest:()=>JSON.stringify({version:1,attempts:[...previousCampaigns,window.quantumDiagnostics.snapshot()].filter(Boolean)},null,2)
 });
 
 function resizeCanvas() {
@@ -74,6 +89,7 @@ function resizeCanvas() {
   if (window.innerWidth <= 1 || window.innerHeight <= 1) return;
   const previousWidth = width, previousHeight = height;
   width = Math.min(window.innerWidth, OrbitalArena.maxWidth); height = window.innerHeight;
+  if(campaignMetrics&&previousWidth&&(previousWidth!==width||previousHeight!==height))campaignMetrics.event('viewportChanged',{width,height});
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
   canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
@@ -110,6 +126,7 @@ function resizeCanvas() {
   spaceBackdrop = makeSpaceBackdrop(width,height);
   $('qberMark').style.left = (qberLimit/qberMaxView*100) + '%';
   buildEarth();
+  refreshArenaBounds();
   if (arcadeActive && !isPlaying && !finale) drawBackground(0);
 }
 window.addEventListener('resize', resizeCanvas);
@@ -130,14 +147,20 @@ function buildEarth() {
 }
 
 resizeCanvas();
+if(typeof ResizeObserver!=='undefined') {
+  const hudObserver=new ResizeObserver(refreshArenaBounds);
+  for(const id of ['channelHud','hudDisplay','phaseHud','bossHud'])hudObserver.observe($(id));
+}
 
 // ---------- Entrada ----------
 window.addEventListener('keydown', e => {
+  if (typeof settingsOpen!=='undefined'&&settingsOpen) return;
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
   if (!arcadeActive) return;
   if(e.code==='Enter' && e.target?.closest?.('summary'))return;
   if(e.code==='Enter'&&e.repeat){e.preventDefault();return;}
   if(e.target?.closest?.('input,textarea,select,[contenteditable="true"]'))return;
-  if(e.code==='Enter' && e.target?.closest?.('button,a,input') && !isStageBriefing)return;
+  if(e.code==='Enter' && e.target?.closest?.('button,a,input'))return;
   if (['ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
   // ENTER inicia / reinicia o jogo quando o menu está aberto (e não durante o final)
   if (e.code === 'Enter' && !isPlaying && !finale) {
@@ -148,25 +171,28 @@ window.addEventListener('keydown', e => {
   }
   if (isStageBriefing) { if (e.code === 'Enter') { e.preventDefault(); continuePhase(); } return; }
   if (!isPlaying || isPaused) return;
-  if (e.code === 'KeyR') tryRegen();
-  if (movementKeys[e.code]) { e.preventDefault();pressMovement('key:'+e.code,movementKeys[e.code]); }
+  if (regenerationKey(e.code)) {e.preventDefault();tryRegen('keyboard');}
+  if (movementDirection(e.code)) { e.preventDefault();pressMovement('key:'+e.code,movementDirection(e.code)); }
 });
 window.addEventListener('keyup',e=>shipPilot.release('key:'+e.code));
 
 const audioPan = x => width > 0 ? x / width * 1.2 - .6 : 0;
-function moveShip(direction) {
-  if(!isPlaying||isPaused||isStageBriefing||isRegen)return false;
-  syncShipPilot();const moved=shipPilot.move(direction);currentLane=shipPilot.lane;return moved;
+function moveShip(direction,source='simulation') {
+  if(!combatRunning()||isRegen)return false;
+  syncShipPilot();const moved=shipPilot.move(direction);currentLane=shipPilot.lane;if(moved)campaignMetrics?.input(source);return moved;
 }
 
-function tryRegen() {
-  if(!isPlaying||isPaused||isStageBriefing)return;
+function tryRegen(source='simulation') {
+  if(!combatRunning())return;
   campaignMetrics?.count('regenAttempts');
   if (isRegen || gameTime < keyReadyAt) {campaignMetrics?.count('regenRejected');if(!isRegen)notifyCombat('R RECARREGANDO · '+((keyReadyAt-gameTime)/1000).toFixed(1)+' s');return;}
   campaignMetrics?.count('regenerationsStarted');campaignMetrics?.event('regen',{qber,emergency:isCompromised});
+  campaignMetrics?.input(source,'regen');campaignMetrics?.milestone('regen',{input:source,qber,recovery:bossRecoveryAvailable()||waveRecoveryAvailable()});
+  if(qber>0&&(bossRecoveryAvailable()||waveRecoveryAvailable()))recordPhaseGoal('regenInRecovery');
   if(isCompromised)campaignMetrics?.count('emergencyRegenerations');
   isCompromised=false;compEnd=0;
   isRegen = true; regenEnd = gameTime + regenDuration; keyReadyAt = gameTime + regenCooldown;
+  queueScienceCue('renew');
   gameAudio.startLoop('regen');
 }
 
@@ -176,11 +202,18 @@ function startGame(checkpoint = null) {
   gameAudio.stopEffects(); gameAudio.setPaused('game', false); gameAudio.setScene('phase', checkpoint?.level || 1); gameAudio.sfx('confirm');
   cancelAnimationFrame(rafId);
   finale = null;
+  canvas.focus({preventScroll:true});
   $('ui').style.display = 'none'; $('warning').style.display = 'none';
   isPlaying = true; isPaused = false; $('pauseOverlay').hidden = true; particles = []; $('pauseBtn').disabled = false; $('pauseBtn').innerHTML = 'Ⅱ <span>PAUSAR</span>';
   score = 0; combatScore=0; campaignSeed=checkpoint?.seed??Math.floor(Math.random()*4294967296); missed = 0; level = 1; currentLane = Math.floor(numLanes/2); qber = 0;
-  if(campaignMetrics) {previousCampaigns.push(campaignMetrics.snapshot());if(previousCampaigns.length>5)previousCampaigns.shift();}
-  campaignMetrics=new CampaignMetrics({lanes:numLanes,stepMs:OrbitalArena.stepMs,width,height,seed:campaignSeed},checkpoint?.level||1);
+  campaignRandom=new CampaignRandom(campaignSeed,checkpoint?.random);
+  encounterOverride=checkpoint?{phase:checkpoint.level,variant:checkpoint.variant??0}:null;
+  beginCampaignJourney(checkpoint);
+  if(campaignMetrics) {previousCampaigns.push(campaignMetrics.snapshot());if(previousCampaigns.length>20)previousCampaigns.shift();}
+  campaignMetrics=new CampaignMetrics({lanes:numLanes,stepMs:OrbitalArena.stepMs,width,height,seed:campaignSeed,randomVersion:CampaignRandom.version,encounterVersion:EncounterDirector.version},checkpoint?.level||1);
+  campaignMetrics.data.configuration.preferences=runtimePreferences();
+  syncCampaignIdentity();$('campaignResult').hidden=true;$('phaseFinalReport').hidden=true;
+  campaignMetrics.data.entry={phase:checkpoint?.level||1,kind:checkpoint?.kind||'wave'};
   campaignMetrics.event('campaignStart',{checkpoint:!!checkpoint});
   shipPilot.reset(currentLane);
   isRegen = false; isCompromised = false; regenEnd = 0; compEnd = 0; keyReadyAt = 0; invulUntil = 0; criticalGraceUntil=0;
@@ -197,9 +230,12 @@ function startGame(checkpoint = null) {
     phaseCheckpointData=checkpoint.kind==='boss'?null:checkpoint;restoreResources(checkpoint);
   }
   resetEncounters();
+  phaseGoals=new PhaseGoals(level,checkpoint?.goals,!checkpoint||checkpoint.kind==='wave');lastPhaseReport=null;
   if(!checkpoint)phaseCheckpointData=captureCheckpoint('wave');
   resetResourceFeedback();$('btnRetryPhase').hidden=true;
-  updateHUD(); refreshCombatHUD();
+  resetScienceCues();
+  updateHUD(); refreshCombatHUD();refreshArenaBounds();
+  if(!checkpoint)saveCampaignEntry(phaseCheckpointData);
   rafId = requestAnimationFrame(update);
 }
 
@@ -220,11 +256,11 @@ function updateQberUI() {
   $('qberFill').style.background = isCompromised ? '#ef7976' : (qber > qberLimit*0.7 ? '#e6c491' : '#6ce8cd');
   const ls = $('linkStatus');
   if (isRegen)  { ls.innerText = 'Canal: renovando chave...'; ls.style.color = '#88bbff'; }
-  else if (isCompromised) { ls.innerText = 'Canal: COMPROMETIDO'; ls.style.color = '#ff5555'; }
+  else if (isCompromised) { ls.innerText = 'Comandos INVERTIDOS'; ls.style.color = '#ff5555'; }
   else if (qber >= channelRules.alert) { ls.innerText = qber>qberLimit?'Canal: CRÍTICO':'Canal: INSTÁVEL'; ls.style.color = '#ffaa00'; }
   else { ls.innerText = 'Canal quântico: seguro'; ls.style.color = '#6ce8cd'; }
   const wait = Math.max(0, (keyReadyAt - gameTime)/1000);
-  $('keyStatus').innerHTML = '<kbd>R</kbd> ' + (isRegen?'Renovando...':wait<=0?(isCompromised?'Renovação de emergência':'Renovar chave: pronta'):`Recarga: ${wait.toFixed(1)}s`);
+  $('keyStatus').innerHTML = '<kbd>'+keyLabel('regen')+'</kbd> ' + (isRegen?'Renovando...':wait<=0?(isCompromised?'Renovação de emergência':'Renovar chave: pronta'):`Recarga: ${wait.toFixed(1)}s`);
 }
 
 function showWarning(html, bg, border, kind='state') {
@@ -251,9 +287,10 @@ function endGame(title, color, html) {
   const b = $('btnStart');
   b.innerText = "Jogar Novamente"; b.disabled = true; b.blur();
   $('btnRetry').disabled=true;$('btnRetryPhase').disabled=true;$('btnDevRevive').disabled=true;
-  setTimeout(() => { b.disabled = false;$('btnRetry').disabled=false;$('btnRetryPhase').disabled=false;$('btnDevRevive').disabled=false; }, 800);
+  setTimeout(() => { b.disabled = false;$('btnRetry').disabled=false;$('btnRetryPhase').disabled=false;$('btnDevRevive').disabled=false;if(!isPlaying&&!finale&&arcadeActive)($('btnRetry').hidden?b:$('btnRetry')).focus({preventScroll:true}); }, 800);
   $('missionInstructions').hidden = true; $('pauseBtn').disabled = true;
   $('ui').style.display = 'flex';
+  $('campaignResult').textContent=campaignResultLabel();$('campaignResult').hidden=!campaignJourney;
 }
 function gameOver(reason,cause={}) {
   const reviveBoss=boss;
@@ -274,10 +311,13 @@ function showVictory() {
   endGame("A TERRA ESTÁ SALVA! 🎉", "#55ff55",
     `<b>O canhão disparou!</b><br><br>Você neutralizou os oito guardiões, protegeu a Terra e liberou o disparo contra a nave-mãe.<br><br>Desafios concluídos: <b>${bossesDefeated} / ${maxLevel}</b> · Cápsulas coletadas: <b>${quantumCollected}</b><br>Pontos: <b>${combatScore}</b> · Carga: <b>${score} / ${winScore}</b> · Impactos atuais: <b>${missed} de ${maxMisses} permitidos</b>`);
   gameAudio.setScene('victory'); gameAudio.sfx('victory');
+  $('phaseFinalReport').hidden=!lastPhaseReport;
+  if(lastPhaseReport)$('phaseFinalReport').textContent=lastPhaseReport.text+' Medalhas da campanha: '+(campaignJourney.awards||[]).filter(Boolean).length+'/8.';
 }
 
 // ---------- Final: canhão de energia da Terra ----------
 function startFinale() {
+  clearCompletedCampaign();
   campaignMetrics?.finish('victory',{score,combatScore,missed,guardians:bossesDefeated});clearMovementInput();
   gameAudio.stopLoop('regen'); gameAudio.setScene('finale');
   isPlaying = false; cancelAnimationFrame(rafId); $('pauseBtn').disabled = true;
@@ -315,7 +355,7 @@ function finaleLoop(ts) {
   if (t >= T_BOOM && !finale.boomed) {
     finale.boomed = true;
     gameAudio.stopLoop('beam'); gameAudio.sfx('mothership');
-    for (let i = 0; i < 120; i++) {
+    for (let i = 0; i < (reducedEffects()?0:120); i++) {
       const a = Math.random()*Math.PI*2, v = 1 + Math.random()*6;
       finale.parts.push({ x: cx + (Math.random()-.5)*width*0.5, y: top - 10,
         vx: Math.cos(a)*v, vy: Math.abs(Math.sin(a))*v*0.6, life: 1, hue: Math.random()*50 });
@@ -323,7 +363,7 @@ function finaleLoop(ts) {
   }
 
   ctx.save();
-  if (t > T_BEAM && t < T_BOOM + 1500) ctx.translate((Math.random()-.5)*7, (Math.random()-.5)*7);  // tremor
+  if (!reducedEffects() && t > T_BEAM && t < T_BOOM + 1500) ctx.translate((Math.random()-.5)*7, (Math.random()-.5)*7);  // tremor
   drawBackground(dt);
   drawLink(shipX);
   drawShip(shipX, "#00ffff", false);
@@ -332,9 +372,9 @@ function finaleLoop(ts) {
   if (t > T_MOVE && t < T_BEAM) {
     const c = (t - T_MOVE)/(T_BEAM - T_MOVE), r = 4 + 30*c;
     ctx.save(); ctx.shadowBlur = 20 + 40*c; ctx.shadowColor = "#0ff"; ctx.fillStyle = "#fff";
-    ctx.beginPath(); ctx.arc(cx, tipY, r*(0.9 + 0.1*Math.random()), 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, tipY, r*(reducedEffects()?1:(0.9 + 0.1*Math.random())), 0, Math.PI*2); ctx.fill();
     ctx.fillStyle = "#7ff";
-    for (let i = 0; i < 8; i++) {                       // faíscas sendo sugadas para o canhão
+    for (let i = 0; i < (reducedEffects()?0:8); i++) {                       // faíscas sendo sugadas para o canhão
       const a = i*Math.PI/4 + t/200, d = 90*(1 - ((t/500 + i/8) % 1));
       ctx.beginPath(); ctx.arc(cx + Math.cos(a)*d, tipY + Math.sin(a)*d, 3, 0, Math.PI*2); ctx.fill();
     }
@@ -353,7 +393,7 @@ function finaleLoop(ts) {
   }
 
   // nave-mãe (pisca ao ser atingida e some após a explosão)
-  if (!finale.boomed && (t < T_BEAM + 500 || Math.random() < 0.7)) drawMothership();
+  if (!finale.boomed && (reducedEffects() || t < T_BEAM + 500 || Math.random() < 0.7)) drawMothership();
 
   // fragmentos da explosão
   for (const p of finale.parts) {
@@ -367,7 +407,7 @@ function finaleLoop(ts) {
 
   // clarão branco da explosão
   if (t >= T_BOOM && t < T_BOOM + 600) {
-    ctx.fillStyle = `rgba(255,255,255,${1 - (t - T_BOOM)/600})`; ctx.fillRect(0, 0, width, height);
+    if(!reducedEffects()){ctx.fillStyle = `rgba(255,255,255,${1 - (t - T_BOOM)/600})`; ctx.fillRect(0, 0, width, height);}
   }
 
   // textos
@@ -400,7 +440,7 @@ const blockedByAsteroid = lane => asteroids.some(e => laneOf(e) === lane && e.y 
 const flashHatch = (lane, color) => { hatchFlash[lane] = { color, until: gameTime + hatchFlashMs }; };
 
 function shuffled(arr) {
-  for (let i = arr.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [arr[i],arr[j]] = [arr[j],arr[i]]; }
+  for (let i = arr.length-1; i > 0; i--) { const j = Math.floor(campaignRandom.next('clouds')*(i+1)); [arr[i],arr[j]] = [arr[j],arr[i]]; }
   return arr;
 }
 
@@ -408,11 +448,11 @@ function spawnClouds() {
   if (clouds.length > (level>=5?2:0) || noImpact() || gameTime < nextCloudAt) return;
   const free = shuffled([...Array(numLanes).keys()].filter(i => !blockedByAsteroid(i)));
   if (free.length < 2) return;
-  const gap = cloudGapMin + Math.random()*(cloudGapMax - cloudGapMin);
+  const gap = cloudGapMin + campaignRandom.next('clouds')*(cloudGapMax - cloudGapMin);
   clouds.push(makeCloud(free[0], -50), makeCloud(free[1], -50-gap));
   campaignMetrics?.count('cloudsSpawned',2);
   flashHatch(free[0], "#b04dff"); flashHatch(free[1], "#b04dff");
-  nextCloudAt = gameTime + phaseConfig().cloudInterval * (.9 + Math.random()*.2);
+  nextCloudAt = gameTime + phaseConfig().cloudInterval * (.9 + campaignRandom.next('clouds')*.2);
 }
 
 function spawnSpies() {            // pulsos espiões: a partir da fase 2
@@ -420,11 +460,11 @@ function spawnSpies() {            // pulsos espiões: a partir da fase 2
   const free = [...Array(numLanes).keys()].filter(i => !blockedByHazard(i) && !blockedByAsteroid(i));
   if (!free.length) return;
   const playerLane=occupiedShipLane();
-  const l = free.includes(playerLane) && Math.random()<.6 ? playerLane : free[Math.floor(Math.random()*free.length)];
+  const l = free.includes(playerLane) && campaignRandom.next('spies')<.6 ? playerLane : free[Math.floor(campaignRandom.next('spies')*free.length)];
   spies.push({ x: l*laneWidth + laneWidth/2, y: -40, radius: laneWidth*0.22, speed: flightSpeed(spySpeed + (level-2)*.12) });
   campaignMetrics?.count('spiesSpawned');
   flashHatch(l, "#ffd21f");
-  nextSpyAt = gameTime + phaseConfig().spyInterval * (.9 + Math.random()*.2);
+  nextSpyAt = gameTime + phaseConfig().spyInterval * (.9 + campaignRandom.next('spies')*.2);
 }
 
 function fireLaser(x) {
@@ -442,7 +482,7 @@ function fireLaser(x) {
 // ---------- Desenho: cenário ----------
 function drawBackground(dt) {
   if(spaceBackdrop)ctx.drawImage(spaceBackdrop,0,0);else{ctx.fillStyle='#070d17';ctx.fillRect(0,0,width,height)}
-  stars.forEach(s=>{s.y+=s.speed*dt;if(s.y>height)s.y=0;ctx.fillStyle='rgba(204,231,235,.45)';ctx.beginPath();ctx.arc(s.x,s.y,s.size,0,Math.PI*2);ctx.fill()});
+  stars.forEach(s=>{s.y+=s.speed*(reducedEffects()?0:dt);if(s.y>height)s.y=0;ctx.fillStyle='rgba(204,231,235,.45)';ctx.beginPath();ctx.arc(s.x,s.y,s.size,0,Math.PI*2);ctx.fill()});
   ctx.lineWidth=1;ctx.strokeStyle='rgba(145,202,210,.045)';ctx.setLineDash([3,12]);
   for(let i=1;i<numLanes;i++){ctx.beginPath();ctx.moveTo(i*laneWidth,210);ctx.lineTo(i*laneWidth,earthTop);ctx.stroke()}ctx.setLineDash([]);
   if(isPlaying&&!finale){const x=currentLane*laneWidth;const lane=ctx.createLinearGradient(0,shipY-180,0,earthTop);lane.addColorStop(0,'rgba(108,232,205,0)');lane.addColorStop(1,'rgba(108,232,205,.035)');ctx.fillStyle=lane;ctx.fillRect(x,shipY-180,laneWidth,earthTop-shipY+180)}
@@ -517,7 +557,7 @@ function drawMothership() {
 
   // luzes piscando na borda
   for (let i = 0; i <= numLanes; i++) {
-    const x = i*laneWidth, y = hullBottom(x) - 9, on = Math.sin(gameTime/180 + i*1.7) > 0;
+    const x = i*laneWidth, y = hullBottom(x) - 9, on = reducedEffects()||Math.sin(gameTime/180 + i*1.7) > 0;
     ctx.save();
     if (on) { ctx.shadowBlur = 8; ctx.shadowColor = "#cf7c8a"; }
     ctx.fillStyle = on ? "#ff5b83" : "#552233";
@@ -525,7 +565,7 @@ function drawMothership() {
   }
 
   // núcleo (pulsa mais rápido quando o canal está comprometido)
-  const pulse = 0.5 + 0.5*Math.sin(gameTime/(isCompromised ? 120 : 400)), cy = hullBottom(cx) - 34;
+  const pulse = reducedEffects()?0.6:0.5 + 0.5*Math.sin(gameTime/(isCompromised ? 120 : 400)), cy = hullBottom(cx) - 34;
   const core = ctx.createRadialGradient(cx, cy, 2, cx, cy, 16);
   core.addColorStop(0, "#ffd0dc"); core.addColorStop(.5, "#ff3b6b"); core.addColorStop(1, "#7a0f2e");
   ctx.shadowBlur = 10 + 14*pulse; ctx.shadowColor = "#ff3b6b"; ctx.fillStyle = core;
@@ -539,9 +579,9 @@ function drawLink(shipX) {
   const r = Math.min(1, qber/qberLimit);
   ctx.save(); ctx.lineWidth = 1;
   if (isCompromised) { ctx.strokeStyle = "rgba(255,60,60,.6)"; ctx.setLineDash([3,16]); ctx.lineDashOffset = Math.random()*20; }
-  else if (isRegen)  { ctx.strokeStyle = `rgba(150,200,255,${0.6 + 0.4*Math.sin(gameTime/60)})`; }
+  else if (isRegen)  { ctx.strokeStyle = `rgba(150,200,255,${0.6 + (reducedEffects()?0:0.4*Math.sin(gameTime/60))})`; }
   else {
-    ctx.strokeStyle = `hsla(${165 - 165*r},65%,65%,${0.3 + 0.15*Math.sin(gameTime/200)})`;
+    ctx.strokeStyle = `hsla(${165 - 165*r},65%,65%,${0.3 + (reducedEffects()?0:0.15*Math.sin(gameTime/200))})`;
     ctx.setLineDash([10,6]); ctx.lineDashOffset = (r > 0.6 ? Math.random()*6 : -gameTime/40);
   }
   ctx.beginPath(); ctx.moveTo(width/2, baseTipY());
@@ -551,12 +591,12 @@ function drawLink(shipX) {
 
 // ---------- Desenho: nave do jogador (caça com asas, canhões e dois motores) ----------
 function drawShip(x,color,flicker) {
-  if(gameTime<hullInvulUntil && Math.floor(gameTime/100)%2===0)return;
-  if(flicker&&Math.floor(gameTime/150)%2===0)return;
+  if(!reducedEffects() && gameTime<hullInvulUntil && Math.floor(gameTime/100)%2===0)return;
+  if(!reducedEffects()&&flicker&&Math.floor(gameTime/150)%2===0)return;
   const shipColor=isRegen?'#99bbef':flicker?'#ef7976':'#6ce8cd';
   drawInterceptor(ctx,x,shipY,shipSize,shipColor,gameTime,flicker);
   if(isRegen){ctx.save();ctx.strokeStyle='#99bbef77';ctx.lineWidth=1;ctx.setLineDash([6,7]);ctx.beginPath();ctx.arc(x,shipY,shipSize*1.8,gameTime/350,gameTime/350+Math.PI*1.7);ctx.stroke();ctx.restore()}
-  if(gameTime-lastShotTime<80)drawGlow(ctx,x,shipY-shipSize*1.3,14,'rgba(166,255,232,.5)');
+  if(!reducedEffects()&&gameTime-lastShotTime<80)drawGlow(ctx,x,shipY-shipSize*1.3,14,'rgba(166,255,232,.5)');
 }
 
 // ---------- Desenho: ameaças ----------
@@ -567,16 +607,21 @@ function drawCloud(c) { drawQuantumCloud(c); }
 
 function drawBanner() {
   if(gameTime>bannerUntil)return;
-  const bannerY = Math.max(height*.42, Math.min(355, height*.6));
+  if(height<=420)return;
+  const bannerY = Math.max(arenaBounds.top+20,Math.max(height*.42, Math.min(355, height*.6)));
   ctx.save();ctx.globalAlpha=Math.min(1,(bannerUntil-gameTime)/500);
   ctx.textAlign='center';ctx.fillStyle='#829eae';ctx.font='9px Consolas,monospace';ctx.fillText(phaseConfig().concept.toUpperCase(),width/2,bannerY);
-  ctx.fillStyle='#deeee9';ctx.font='300 '+Math.min(32,width/15)+'px Segoe UI,sans-serif';ctx.fillText('FASE 0'+level+' · '+phaseConfig().name,width/2,bannerY+36);
+  const title='FASE 0'+level+' · '+phaseConfig().name;
+  let size=Math.min(32,width/15);ctx.font='300 '+size+'px Segoe UI,sans-serif';
+  const measured=ctx.measureText?.(title)?.width||0;
+  if(measured>width-32){size*=(width-32)/measured;ctx.font='300 '+size+'px Segoe UI,sans-serif';}
+  ctx.fillStyle='#deeee9';ctx.fillText(title,width/2,bannerY+36);
   ctx.strokeStyle='#6ce8cd66';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(width/2-25,bannerY+52);ctx.lineTo(width/2+25,bannerY+52);ctx.stroke();ctx.restore();
 }
 
 // ---------- Loop ----------
 function update(ts) {
-  if (!isPlaying || isPaused || isStageBriefing) return;
+  if (!combatRunning()) return;
   if (!boss && encountersReady() && !bossCleared[level-1]) { beginBoss(); return; }
   if (!lastTs) lastTs = ts;
   const dt = Math.max(0,Math.min((ts - lastTs)/FRAME_MS, 3));
@@ -590,7 +635,12 @@ function update(ts) {
   const previousShipX=shipCenterX();
   shipPilot.advance(movementMs,isRegen,isCompromised);currentLane=shipPilot.lane;
   const shipX = shipCenterX();
-  campaignMetrics?.tick(dt*FRAME_MS,{position:shipPosition(),previousPosition:previousShipX/laneWidth-.5,qber,regenReady:gameTime>=keyReadyAt&&!isRegen,regenerating:isRegen,compromised:isCompromised,recoveryWindow:bossRecoveryAvailable()||waveRecoveryAvailable()});
+  const bossFighting=boss?.status==='fighting'&&!boss.model.complete;
+  const targetOpen=!!bossFighting&&boss.model.targets(qber).some(n=>n.open);
+  const bossThreat=!!bossFighting&&(boss.model.pulses.some(p=>!p.fired&&boss.model.time>=p.announceAt)||!!boss.channelPulse&&!boss.channelPulse.fired);
+  const waveThreat=!boss&&(asteroids.length||drones.length||scout||clouds.some(c=>c.y-c.radius<=shipY)||spies.some(p=>p.y-p.radius<=shipY)||interferenceFront&&!interferenceFront.passed||encounterDirector?.pending);
+  campaignMetrics?.tick(dt*FRAME_MS,{position:shipPosition(),previousPosition:previousShipX/laneWidth-.5,qber,regenReady:gameTime>=keyReadyAt&&!isRegen,regenerating:isRegen,compromised:isCompromised,recoveryWindow:bossRecoveryAvailable()||waveRecoveryAvailable(),
+    actionable:!!(targetOpen||bossThreat||waveThreat||isRegen||bossFighting&&boss.model.stabilizing&&boss.model.coherence<90||qber>=channelRules.alert&&gameTime>=keyReadyAt),waitingForOpening:!!bossFighting&&!targetOpen&&!bossThreat&&!isRegen});
   if(!boss)updateInterference(dt);
   drawEntangledLinks();
   const protectedNow = noImpact();
@@ -662,6 +712,7 @@ function update(ts) {
       if (laserTouchesEntity(l,a,previousY,previousX)) {
         lasers.splice(j,1); a.hp--;
         campaignMetrics?.count('asteroidHits');
+        if(l.quantum)recordPhaseGoal('hadamardHits');
         if (a.hp <= 0) { destroyQuantumAsteroid(a); destroyed = true; }
         else { a.hitUntil = gameTime+160; gameAudio.sfx('impact', { pan: audioPan(a.x) }); }
         break;
@@ -672,7 +723,7 @@ function update(ts) {
     if (a.y-a.radius*.5 > earthTop) {
       asteroids.splice(asteroids.indexOf(a),1);resolveThreat(a); impacts.push({x:a.x,t:gameTime});
       gameAudio.sfx('earth', { pan: audioPan(a.x) });
-      campaignMetrics?.count('earthImpacts');campaignMetrics?.event('earthImpact',{kind:a.kind||'rock',lane:laneOf(a)});missed++; updateHUD();
+      campaignMetrics?.count('earthImpacts');recordPhaseGoal('earthImpacts');campaignMetrics?.event('earthImpact',{kind:a.kind||'rock',lane:laneOf(a)});missed++; updateHUD();
       if (missed >= maxMisses) { gameOver('Defesa falhou! '+maxMisses+' asteroides atingiram a Terra.',{kind:'earth'}); return; }
     }
   }

@@ -127,7 +127,7 @@ test('Nuvens têm limite simultâneo e permanência breve sem travar o encontro'
   g.run('gameTime+=1200;update(160)');assert.ok(g.run('clouds[0].y>shipY-16'));
 });
 test('Respiro permite R e pausa congela mira, divisão e relógio dos encontros',()=>{
-  const g=makeGame();setup(g,2);actor(g,'scout');g.run('encounterDirector.state="breather";encounterDirector.breatherUntil=1800;qber=8;updateQuantumStatus()');assert.equal(g.run('waveRecoveryAvailable()'),true);
+  const g=makeGame();setup(g,2);actor(g,'scout');g.run('encounterDirector.state="breather";encounterDirector.breatherUntil=3000;qber=8;updateQuantumStatus()');assert.equal(g.run('waveRecoveryAvailable()'),true);
   assert.match(g.elements.get('quantumStatus').textContent,/RESPIRO/);g.press('Escape');g.run('update(9000)');assert.equal(g.run('gameTime'),0);assert.equal(g.run('scout.state'),'tracking');g.press('Escape');
   g.run('gameTime=750');assert.equal(g.run('waveRecoveryAvailable()'),false);
 });

@@ -23,9 +23,11 @@ function updatePhaseHUD() {
 function enterPhase(nextLevel) {
   gameAudio.stopLoop('regen'); gameAudio.setScene('briefing', nextLevel); gameAudio.sfx('phase');
   level = nextLevel; phaseWaveCount = 0; pickupSerial = level % 2; isStageBriefing = true; cancelAnimationFrame(rafId);
+  if(phaseGoals?.phase!==level)phaseGoals=new PhaseGoals(level);
   clearMovementInput();
   if(!isRegen){shipPilot.reset(occupiedShipLane());currentLane=shipPilot.lane;}
   campaignMetrics?.setContext(level,'wave');campaignMetrics?.event('phaseStart',{score,qber});
+  campaignMetrics?.count('briefingViews');campaignMetrics?.event('briefingViewed',{kind:'phase'});
   bossCheckpointData=null;
   $('bossInstructions').hidden=true;$('bossControls').hidden=true;
   $('phaseScienceDetails').open=true;$('phaseOverlay').dataset.mode='phase';
@@ -36,14 +38,17 @@ function enterPhase(nextLevel) {
   nextCloudAt = gameTime+3500;
   nextSpyAt = gameTime+5000; nextPickupAt = gameTime+2500; nextInterferenceAt = gameTime+6000;
   phaseCheckpointData=captureCheckpoint('wave');
+  saveCampaignEntry(phaseCheckpointData);
   $('warning').style.display = 'none'; $('pauseBtn').disabled = true;
   const phase = phaseConfig();
   $('phaseEyebrow').textContent = 'DR. ÍRIS / FASE '+String(level).padStart(2,'0')+' DE '+maxLevel;
   $('phaseTitle').textContent = phase.name;
   $('phaseObjective').textContent = phase.objective;
+  $('phaseOptional').textContent=optionalGoalText();$('phaseOptional').hidden=false;showPhaseReport();
   $('phaseConcept').textContent = phase.concept;
   $('phaseScience').textContent = phase.science;
-  $('phaseCheckpoint').textContent = channelBriefingStatus()+' · GUARDIÕES '+bossesDefeated+'/8 · IMPACTOS '+missed+'/'+maxMisses+' · ESCUDO '+hullShield+(lastReward?' · REPARO +'+lastReward.repair+(lastReward.clean?' (SEM DANO)':''):'')+' · AO FIM: '+quantumBosses[level-1].name.toUpperCase();
+  configureSciencePanel('phase');
+  $('phaseCheckpoint').textContent = controlText(channelBriefingStatus())+' · GUARDIÕES '+bossesDefeated+'/8 · IMPACTOS '+missed+'/'+maxMisses+' · ESCUDO '+hullShield+(lastReward?' · REPARO +'+lastReward.repair+(lastReward.clean?' (SEM DANO)':''):'')+' · AO FIM: '+quantumBosses[level-1].name.toUpperCase();
   $('phaseRoute').innerHTML = missionPhases.map((p,i)=>'<span class="'+(i+1<level?'complete':i+1===level?'current':'')+'" title="'+p.name+'" aria-label="Fase '+(i+1)+': '+p.name+'">'+String(i+1).padStart(2,'0')+'</span>').join('');
   updateHUD(); updateQuantumStatus(); drawBackground(0); drawMothership();
   $('phaseOverlay').hidden = false; $('btnContinue').focus({preventScroll:true});$('phaseOverlay').scrollTop=0;
@@ -56,6 +61,7 @@ function continuePhase() {
   isStageBriefing = false; $('phaseOverlay').hidden = true;
   $('pauseBtn').disabled = false; $('btnContinue').blur();
   canvas.focus({preventScroll:true}); bannerUntil = gameTime+2400; lastTs = 0;
+  refreshArenaBounds();
   rafId = requestAnimationFrame(update);
 }
 
@@ -106,6 +112,7 @@ function updateQuantumPickups(dt,shipX,previousShipX=shipX) {
     const previousY=p.y;p.y+=p.speed*activeDt;
     if(shipTouches(p,previousY,previousShipX,shipX,p.radius+shipSize*.7)){
       quantumCollected++;campaignMetrics?.count(p.type==='correction'?'correctionsCollected':'hadamardsCollected');
+      queueScienceCue(p.type==='correction'?'correction':'h');
       gameAudio.sfx(p.type==='correction'?'correction':'hadamard',{pan:audioPan(p.x)});
       if(p.type==='correction'){
         const removed=Math.min(qber,resourceRules.correction),cooldown=Math.min(Math.max(0,keyReadyAt-gameTime),resourceRules.correctionCooldownMs);
@@ -194,9 +201,10 @@ function drawAsteroidQuantum(a) {
 }
 
 function destroyQuantumAsteroid(target) {
+  if(target.group!==null&&target.group!==undefined)queueScienceCue('bell');
   const victims = asteroids.filter(a => a===target || (target.group !== null && a.group===target.group));
   gameAudio.sfx('explosion', { pan: audioPan(target.x) });
-  for (const a of victims) {emitDebris(a.x,a.y,a.radius);asteroids.splice(asteroids.indexOf(a),1);combatScore+=a.fragment?5:a.splittable?15:10;}
+  for (const a of victims) {if(a.splittable)recordPhaseGoal('splitsPrevented');emitDebris(a.x,a.y,a.radius);asteroids.splice(asteroids.indexOf(a),1);combatScore+=a.fragment?5:a.splittable?15:10;}
   victims.forEach(resolveThreat);
   campaignMetrics?.count('asteroidsDestroyed',victims.length);
   updateHUD();
@@ -205,7 +213,7 @@ function destroyQuantumAsteroid(target) {
 function updateInterference(dt) {
   if (!phaseConfig().interference) return;
   if (!interferenceFront && encounterDirector?.ambientAllowed && gameTime >= nextInterferenceAt) {
-    const gap=Math.floor(Math.random()*(numLanes-2));
+    const gap=Math.floor(campaignRandom.next('interference')*(numLanes-2));
     const lanes=Array.from({length:numLanes},(_,i)=>i).filter(i=>i<gap||i>gap+2);
     interferenceFront={lanes,releaseAt:gameTime+1800,y:95,passed:false};
     if(level>=7&&encounterDirector.index===2){
@@ -226,7 +234,7 @@ function drawInterferenceFront(front,dt,label='A',row=0) {
   if(front.y>earthTop+30)return;
   ctx.save();
   if (gameTime < front.releaseAt) {
-    const top=height<=620?182:width<=900?260:225,guide=top+row*(height<=620?28:34);
+    const guide=arenaBounds.warningY+row*(height<=620?18:28);
     ctx.textAlign='center';ctx.font='10px Consolas,monospace';
     ctx.fillStyle='#d5bdf4';ctx.fillText('FRENTE '+label+' · '+((front.releaseAt-gameTime)/1000).toFixed(1)+' s',width/2,guide);
     for(let lane=0;lane<numLanes;lane++){

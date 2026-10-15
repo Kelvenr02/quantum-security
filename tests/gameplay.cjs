@@ -6,22 +6,22 @@ const root = path.join(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const ids = [...html.matchAll(/id="([^"]+)"/g)].map(m => m[1]);
 assert.equal(new Set(ids).size, ids.length, 'IDs da interface devem ser únicos');
-const scripts = ['arena.js','metrics.js','phases.js','channel.js','resources.js','encounters.js','boss-model.js','bosses.js','script.js','quantum.js','presentation.js'];
+const scripts = ['config.js','accessibility.js','arena.js','random.js','metrics.js','continuity.js','phases.js','channel.js','resources.js','encounters.js','progression.js','science.js','boss-model.js','bosses.js','script.js','quantum.js','presentation.js'];
 
-function makeGame(viewWidth = 1100, viewHeight = 800) {
+function makeGame(viewWidth = 1100, viewHeight = 800, options={}) {
   const listeners = {}, frames = new Map(); let frameId = 0;
   const noop = () => {};
   const ctx = new Proxy({}, {get: (o,k) => o[k] || (k.startsWith('create') ? () => ({addColorStop:noop}) : noop), set: (o,k,v) => (o[k]=v,true)});
   const element = id => ({id,style:{},hidden:false,disabled:false,dataset:{},textContent:'',innerText:'',innerHTML:'',focus:noop,blur:noop,appendChild:noop,setPointerCapture:noop,addEventListener:noop,getContext:()=>ctx,querySelectorAll:()=>[]});
   const elements = new Map(ids.map(id => [id,element(id)]));
   const sandbox = {
-    console, Map, Math:Object.create(Math), setTimeout:callback=>callback(),
+    console, Map, Math:Object.create(Math), localStorage:options.storage,setTimeout:callback=>callback(),
     requestAnimationFrame:callback=>{frames.set(++frameId,callback);return frameId},cancelAnimationFrame:id=>frames.delete(id),
     window:{innerWidth:viewWidth,innerHeight:viewHeight,devicePixelRatio:1,addEventListener:(type,fn)=>(listeners[type] ||= []).push(fn)},
     document:{hidden:false,getElementById:id=>{assert.ok(elements.has(id),'Elemento ausente: '+id);return elements.get(id)},createElement:()=>element(''),addEventListener:noop},
     seededRandom:()=>()=>.5,makeSpaceBackdrop:()=>({}),drawGlow:noop,drawDebris:noop,drawInterceptor:noop,drawAsteroid:noop,drawEnergyBolt:noop,drawQuantumCloud:noop,drawSpyPulse:noop,
     emitDebris:noop,spaceBackdrop:null,particles:[],introActive:false,renderScene:noop,
-    gameAudio:{sfx:noop,setScene:noop,setPaused:noop,stopEffects:noop,startLoop:noop,stopLoop:noop,setLoopPitch:noop}
+    gameAudio:{sfx:noop,setBossStage:noop,setScene:noop,setPaused:noop,stopEffects:noop,startLoop:noop,stopLoop:noop,setLoopPitch:noop}
   };
   const context = vm.createContext(sandbox);
   for (const file of scripts) vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context,{filename:file});
@@ -29,7 +29,7 @@ function makeGame(viewWidth = 1100, viewHeight = 800) {
   const dispatch = (type,event={}) => (listeners[type]||[]).forEach(fn=>fn({preventDefault:noop,...event}));
   const press = (code,target=null) => dispatch('keydown',{code,target});
   const release = code => dispatch('keyup',{code});
-  run('arcadeActive=true; startGame();');
+  if(options.autoStart!==false)run('arcadeActive=true; startGame();');
   return {run,press,release,dispatch,elements,frames,sandbox};
 }
 const results=[];

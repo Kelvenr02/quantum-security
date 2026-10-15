@@ -1,7 +1,9 @@
 /* Integração dos guardiões com pilotagem, canal, áudio e apresentação. */
 let boss=null, bossesDefeated=0, bossCleared=Array(8).fill(false);
 let hullShield=1, hullInvulUntil=0, phaseCheckpointData=null;
-const bossArenaY=()=>Math.max(120,Math.min(shipY-(height<620?55:95),height<620?Math.max(260,height*.54):Math.max(365,height*.48)));
+const bossNodeRadius=()=>Math.min(height<=380?18:height<620?26:34,laneWidth*.38);
+const bossArenaY=()=>Math.max(arenaBounds.top+bossNodeRadius()+20,
+  Math.max(120,Math.min(shipY-(height<620?55:95),height<620?Math.max(260,height*.54):Math.max(365,height*.48))));
 
 function resetBossCampaign() {
   boss=null;bossCheckpointData=null;bossesDefeated=0;bossCleared=Array(8).fill(false);hullShield=1;hullInvulUntil=0;
@@ -25,18 +27,22 @@ function beginBoss(retrying=false) {
   if(!retrying)campaignMetrics?.event('waveEnd',{score,qber});campaignMetrics?.setContext(level,'boss');
   boss={model:new QuantumBoss(level,occupiedShipLane(),numLanes),status:'briefing',wonAt:0,hullContacts:0};
   campaignMetrics?.count('bossAttempts');boss.attempt=campaignMetrics?.segment.counts.bossAttempts||1;
+  campaignMetrics?.count('briefingViews');campaignMetrics?.event('briefingViewed',{kind:'boss'});
   isStageBriefing=true;cancelAnimationFrame(rafId);
   lasers=[];asteroids=[];drones=[];scout=null;clouds=[];spies=[];pickups=[];particles=[];interferenceFront=null;
   updateShieldHUD();bossCheckpointData=captureCheckpoint('boss');
-  gameAudio.stopEffects();gameAudio.setScene('briefing',level);gameAudio.sfx('phase');
+  saveCampaignEntry(bossCheckpointData);
+  gameAudio.stopEffects();gameAudio.setScene('briefing',level,{nextScene:'boss'});gameAudio.sfx('phase');
   const d=boss.model.definition;
   $('phaseEyebrow').textContent='DR. ÍRIS / DESAFIO FINAL DA FASE '+String(level).padStart(2,'0');
   $('phaseTitle').textContent=d.name;$('phaseObjective').textContent=d.objective;
-  $('bossInstructions').innerHTML=d.instructions.map(text=>'<li>'+text+'</li>').join('');
+  $('phaseOptional').textContent=optionalGoalText();$('phaseOptional').hidden=false;$('phaseDebrief').hidden=true;
+  $('bossInstructions').innerHTML=d.instructions.map(text=>'<li>'+controlText(text)+'</li>').join('');
   $('bossInstructions').hidden=false;$('bossControls').hidden=false;
   $('phaseScienceDetails').open=false;$('phaseOverlay').dataset.mode='boss';
   $('phaseConcept').textContent=d.concept;$('phaseScience').textContent=d.science;
-  $('phaseCheckpoint').textContent=channelBriefingStatus()+' · ESCUDO '+hullShield+' · RETOMADA SALVA NO CHEFE';
+  configureSciencePanel('phase');
+  $('phaseCheckpoint').textContent=controlText(channelBriefingStatus())+' · ESCUDO '+hullShield+' · RETOMADA SALVA NO CHEFE';
   $('phaseRoute').innerHTML=quantumBosses.map((d,i)=>'<span class="'+(i<level-1?'complete':i===level-1?'current':'')+'">'+String(i+1).padStart(2,'0')+'</span>').join('');
   $('btnContinue').textContent='ENFRENTAR DESAFIO →';$('pauseBtn').disabled=true;$('warning').style.display='none';
   updateHUD();updateQberUI();$('phaseOverlay').hidden=false;$('btnContinue').focus({preventScroll:true});$('phaseOverlay').scrollTop=0;
@@ -62,20 +68,30 @@ function beginBossBattle() {
   protectBossRegen(boss.model);
   boss.status='fighting';gameAudio.setScene('boss',level);gameAudio.sfx('bossEntry');
   $('bossHud').hidden=false;$('phaseHud').hidden=true;updateBossHUD();
+  refreshArenaBounds();
 }
 function updateBossHUD() {
   if(!boss)return;
   const m=boss.model;$('bossName').textContent=m.definition.name;
-  $('bossHealth').textContent=m.health+' / '+m.maxHp;
+  $('bossHealth').textContent=(m.phase===8?(m.stage+1)+'/3 · ':'')+(m.stabilizing?'C '+Math.round(m.coherence)+'% · ':'')+m.health+' / '+m.maxHp;
   $('bossFill').style.width=(m.health/m.maxHp*100)+'%';
+  $('bossCoherence').hidden=!m.stabilizing;$('bossCoherence').value=m.coherence;
+  $('bossCoherence').textContent=Math.round(m.coherence)+'% de coerência';
+  $('bossCoherence').dataset.low=String(m.coherence<50);
+  $('bossCoherence').parentElement?.classList?.toggle('has-coherence',m.stabilizing);
+  if(m.complete){$('bossThreat').textContent='VITÓRIA · guardião neutralizado';$('bossThreat').textContent=controlText($('bossThreat').textContent);
+  $('bossThreat').dataset.urgent='false';$('bossHint').textContent=m.hint(qber);return;}
   const pulse=boss.channelPulse,remaining=pulse?pulse.releaseAt-m.time:0;
   const jamHint=remaining>0?'RUÍDO EM '+(remaining/1000).toFixed(1)+' s · ':'';
-  const visible=m.pulses.filter(p=>!p.fired&&m.time>=p.announceAt);
-  const upcoming=visible.map(p=>p.label+' '+(p.tracking?'MIRA SEGUINDO':((p.at-m.time)/1000).toFixed(1)+' s')).join(' → ');
-  const threat=(upcoming?(visible[0].tracking?'':'DESVIE DE ')+upcoming+' · ':'')+jamHint+(bossRecoveryAvailable()?'RESPIRO · use R se precisar':'');
-  $('bossThreat').textContent=threat||'Atire no alvo ATIVO e prepare a próxima fuga.';
-  $('bossThreat').dataset.urgent=String(m.pulses.some(p=>!p.fired&&!p.tracking&&p.at-m.time<900));
-  const hint=m.hint(qber);
+  const visible=m.pulses.filter(p=>!p.fired&&m.time>=p.announceAt),next=visible[0];
+  const upcoming=next?(next.tracking?next.label+' SEGUE VOCÊ · aguarde fixar':next.label+' FIXA · SAIA DA FAIXA · '+((next.at-m.time)/1000).toFixed(1)+' s'):'';
+  const recovery=m.elapsed>=m.recoveryStart&&m.period-m.elapsed>=regenDuration+channelRules.reactionMarginMs;
+  const regenHint=isRegen?'RENOVANDO · parado e sem disparar':recovery?
+    bossRecoveryAvailable()?'RESPIRO · R: 2 s parado e sem disparar':'RESPIRO · R em '+Math.max(0,(keyReadyAt-gameTime)/1000).toFixed(1)+' s':'';
+  $('bossThreat').textContent=[upcoming,jamHint.replace(/ · $/,''),regenHint].filter(Boolean).join(' · ')||'Prepare a próxima fuga; R não protege de salvas.';
+  $('bossThreat').textContent=controlText($('bossThreat').textContent);
+  $('bossThreat').dataset.urgent=String(!!next&&!next.tracking&&next.at-m.time<900);
+  const hint=controlText(m.hint(qber));
   if($('bossHint').textContent!==hint)$('bossHint').textContent=hint;
 }
 function updateBossBattle(dt,shipX) {
@@ -86,10 +102,11 @@ function updateBossBattle(dt,shipX) {
     return;
   }
   for(const event of m.advance(dt*FRAME_MS,{lane:occupiedShipLane(),position:shipPosition()})) {
-    if(event.type==='round') {campaignMetrics?.count('bossRounds');gameAudio.sfx('interference');bossSupply();campaignMetrics?.event('bossPattern',{round:m.round,stage:m.stage+1,pressure:m.pressure});}
-    else if(event.type==='lock')gameAudio.sfx('spy');
+    if(event.type==='round') {campaignMetrics?.count('bossRounds');bossSupply();campaignMetrics?.event('bossPattern',{round:m.round,stage:m.stage+1,pressure:m.pressure});}
+    else if(event.type==='telegraph')gameAudio.sfx(event.tracking?'tracking':'salvoWarning');
+    else if(event.type==='lock')gameAudio.sfx('targetLock');
     else if(event.type==='pulse') {
-      gameAudio.sfx('spy');
+      gameAudio.sfx('salvo');
       campaignMetrics?.count('bossSalvos');
       if(shipOverlapsLanes(event.lanes)) {campaignMetrics?.count('bossSalvoContacts');takeHullHit('A salva do guardião atingiu a nave sem escudo. Observe as trilhas marcadas antes do próximo ataque.',shipX,{kind:'bossSalvo',attack:event.label});if(!isPlaying)return;if(!noImpact())addQber(3.5,'bossSalvo');}
     }
@@ -99,17 +116,19 @@ function updateBossBattle(dt,shipX) {
     fromMs:m.roundStart+m.windows[m.windowIndex][0],toMs:m.roundStart+m.windows[m.windowIndex][1]}:null;
   campaignMetrics?.bossOpening(opening);
   targetLoop: for(const node of m.targets(qber)) {
-    const x=(node.lane+.5)*laneWidth,y=bossArenaY(),radius=Math.min(34,laneWidth*.38);
+    const x=(node.lane+.5)*laneWidth,y=bossArenaY(),radius=bossNodeRadius();
     for(let i=lasers.length-1;i>=0;i--) {
       const l=lasers[i];
       if(Math.abs(l.x-x)<radius+4 && (l.previousY??l.y)>=y-radius && l.y<=y+radius) {
         lasers.splice(i,1);
-        const before=m.health,previousStage=m.stage;
+        const before=m.health,previousStage=m.stage,wasSyndrome=m.syndrome,wasBell=m.bell;
         if(m.hit(node.id,qber,node.lane)){
+          if(wasSyndrome)queueScienceCue('syndrome');else if(wasBell)queueScienceCue('bell');
+          if(l.quantum)recordPhaseGoal('hadamardHits');if(m.bell)recordPhaseGoal('bellHits');
           campaignMetrics?.count('bossHits');campaignMetrics?.count('bossDamage',before-m.health);gameAudio.sfx('impact',{pan:audioPan(x)});
           campaignMetrics?.bossOpening(opening,before-m.health);
           if(m.stage!==previousStage){
-            boss.channelPulse=null;boss.jamRound=-1;gameAudio.sfx('phase');campaignMetrics?.event('bossStage',{stage:m.stage+1});
+            boss.channelPulse=null;boss.jamRound=-1;gameAudio.setBossStage(m.stage);campaignMetrics?.event('bossStage',{stage:m.stage+1});
             // Um disparo em voo pode mudar o estágio enquanto R imobiliza a nave.
             protectBossRegen(m);
             break targetLoop;
@@ -131,6 +150,7 @@ function updateBossBattle(dt,shipX) {
 function finishBoss() {
   if(!boss || boss.status!=='won' || bossCleared[level-1])return;
   const clean=boss.hullContacts===0,repair=Math.min(missed,resourceRules.repair+(clean?resourceRules.cleanRepair:0));
+  settlePhaseProgress(repair);
   bossCleared[level-1]=true;bossesDefeated++;boss=null;bossCheckpointData=null;lastFailure=null;
   campaignMetrics?.count('earthRepairs',repair);campaignMetrics?.count('bossesDefeated');if(clean)campaignMetrics?.count('cleanBosses');campaignMetrics?.event('bossEnd',{qber,missed,clean,repair});
   missed-=repair;setQber(qber-channelRules.victoryRecovery,'bossVictory');hullShield=1;hullInvulUntil=gameTime+1200;updateShieldHUD();
@@ -145,7 +165,7 @@ function retryPhase() {
 }
 function drawBoss() {
   if(!boss)return;
-  const m=boss.model,y=bossArenaY(),radius=Math.min(34,laneWidth*.38);
+  const m=boss.model,y=bossArenaY(),radius=bossNodeRadius();
   ctx.save();
   if(m.stabilizing && !m.complete) {
     for(const lane of m.zone) {ctx.fillStyle='#6ce8cd0d';ctx.fillRect(lane*laneWidth,y+40,laneWidth,earthTop-y-40);ctx.strokeStyle='#6ce8cd60';ctx.strokeRect(lane*laneWidth+3,shipY-45,laneWidth-6,90);}
@@ -166,10 +186,12 @@ function drawBoss() {
       ctx.font=(height<620?'8':'9')+'px Consolas,monospace';ctx.textAlign='center';ctx.fillStyle=color;
       const row=p.label.charCodeAt(0)-65;
       const labelY=height<620?shipY+32+row*10:shipY-100+row*14;
-      ctx.fillText(p.label+(p.tracking?' MIRA':fired?'':(' '+(until/1000).toFixed(1))),x+laneWidth/2,labelY);
+      if(p===nearest||fired&&until>=-150)ctx.fillText(p.label+(p.tracking?' MIRA':fired?'':(' '+(until/1000).toFixed(1))),x+laneWidth/2,labelY);
     }
     if(p===nearest&&!p.tracking)for(const lane of m.lanes.filter(l=>!p.lanes.includes(l))){
-      ctx.fillStyle='#6ce8cd70';ctx.fillRect(lane*laneWidth+5,shipY+31,laneWidth-10,3);
+      ctx.fillStyle='#91c7ff';ctx.fillRect(lane*laneWidth+5,shipY+31,laneWidth-10,3);
+      ctx.font=Math.min(8,laneWidth/5)+'px Consolas,monospace';ctx.textAlign='center';
+      ctx.fillText(p.label+': LIVRE',lane*laneWidth+laneWidth/2,shipY+43);
     }
   }
   ctx.setLineDash([]);drawBossChannel();
@@ -196,10 +218,13 @@ function drawBoss() {
     ctx.fillStyle='#142535';ctx.strokeStyle=color;ctx.lineWidth=n.open?2:1;
     ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+Math.sin(m.time/1400)*.08;const px=x+Math.cos(a)*radius,py=y+Math.sin(a)*radius;i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.closePath();ctx.fill();ctx.stroke();
     ctx.strokeStyle=color+'50';ctx.beginPath();ctx.arc(x,y,radius+7,-m.time/800,Math.PI*1.5-m.time/800);ctx.stroke();
-    ctx.fillStyle=color;ctx.font='600 '+Math.min(17,laneWidth*.3)+'px Consolas,monospace';ctx.textAlign='center';ctx.fillText(n.label,x,y+5);
+    ctx.fillStyle=color;ctx.font='600 '+Math.min(17,laneWidth*(m.syndrome ? .22 : .3))+'px Consolas,monospace';ctx.textAlign='center';
+    ctx.fillText(m.syndrome&&n.hp>0?'M'+(nodes.indexOf(n)+1)+(n.label==='+'?' +':''):n.label,x,y+5);
     const next=m.nextSelection!==null&&n.lane===m.lane([1,3,5][m.nextSelection]);
     ctx.font='8px Consolas,monospace';ctx.fillStyle=next?'#91c7ff':n.open?'#c7eee4':'#b0a8cb';
-    ctx.fillText(next?'PRÓXIMO +':n.hp<=0?'OK':n.open?'ATIVO':'FECHADO',x,height<620?y-radius-9:y-radius-15);
+    const label=next?'PRÓX +':m.targetStatus(n,qber);
+    ctx.font=Math.min(8,(laneWidth-4)/(label.length*.61))+'px Consolas,monospace';
+    ctx.fillText(label,x,height<620?y-radius-9:y-radius-15);
   }
   if(m.complete) {
     ctx.globalAlpha=1-victory;ctx.strokeStyle='#bce9e3';ctx.lineWidth=2;
@@ -213,7 +238,7 @@ function drawGuardianHull(m,nodes,y) {
   const left=Math.min(...nodes.map(n=>(n.lane+.5)*laneWidth)),right=Math.max(...nodes.map(n=>(n.lane+.5)*laneWidth));
   const half=Math.min(width*.46,Math.max(laneWidth*.9,(right-left)/2+laneWidth*.48));
   const tint=m.phase===8?'#d9979f':m.stabilizing?'#8dccc2':'#b7a3d6';
-  const flash=m.time-m.hitAt<130;
+  const flash=!reducedEffects()&&m.time-m.hitAt<130;
   const hull=ctx.createLinearGradient(0,y-55,0,y+35);hull.addColorStop(0,flash?'#a5d4d0':'#4a526c');hull.addColorStop(.45,'#20364a');hull.addColorStop(1,'#0b1928');
   ctx.save();ctx.fillStyle=hull;ctx.strokeStyle=tint+'99';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(center-half,y-12);ctx.lineTo(center-half*.76,y-40);ctx.lineTo(center-half*.3,y-43);ctx.lineTo(center,y-58);ctx.lineTo(center+half*.3,y-43);ctx.lineTo(center+half*.76,y-40);ctx.lineTo(center+half,y-12);ctx.lineTo(center+half*.83,y+26);ctx.lineTo(center+half*.35,y+19);ctx.lineTo(center,y+35);ctx.lineTo(center-half*.35,y+19);ctx.lineTo(center-half*.83,y+26);ctx.closePath();ctx.fill();ctx.stroke();

@@ -173,7 +173,7 @@ test('Métricas guardam aberturas sem dano e atribuem dano ao estágio anterior 
   assert.equal(g.run('campaignMetrics.segment.openings.length'),1);
   assert.equal(g.run('campaignMetrics.segment.openings[0].damage'),0);
   assert.equal(g.run('campaignMetrics.segment.openings[0].attempt'),1);
-  assert.equal(g.run('window.quantumDiagnostics.snapshot().schemaVersion'),2);
+  assert.equal(g.run('window.quantumDiagnostics.snapshot().schemaVersion'),3);
 });
 
 test('Entrada do chefe tem som próprio e não emite comprometimento do canal',()=>{

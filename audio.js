@@ -4,27 +4,34 @@ const ORBITAL_CUES = Object.freeze({
   shot: { asset: 'shot', gain: .13, interval: .10, duration: .22 },
   explosion: { asset: 'explosion', gain: .48, interval: .035, duration: .75 },
   impact: { asset: 'impact', gain: .32, interval: .06, duration: .35 },
-  earth: { asset: 'earth', gain: .65, interval: .08, duration: .9, duck: .45 },
+  earth: { priority:3, asset: 'earth', gain: .65, interval: .08, duration: .9, duck: .45 },
   noise: { asset: 'noise', gain: .24, interval: .15, duration: .28 },
   spy: { asset: 'spy', gain: .30, interval: .15, duration: .45 },
-  cannon: { asset: 'cannon', gain: .72, interval: .5, duration: 1, duck: 1.2 },
-  mothership: { asset: 'mothership', gain: .8, interval: .5, duration: 1.5, duck: 1.5 },
+  cannon: { priority:3, asset: 'cannon', gain: .72, interval: .5, duration: 1, duck: 1.2 },
+  mothership: { priority:3, asset: 'mothership', gain: .8, interval: .5, duration: 1.5, duck: 1.5 },
   ui: { notes: [660, 880], gain: .045, interval: .07, duration: .08 },
   move: { notes: [260], gain: .035, interval: .075, duration: .065 },
   supply: { notes:[523,784],gain:.045,interval:.4,duration:.16 },
-  channelAlert: { notes:[392,330],gain:.065,interval:2,duration:.25 },
-  keyReady: { notes:[660,880],gain:.06,interval:.5,duration:.18 },
-  shieldHit: { notes:[165,110,82],gain:.12,interval:.1,duration:.3,duck:.3 },
+  channelAlert: { priority:2, notes:[392,330],gain:.065,interval:2,duration:.25 },
+  keyReady: { priority:2, notes:[660,880],gain:.06,interval:.5,duration:.18 },
+  shieldHit: { priority:3, notes:[165,110,82],gain:.12,interval:.1,duration:.3,duck:.3 },
   confirm: { notes: [440, 660, 880], gain: .09, interval: .2, duration: .22 },
   phase: { notes: [392, 523, 784], gain: .10, interval: .3, duration: .3 },
   hadamard: { notes: [523, 659, 784, 1047], gain: .09, interval: .2, duration: .35 },
   correction: { notes: [392, 587, 784], gain: .09, interval: .2, duration: .3 },
-  regenReady: { notes: [330, 494, 660], gain: .075, interval: .2, duration: .3 },
-  compromised: { notes: [220, 207, 220, 207], gain: .10, interval: .4, duration: .5, duck: .7 },
+  regenReady: { priority:2, notes: [330, 494, 660], gain: .075, interval: .2, duration: .3 },
+  compromised: { priority:3, notes: [220, 207, 220, 207], gain: .10, interval: .4, duration: .5, duck: .7 },
   bossEntry: { notes: [196, 247, 294, 392], gain: .10, interval: .4, duration: .5, duck: .4 },
   interference: { notes: [196, 294, 196], gain: .075, interval: .5, duration: .36, duck: .4 },
-  defeat: { notes: [392, 330, 262, 196], gain: .11, interval: .5, duration: .7 },
-  victory: { notes: [523, 659, 784, 1047], gain: .12, interval: .5, duration: .65 }
+  tracking: { notes:[330,392],gain:.055,interval:.25,duration:.20,priority:2 },
+  targetLock: { notes:[988,660,988],gain:.075,interval:.18,duration:.16,priority:3,duck:.20 },
+  salvoWarning: { notes:[294,392],gain:.055,interval:.18,duration:.20,priority:2 },
+  salvo: { notes:[196,98],gain:.09,interval:.10,duration:.18,priority:3,duck:.25 },
+  noiseWarning: { notes:[247,370,247],gain:.06,interval:.25,duration:.24,priority:2 },
+  noisePulse: { notes:[185,247,185],gain:.065,interval:.15,duration:.20,priority:2 },
+  bossStage: { notes:[392,587,784,587],gain:.075,interval:.4,duration:.40,priority:1,duck:.45 },
+  defeat: { priority:3, notes: [392, 330, 262, 196], gain: .11, interval: .5, duration: .7 },
+  victory: { priority:2, notes: [523, 659, 784, 1047], gain: .12, interval: .5, duration: .65 }
 });
 
 class OrbitalAudioEngine {
@@ -38,9 +45,11 @@ class OrbitalAudioEngine {
     this.pauses = new Set(); this.buffers = new Map(); this.loading = new Map();
     this.voices = new Set(); this.musicVoices = new Set(); this.loops = new Map(); this.lastCue = new Map();
     this.musicVoice = null; this.revision = 0; this.shotIndex = 0; this.errors = [];
+    this.bossStage=0;this.decodeStats=[];this.peakPcmBytes=0;this.preparedTrack=null;
   }
   notify() { this.onChange(this.status()); }
-  status() { return { ready: !!this.context, running: this.context?.state === 'running', scene: this.scene, track: this.track, muted: this.preferences.muted, paused: this.pauses.size > 0, musicSources: this.musicVoices.size, effects: this.voices.size, loops: [...this.loops.keys()], decoded: this.buffers.size, errors: [...this.errors] }; }
+  pcmBytes(){return [...this.buffers.values()].reduce((sum,b)=>sum+(b.length||0)*(b.numberOfChannels||0)*4,0);}
+  status() { return { ready: !!this.context, running: this.context?.state === 'running', scene: this.scene, track: this.track, muted: this.preferences.muted, paused: this.pauses.size > 0, musicSources: this.musicVoices.size, effects: this.voices.size, loops: [...this.loops.keys()], decoded: this.buffers.size, pcmBytes:this.pcmBytes(),peakPcmBytes:this.peakPcmBytes,loading:this.loading.size,decodeStats:this.decodeStats.map(s=>({...s})),bossStage:this.bossStage,errors: [...this.errors] }; }
   unlock() {
     if (!this.context) {
       try {
@@ -63,9 +72,16 @@ class OrbitalAudioEngine {
     if (!this.context || !this.assets[key]) return null;
     const pending = Promise.resolve().then(async () => {
       try {
-        const binary = atob(this.assets[key].data), bytes = Uint8Array.from(binary, ch => ch.charCodeAt(0));
+        const started=performance.now();
+        const binary = atob(this.assets[key].data), bytes = new Uint8Array(binary.length);
+        // Avoid one JS callback and iterator allocation per compressed byte.
+        for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+        const converted=performance.now();
         const buffer = await this.context.decodeAudioData(bytes.buffer);
-        this.buffers.set(key, buffer); return buffer;
+        this.buffers.set(key, buffer);this.peakPcmBytes=Math.max(this.peakPcmBytes,this.pcmBytes());
+        this.decodeStats.push({key,bytes:binary.length,convertMs:converted-started,decodeMs:performance.now()-converted});
+        if(this.decodeStats.length>64)this.decodeStats.shift();
+        return buffer;
       } catch { if (!this.errors.includes(key)) this.errors.push(key); return null; }
     });
     this.loading.set(key, pending); pending.finally(() => this.loading.delete(key)); return pending;
@@ -78,13 +94,15 @@ class OrbitalAudioEngine {
     if (scene === 'defeat') return null;
     return scene === 'menu' ? 'menu' : 'briefing';
   }
-  sceneGain() { return ['story', 'briefing'].includes(this.scene) ? .22 : this.scene === 'menu' ? .32 : this.scene === 'tutorial' ? .3 : this.scene === 'finale' ? .32 : .52; }
-  setScene(scene, phase = 1) {
-    this.scene = scene; this.phase = phase; this.track = this.trackFor(scene, phase); this.revision++;
+  sceneGain() { return ['story', 'briefing'].includes(this.scene) ? .22 : this.scene === 'menu' ? .32 : this.scene === 'tutorial' ? .3 : this.scene === 'finale' ? .32 : this.scene==='boss'?.52*(1+this.bossStage*.06):.52; }
+  setBossStage(stage,{announce=true}={}){const next=Math.max(0,Math.min(2,Math.floor(Number(stage)||0)));if(this.scene!=='boss'||next===this.bossStage)return false;this.bossStage=next;this.applyVolumes();if(announce)this.sfx('bossStage');return true;}
+  setScene(scene, phase = 1, {nextScene='phase'} = {}) {
+    this.scene = scene; this.phase = phase; this.bossStage=0;this.track = this.trackFor(scene, phase); this.revision++;
+    this.preparedTrack=scene==='briefing'?this.trackFor(nextScene,phase):scene==='tutorial'?ORBITAL_PHASE_TRACKS[0]:null;
     if (this.context) {
       this.applyVolumes(); this.ensureMusic();
       // Prepare the next gameplay track while the player reads or trains.
-      const next = scene === 'briefing' ? ORBITAL_PHASE_TRACKS[phase - 1] : scene === 'tutorial' ? ORBITAL_PHASE_TRACKS[0] : null;
+      const next = this.preparedTrack;
       if (next) this.load(next).then(() => this.trimMusicBuffers());
     }
     this.notify();
@@ -94,6 +112,8 @@ class OrbitalAudioEngine {
     const revision = this.revision, key = this.track;
     if (!key) { if (this.musicVoice) this.retireMusic(this.musicVoice); this.musicVoice = null; return; }
     if (this.musicVoice?.key === key) return;
+    // At most a current track and its fading predecessor, even in rapid transitions.
+    for(const voice of [...this.musicVoices])if(voice!==this.musicVoice)this.finishMusic(voice,true);
     const buffer = await this.load(key);
     if (!buffer || revision !== this.revision || key !== this.track) return;
     // Multiple unlocks and scene requests must never create duplicate loops.
@@ -102,23 +122,22 @@ class OrbitalAudioEngine {
     source.buffer = buffer; source.loop = true; source.connect(gain); gain.connect(this.musicBus);
     gain.gain.setValueAtTime(0, c.currentTime); gain.gain.linearRampToValueAtTime(1, c.currentTime + .8);
     const voice = { key, source, gain }; this.musicVoices.add(voice);
-    source.onended = () => { source.disconnect(); gain.disconnect(); this.musicVoices.delete(voice); this.trimMusicBuffers(); };
+    source.onended = () => this.finishMusic(voice);
     if (this.musicVoice) this.retireMusic(this.musicVoice);
     this.musicVoice = voice; source.start(c.currentTime);
     this.trimMusicBuffers();
-    if (this.scene === 'phase' && this.phase < 8) this.load(ORBITAL_PHASE_TRACKS[this.phase]).then(() => this.trimMusicBuffers());
     this.notify();
   }
   retireMusic(voice) {
     const t = this.context.currentTime;
+    if(this.pauses.size||this.context.state!=='running'){this.finishMusic(voice,true);return;}
     voice.gain.gain.cancelScheduledValues(t); voice.gain.gain.setValueAtTime(voice.gain.gain.value, t); voice.gain.gain.linearRampToValueAtTime(0, t + .8);
     try { voice.source.stop(t + .82); } catch {}
   }
+  finishMusic(voice,stop=false){if(!this.musicVoices.delete(voice))return;if(stop){try{voice.source.stop(this.context.currentTime);}catch{}}voice.source.disconnect();voice.gain.disconnect();this.trimMusicBuffers();}
   trimMusicBuffers() {
     const keep = new Set([this.track, ...[...this.musicVoices].map(v => v.key)]);
-    if (this.scene === 'phase' && this.phase < 8) keep.add(ORBITAL_PHASE_TRACKS[this.phase]);
-    if (this.scene === 'briefing') keep.add(ORBITAL_PHASE_TRACKS[this.phase - 1]);
-    if (this.scene === 'tutorial') keep.add(ORBITAL_PHASE_TRACKS[0]);
+    if(this.preparedTrack)keep.add(this.preparedTrack);
     for (const key of this.buffers.keys()) if (this.assets[key]?.kind === 'music' && !keep.has(key)) this.buffers.delete(key);
   }
   setPaused(reason, paused) {
@@ -159,13 +178,19 @@ class OrbitalAudioEngine {
     if (now - (this.lastCue.get(name) ?? -Infinity) < cue.interval) return false;
     this.lastCue.set(name, now);
     // Quiet repetitive cues yield to impacts and alerts.
-    if (this.voices.size >= 18) { if (['shot', 'move', 'ui'].includes(name)) return false; this.stopVoice(this.voices.values().next().value); }
+    const priority=cue.priority??(['shot','move','ui'].includes(name)?0:1);
+    if (this.voices.size >= 18) {
+      if(!priority)return false;
+      const expendable=[...this.voices].sort((a,b)=>a.priority-b.priority)[0];
+      if(expendable.priority>priority)return false;
+      this.stopVoice(expendable);
+    }
     if (cue.duck) this.duck(cue.duck);
     let asset = cue.asset;
     if (name === 'shot') asset = this.shotIndex++ % 2 ? 'shotAlt' : 'shot';
     const buffer = this.buffers.get(asset);
     if (buffer) this.bufferVoice(buffer, cue, options, name);
-    else this.toneVoice(cue.notes || (name === 'shot' ? [900, 240] : [180, 90]), cue.gain, cue.duration, options.pan, name);
+    else this.toneVoice(cue.notes || (name === 'shot' ? [900, 240] : [180, 90]), cue.gain, cue.duration, options.pan, name,priority);
     return true;
   }
   output(gain, pan = 0) {
@@ -175,15 +200,15 @@ class OrbitalAudioEngine {
   }
   bufferVoice(buffer, cue, options, name) {
     const c = this.context, source = c.createBufferSource(), gain = c.createGain(), t = c.currentTime;
-    const duration = Math.min(buffer.duration, cue.duration), voice = { nodes: [source], gain, panner: this.output(gain, options.pan), name };
+    const duration = Math.min(buffer.duration, cue.duration), voice = { nodes: [source], gain, panner: this.output(gain, options.pan), name,priority:cue.priority??(name==='shot'?0:1) };
     source.buffer = buffer; source.connect(gain);
     gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(cue.gain, t + .004); gain.gain.setValueAtTime(cue.gain, t + Math.max(.004, duration - .03)); gain.gain.linearRampToValueAtTime(0, t + duration);
     this.voices.add(voice); source.onended = () => this.disposeVoice(voice);
     source.start(t, 0, duration); source.stop(t + duration + .01);
   }
-  toneVoice(notes, volume, duration, pan = 0, name = 'tone') {
+  toneVoice(notes, volume, duration, pan = 0, name = 'tone',priority=1) {
     const c = this.context, gain = c.createGain(), t = c.currentTime;
-    const voice = { nodes: [], gain, panner: this.output(gain, pan), name }; this.voices.add(voice);
+    const voice = { nodes: [], gain, panner: this.output(gain, pan), name,priority }; this.voices.add(voice);
     gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(volume, t + .008); gain.gain.exponentialRampToValueAtTime(.0001, t + duration);
     const oscillator = c.createOscillator(); oscillator.type = name === 'move' ? 'sine' : 'triangle'; oscillator.connect(gain);
     notes.forEach((note, index) => oscillator.frequency.setValueAtTime(note, t + index * duration / notes.length));
@@ -241,7 +266,8 @@ if (typeof document !== 'undefined') {
   document.addEventListener('pointerdown', () => gameAudio.unlock(), { capture: true });
   document.addEventListener('keydown', event => {
     gameAudio.unlock();
-    if (event.code === 'KeyM' && !event.repeat && !event.target.closest('input, textarea, [contenteditable]')) { event.preventDefault(); gameAudio.setPreferences({ muted: !gameAudio.preferences.muted }); }
+    if(typeof settingsOpen!=='undefined'&&settingsOpen)return;
+    if (event.code === 'KeyM' && !event.repeat && !event.ctrlKey && !event.altKey && !event.metaKey && !event.target.closest('input, textarea, select, [contenteditable]')) { event.preventDefault(); gameAudio.setPreferences({ muted: !gameAudio.preferences.muted }); }
     if (event.target.closest('.audio-controls')) { if (event.code === 'Escape') { panel(false); element('audioToggle').focus(); } event.stopPropagation(); }
   }, { capture: true });
   document.addEventListener('click', event => {

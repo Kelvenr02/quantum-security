@@ -3,12 +3,13 @@ function encounterRandom(seed) {
   let value=seed>>>0;
   return ()=>((value=Math.imul(value,1664525)+1013904223>>>0)/4294967296);
 }
-function buildEncounters(phase,seed,lanes=9) {
+function encounterVariant(phase,seed){return phase<3?0:((seed>>>5)^(seed>>>13)^phase)&1;}
+function buildEncounters(phase,seed,lanes=9,variant=encounterVariant(phase,seed)) {
   const random=encounterRandom(seed),mirror=random()<.5,rotation=Math.floor(random()*3);
   const route=[4,3,5,2,6,1,7,0,8];
   const map=lane=>Math.round((mirror?8-lane:lane)*(lanes-1)/8);
   let serial=0;
-  return [0,1,2].map(encounter=>{
+  const plan=[0,1,2].map(encounter=>{
     const count=phase<=2?[4,4,5][encounter]:[5,5,6][encounter];
     return Array.from({length:count},(_,index)=>{
       const offset=encounter*2+(phase-1+rotation)%3;
@@ -34,13 +35,17 @@ function buildEncounters(phase,seed,lanes=9) {
       return {actors:actors.map(a=>({...a,energyId:phase+':'+(++serial)})),bell:actors.filter(a=>a.kind==='bell').length===2};
     });
   });
+  // A apresentação permanece igual; a combinação e a pressão final alternam prioridades.
+  if(phase>=3&&variant===1){[plan[1][1],plan[1][2]]=[plan[1][2],plan[1][1]];[plan[2][2],plan[2][5]]=[plan[2][5],plan[2][2]];}
+  return plan;
 }
 
 class EncounterDirector {
-  constructor(phase,config,seed,lanes=9,now=0) {
+  static version=2;
+  constructor(phase,config,seed,lanes=9,now=0,variant=encounterVariant(phase,seed)) {
     this.stepMs=typeof OrbitalArena==='undefined'?150:OrbitalArena.stepMs;
     this.shotMs=typeof shotCooldown==='undefined'?300:shotCooldown;
-    this.phase=phase;this.config=config;this.seed=seed>>>0;this.plan=buildEncounters(phase,seed,lanes);
+    this.phase=phase;this.config=config;this.seed=seed>>>0;this.variant=variant;this.plan=buildEncounters(phase,seed,lanes,variant);
     this.totalUnits=this.plan.flat().reduce((sum,p)=>sum+p.actors.length,0);
     this.index=0;this.packetIndex=0;this.state='active';this.pending=null;
     this.nextAt=now+800;this.breatherUntil=0;this.outstanding=new Set();this.resolved=0;
@@ -68,7 +73,7 @@ class EncounterDirector {
     if(this.state==='draining'&&this.outstanding.size===0&&clear) {
       events.push({type:'cleared',index:this.index});
       if(++this.index===3){this.state='complete';events.push({type:'complete'});}
-      else {this.state='breather';this.breatherUntil=now+1800;}
+      else {this.state='breather';this.breatherUntil=now+3000;}
       return events;
     }
     if(this.state==='active'&&!this.pending&&now>=this.nextAt) {
@@ -87,10 +92,11 @@ class EncounterDirector {
 }
 if(typeof module!=='undefined'&&module.exports)module.exports={EncounterDirector,buildEncounters};
 
-let encounterDirector=null,drones=[],scout=null,combatScore=0,campaignSeed=0;
+let encounterDirector=null,drones=[],scout=null,combatScore=0,campaignSeed=0,encounterOverride=null;
 function resetEncounters(phase=level,now=gameTime) {
   drones=[];scout=null;
-  encounterDirector=new EncounterDirector(phase,missionPhases[phase-1],campaignSeed^Math.imul(phase,2654435761),numLanes,now);
+  const seed=campaignSeed^Math.imul(phase,2654435761);
+  encounterDirector=new EncounterDirector(phase,missionPhases[phase-1],seed,numLanes,now,encounterOverride?.phase===phase?encounterOverride.variant:encounterVariant(phase,seed));
 }
 function resolveThreat(entity) {
   if(!entity.energyId||asteroids.some(a=>a.energyId===entity.energyId)||drones.some(d=>d.energyId===entity.energyId)||scout?.energyId===entity.energyId)return;
@@ -124,7 +130,7 @@ function updateEncounters() {
   if(!encounterDirector||encounterDirector.phase!==level)resetEncounters();
   for(const event of encounterDirector.step(gameTime,formationFits,encounterFieldClear())) {
     if(event.type==='spawn')spawnFormation(event.packet);
-    else if(event.type==='encounter'){campaignMetrics?.event('encounterStart',{encounter:event.index+1,seed:encounterDirector.seed});}
+    else if(event.type==='encounter'){campaignMetrics?.event('encounterStart',{encounter:event.index+1,seed:encounterDirector.seed,variant:encounterDirector.variant});}
     else if(event.type==='cleared'){campaignMetrics?.count('encountersCleared');gameAudio.sfx('confirm');}
     else if(event.type==='deferred')campaignMetrics?.count('formationDelays');
   }
@@ -132,7 +138,7 @@ function updateEncounters() {
   if(encounterDirector.ambientAllowed){spawnClouds();spawnSpies();spawnQuantumPickup();}
 }
 function waveRecoveryAvailable() {
-  return !boss&&!isRegen&&gameTime>=keyReadyAt&&encounterDirector?.state==='breather'&&encounterDirector.breatherUntil-gameTime>=1100;
+  return !boss&&!isRegen&&gameTime>=keyReadyAt&&encounterDirector?.state==='breather'&&encounterDirector.breatherUntil-gameTime>=regenDuration+channelRules.reactionMarginMs;
 }
 function spawnFormation(packet) {
   const rockActors=packet.actors.filter(a=>!['drone','scout'].includes(a.kind));
@@ -141,7 +147,7 @@ function spawnFormation(packet) {
     const radius=Math.min(32,laneWidth*.3),rush=actor.kind==='rush';
     asteroids.push({...actor,id:++asteroidSerial,x:(actor.lane+.5)*laneWidth,y:-30-index*85,radius,
       speed:flightSpeed(phaseConfig().speed*(rush?1.22:1)),armored:actor.kind==='armor',rush,
-      splittable:actor.kind==='split',splitY:Math.min(shipY-90,Math.max(210,height*.45)),group});
+      splittable:actor.kind==='split',splitY:Math.min(shipY-45,Math.max(arenaBounds.top+radius+8,Math.min(shipY-90,Math.max(210,height*.45)))),group});
     flashHatch(actor.lane,actor.kind==='bell'?'#91c7ff':'#eeaa72');
   }
   for(const actor of packet.actors) {
@@ -152,7 +158,7 @@ function spawnFormation(packet) {
     }else if(actor.kind==='scout') {
       scout={...actor,x:shipCenterX(),y:Math.min(shipY-65,Math.max(260,height*.33)),state:'tracking',
         lockAt:gameTime+1100,fireAt:gameTime+2000,endsAt:gameTime+2350};
-      campaignMetrics?.count('scoutsSpawned');gameAudio.sfx('interference');
+      campaignMetrics?.count('scoutsSpawned');gameAudio.sfx('tracking');
     }
   }
   campaignMetrics?.count('asteroidsSpawned',rockActors.length);campaignMetrics?.count('wavesSpawned');phaseWaveCount++;
@@ -160,14 +166,14 @@ function spawnFormation(packet) {
 function drawFormationWarning() {
   const pending=encounterDirector?.pending;if(!pending)return;
   const compactFront=width<=900&&height>620&&!!interferenceFront;
-  const y=Math.min(shipY-75,height<=620?154:width<=900?(compactFront?245:265):183);
+  const y=height<=620?shipY+32:arenaBounds.warningY;
   ctx.save();ctx.textAlign='center';ctx.font='12px Consolas,monospace';
   for(const actor of pending.packet.actors) {
     const x=(actor.lane+.5)*laneWidth;
     ctx.fillStyle=['drone','bell'].includes(actor.kind)?'#91c7ff':'#e6c491';
     ctx.fillText(({armor:'Ⅱ',rush:'»',bell:'↔',split:'✣',drone:'D',scout:'◎'})[actor.kind]||'▼',x,y);
   }
-  ctx.font='9px Consolas,monospace';ctx.fillStyle='#9bb4c4';if(!compactFront)ctx.fillText('FORMAÇÃO EM '+Math.max(0,(pending.releaseAt-gameTime)/1000).toFixed(1)+' s',width/2,y+17);ctx.restore();
+  ctx.font='9px Consolas,monospace';ctx.fillStyle='#9bb4c4';if(!compactFront)ctx.fillText('FORMAÇÃO EM '+Math.max(0,(pending.releaseAt-gameTime)/1000).toFixed(1)+' s',width/2,y+15);ctx.restore();
 }
 
 // Segmento relativo: um tiro rápido não atravessa um alvo entre dois quadros.
@@ -196,7 +202,7 @@ function updateEncounterActors(dt) {
     for(let i=lasers.length-1;i>=0;i--)if(laserTouchesEntity(lasers[i],d)) {
       lasers.splice(i,1);d.hp--;campaignMetrics?.count('droneHits');
       gameAudio.sfx('impact',{pan:audioPan(d.x)});
-      if(d.hp<=0){drones.splice(drones.indexOf(d),1);combatScore+=25;resolveThreat(d);campaignMetrics?.count('dronesDestroyed');emitDebris(d.x,d.y,d.radius);break;}
+      if(d.hp<=0){drones.splice(drones.indexOf(d),1);combatScore+=25;resolveThreat(d);campaignMetrics?.count('dronesDestroyed');recordPhaseGoal('dronesDestroyed');emitDebris(d.x,d.y,d.radius);break;}
     }
     if(d.hp<=0)continue;
     // Só conta o trecho ativo deste quadro, inclusive quando cruza o aquecimento.
@@ -215,10 +221,11 @@ function updateEncounterActors(dt) {
   const s=scout;
   if(s.state==='tracking') {
     s.x=shipCenterX();
-    if(gameTime>=s.lockAt){s.state='locked';s.lane=occupiedShipLane();s.x=(s.lane+.5)*laneWidth;gameAudio.sfx('spy',{pan:audioPan(s.x)});}
+    if(gameTime>=s.lockAt){s.state='locked';s.lane=occupiedShipLane();s.x=(s.lane+.5)*laneWidth;gameAudio.sfx('targetLock',{pan:audioPan(s.x)});}
   }
   if(s.state==='locked'&&gameTime>=s.fireAt) {
-    s.state='fired';gameAudio.sfx('noise',{pan:audioPan(s.x)});
+    s.state='fired';gameAudio.sfx('noisePulse',{pan:audioPan(s.x)});
+    if(!shipOverlapsLanes([s.lane]))recordPhaseGoal('scoutsDodged');
     if(!noImpact()&&shipOverlapsLanes([s.lane])){addQber(5,'scout');campaignMetrics?.count('scoutContacts');}
   }
   if(gameTime>=s.endsAt){scout=null;resolveThreat(s);return;}

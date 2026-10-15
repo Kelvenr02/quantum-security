@@ -63,7 +63,7 @@ function flyCampaign(seed,maxFrames=42000,manageChannel=true,options={}) {
     }
   }
   let rng=seed;Math.random=()=>((rng=Math.imul(rng,1664525)+1013904223>>>0)/4294967296);
-  campaignSeed=seed;campaignMetrics.data.arena.seed=seed;resetEncounters();phaseCheckpointData=captureCheckpoint('wave');
+  campaignSeed=seed;campaignRandom=new CampaignRandom(seed);campaignMetrics.data.arena.seed=seed;resetEncounters();phaseCheckpointData=captureCheckpoint('wave');
   let clock=100,decision=0,frames=0,lastLevel=1;const phases=[1];
   while(isPlaying&&frames++<maxFrames) {
     if(isStageBriefing)continuePhase();
@@ -73,7 +73,9 @@ function flyCampaign(seed,maxFrames=42000,manageChannel=true,options={}) {
   }
   const metrics=window.quantumDiagnostics.snapshot();
   const compromisedMs=Object.values(metrics.phases).flatMap(p=>Object.values(p)).reduce((sum,p)=>sum+p.compromisedMs,0);
-  return {won:!!finale,phases,guardians:bossesDefeated,score,missed,seconds:Math.round(gameTime/1000),points:combatScore,
+  const segments=Object.values(metrics.phases).flatMap(p=>Object.values(p));
+  return {build:metrics.build,configuration:metrics.configuration,campaign:metrics.campaign,inputMethods:metrics.inputMethods,entry:metrics.entry,randomVersion:CampaignRandom.version,encounterVersion:EncounterDirector.version,won:!!finale,phases,guardians:bossesDefeated,score,missed,seconds:Math.round(gameTime/1000),points:combatScore,
+    pacing:Object.fromEntries(['noDecisionMs','emptyTravelMs','waitingForOpeningMs'].map(key=>[key,Math.round(segments.reduce((sum,p)=>sum+(p[key]||0),0))])),
     outcome:metrics.outcome,failure:lastFailure?.cause||null,lastPhase:level,seed,options,
     hullHits:metrics.counts.hullHits||0,earthImpacts:metrics.counts.earthImpacts||0,repairs:metrics.counts.earthRepairs||0,
     dronesDestroyed:metrics.counts.dronesDestroyed||0,dronesEscaped:metrics.counts.dronesEscaped||0,

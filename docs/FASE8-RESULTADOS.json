@@ -1,0 +1,3216 @@
+{
+  "schema": 1,
+  "createdAt": "2026-10-15T09:37:44.808Z",
+  "build": {
+    "version": "0.8.0",
+    "rulesVersion": 1
+  },
+  "referenceRevision": "f3f0828dac2aa9b32bc5e41de7b4ba3e31226fc2",
+  "workingTreeDirty": true,
+  "remoteCiExecuted": false,
+  "platform": "Windows; Playwright 1.62.1 bundled Chromium 151.0.7922.34",
+  "node": {
+    "passed": 253,
+    "suites": [
+      {
+        "file": "gameplay.cjs",
+        "ok": true,
+        "passed": 21,
+        "error": null
+      },
+      {
+        "file": "training.cjs",
+        "ok": true,
+        "passed": 9,
+        "error": null
+      },
+      {
+        "file": "audio.cjs",
+        "ok": true,
+        "passed": 14,
+        "error": null
+      },
+      {
+        "file": "story.cjs",
+        "ok": true,
+        "passed": 7,
+        "error": null
+      },
+      {
+        "file": "bosses.cjs",
+        "ok": true,
+        "passed": 30,
+        "error": null
+      },
+      {
+        "file": "balance.cjs",
+        "ok": true,
+        "passed": 7,
+        "error": null
+      },
+      {
+        "file": "arena.cjs",
+        "ok": true,
+        "passed": 13,
+        "error": null
+      },
+      {
+        "file": "channel.cjs",
+        "ok": true,
+        "passed": 22,
+        "error": null
+      },
+      {
+        "file": "encounters.cjs",
+        "ok": true,
+        "passed": 19,
+        "error": null
+      },
+      {
+        "file": "resources.cjs",
+        "ok": true,
+        "passed": 24,
+        "error": null
+      },
+      {
+        "file": "fairness.cjs",
+        "ok": true,
+        "passed": 12,
+        "error": null
+      },
+      {
+        "file": "random.cjs",
+        "ok": true,
+        "passed": 5,
+        "error": null
+      },
+      {
+        "file": "feedback.cjs",
+        "ok": true,
+        "passed": 12,
+        "error": null
+      },
+      {
+        "file": "continuity.cjs",
+        "ok": true,
+        "passed": 16,
+        "error": null
+      },
+      {
+        "file": "progression.cjs",
+        "ok": true,
+        "passed": 12,
+        "error": null
+      },
+      {
+        "file": "science.cjs",
+        "ok": true,
+        "passed": 13,
+        "error": null
+      },
+      {
+        "file": "accessibility.cjs",
+        "ok": true,
+        "passed": 6,
+        "error": null
+      },
+      {
+        "file": "sound-events.cjs",
+        "ok": true,
+        "passed": 6,
+        "error": null
+      },
+      {
+        "file": "integration.cjs",
+        "ok": true,
+        "passed": 5,
+        "error": null
+      }
+    ]
+  },
+  "browser": {
+    "suites": [
+      {
+        "suite": "layout",
+        "ok": true,
+        "error": null
+      },
+      {
+        "suite": "layout-large",
+        "ok": true,
+        "error": null
+      },
+      {
+        "suite": "feedback",
+        "ok": true,
+        "error": null
+      },
+      {
+        "suite": "continuity",
+        "ok": true,
+        "error": null
+      },
+      {
+        "suite": "progression",
+        "ok": true,
+        "error": null
+      },
+      {
+        "suite": "science",
+        "ok": true,
+        "error": null
+      },
+      {
+        "suite": "accessibility",
+        "ok": true,
+        "error": null
+      },
+      {
+        "suite": "audio",
+        "ok": true,
+        "error": null
+      },
+      {
+        "suite": "integration",
+        "ok": true,
+        "error": null
+      }
+    ],
+    "layoutStates": 1232,
+    "viewports": 14,
+    "flowTests": "Eight-phase completion is arranged to check transitions, not a gameplay victory"
+  },
+  "stationary": {
+    "passed": 576,
+    "tests": [
+      "Nenhuma vitória estacionária nos oito chefes, nove posições, duas telas, com/sem escudo e R"
+    ],
+    "summary": {
+      "wins": 0,
+      "defeats": 560,
+      "timeouts": 16,
+      "maxSeconds": 180
+    }
+  },
+  "matrix": {
+    "cases": 58,
+    "allHistoricalFieldsMatchPhase4": true,
+    "controllerPolicies": {
+      "balanced": "Evita ruído conforme QBER, compensa inversões e usa R nos respiros.",
+      "canal-sem-R": "Desativa somente R; ainda evita ruído e compensa inversões.",
+      "ignora-canal": "Não usa R, não evita nuvens/sondas/frentes por risco ao canal e não compensa inversões. Ainda desvia de dano físico.",
+      "renova-no-alerta": "Usa R na primeira decisão com QBER >= 7.7 e recarga disponível, mesmo fora dos respiros.",
+      "ignora-emissores": "Nunca escolhe drones como alvo, mesmo sem meteoros. Disparos incidentais continuam possíveis."
+    },
+    "summary": [
+      {
+        "name": "equilibrado",
+        "cases": 20,
+        "wins": 20,
+        "seconds": [
+          558,
+          645
+        ],
+        "regens": [
+          25,
+          35
+        ],
+        "missed": [
+          1,
+          7
+        ],
+        "losses": []
+      },
+      {
+        "name": "meteors",
+        "cases": 4,
+        "wins": 4,
+        "seconds": [
+          571,
+          601
+        ],
+        "regens": [
+          28,
+          32
+        ],
+        "missed": [
+          2,
+          4
+        ],
+        "losses": []
+      },
+      {
+        "name": "noise",
+        "cases": 4,
+        "wins": 4,
+        "seconds": [
+          564,
+          606
+        ],
+        "regens": [
+          27,
+          32
+        ],
+        "missed": [
+          1,
+          4
+        ],
+        "losses": []
+      },
+      {
+        "name": "leitura-300ms",
+        "cases": 4,
+        "wins": 2,
+        "seconds": [
+          600,
+          614
+        ],
+        "regens": [
+          29,
+          30
+        ],
+        "missed": [
+          0,
+          2
+        ],
+        "losses": [
+          {
+            "seed": 42,
+            "width": 1600,
+            "height": 900,
+            "phase": 8,
+            "cause": {
+              "kind": "earth"
+            },
+            "timeout": false
+          },
+          {
+            "seed": 519,
+            "width": 1600,
+            "height": 900,
+            "phase": 7,
+            "cause": {
+              "kind": "bossSalvo",
+              "attack": "B"
+            },
+            "timeout": false
+          }
+        ]
+      },
+      {
+        "name": "leitura-500ms",
+        "cases": 2,
+        "wins": 0,
+        "seconds": null,
+        "regens": null,
+        "missed": null,
+        "losses": [
+          {
+            "seed": 42,
+            "width": 1600,
+            "height": 900,
+            "phase": 3,
+            "cause": {
+              "kind": "bossSalvo",
+              "attack": "A"
+            },
+            "timeout": false
+          },
+          {
+            "seed": 519,
+            "width": 1600,
+            "height": 900,
+            "phase": 3,
+            "cause": {
+              "kind": "bossSalvo",
+              "attack": "A"
+            },
+            "timeout": false
+          }
+        ]
+      },
+      {
+        "name": "comando-perdido",
+        "cases": 2,
+        "wins": 1,
+        "seconds": [
+          604,
+          604
+        ],
+        "regens": [
+          30,
+          30
+        ],
+        "missed": [
+          8,
+          8
+        ],
+        "losses": [
+          {
+            "seed": 42,
+            "width": 1600,
+            "height": 900,
+            "phase": 8,
+            "cause": {
+              "kind": "bossSalvo",
+              "attack": "B"
+            },
+            "timeout": false
+          }
+        ]
+      },
+      {
+        "name": "canal-com-R",
+        "cases": 2,
+        "wins": 2,
+        "seconds": [
+          601,
+          606
+        ],
+        "regens": [
+          29,
+          32
+        ],
+        "missed": [
+          1,
+          2
+        ],
+        "losses": []
+      },
+      {
+        "name": "canal-sem-R",
+        "cases": 2,
+        "wins": 2,
+        "seconds": [
+          631,
+          651
+        ],
+        "regens": [
+          0,
+          0
+        ],
+        "missed": [
+          5,
+          7
+        ],
+        "losses": []
+      },
+      {
+        "name": "inversao-com-R",
+        "cases": 2,
+        "wins": 1,
+        "seconds": [
+          588,
+          588
+        ],
+        "regens": [
+          30,
+          30
+        ],
+        "missed": [
+          6,
+          6
+        ],
+        "losses": [
+          {
+            "seed": 519,
+            "width": 1600,
+            "height": 900,
+            "phase": 8,
+            "cause": {
+              "kind": "earth"
+            },
+            "timeout": false
+          }
+        ]
+      },
+      {
+        "name": "inversao-sem-R",
+        "cases": 2,
+        "wins": 0,
+        "seconds": null,
+        "regens": null,
+        "missed": null,
+        "losses": [
+          {
+            "seed": 42,
+            "width": 1600,
+            "height": 900,
+            "phase": 5,
+            "cause": {
+              "kind": "earth"
+            },
+            "timeout": false
+          },
+          {
+            "seed": 519,
+            "width": 1600,
+            "height": 900,
+            "phase": 5,
+            "cause": {
+              "kind": "bossSalvo",
+              "attack": "B"
+            },
+            "timeout": false
+          }
+        ]
+      },
+      {
+        "name": "imovel",
+        "cases": 2,
+        "wins": 0,
+        "seconds": null,
+        "regens": null,
+        "missed": null,
+        "losses": [
+          {
+            "seed": 519,
+            "width": 1600,
+            "height": 900,
+            "phase": 1,
+            "cause": {
+              "kind": "earth"
+            },
+            "timeout": false
+          },
+          {
+            "seed": 519,
+            "width": 390,
+            "height": 700,
+            "phase": 1,
+            "cause": {
+              "kind": "earth"
+            },
+            "timeout": false
+          }
+        ]
+      },
+      {
+        "name": "ignora-canal",
+        "cases": 4,
+        "wins": 0,
+        "seconds": null,
+        "regens": null,
+        "missed": null,
+        "losses": [
+          {
+            "seed": 42,
+            "width": 1600,
+            "height": 900,
+            "phase": 5,
+            "cause": {
+              "kind": "bossSalvo",
+              "attack": "B"
+            },
+            "timeout": false
+          },
+          {
+            "seed": 519,
+            "width": 1600,
+            "height": 900,
+            "phase": 5,
+            "cause": {
+              "kind": "earth"
+            },
+            "timeout": false
+          },
+          {
+            "seed": 42,
+            "width": 390,
+            "height": 700,
+            "phase": 5,
+            "cause": {
+              "kind": "bossSalvo",
+              "attack": "B"
+            },
+            "timeout": false
+          },
+          {
+            "seed": 519,
+            "width": 390,
+            "height": 700,
+            "phase": 6,
+            "cause": {
+              "kind": "earth"
+            },
+            "timeout": false
+          }
+        ]
+      },
+      {
+        "name": "renova-no-alerta",
+        "cases": 4,
+        "wins": 0,
+        "seconds": null,
+        "regens": null,
+        "missed": null,
+        "losses": [
+          {
+            "seed": 42,
+            "width": 1600,
+            "height": 900,
+            "phase": 6,
+            "cause": {
+              "kind": "bossSalvo",
+              "attack": "A"
+            },
+            "timeout": false
+          },
+          {
+            "seed": 519,
+            "width": 1600,
+            "height": 900,
+            "phase": 7,
+            "cause": {
+              "kind": "collision"
+            },
+            "timeout": false
+          },
+          {
+            "seed": 42,
+            "width": 390,
+            "height": 700,
+            "phase": 8,
+            "cause": {
+              "kind": "bossSalvo",
+              "attack": "C"
+            },
+            "timeout": false
+          },
+          {
+            "seed": 519,
+            "width": 390,
+            "height": 700,
+            "phase": 7,
+            "cause": {
+              "kind": "bossSalvo",
+              "attack": "B"
+            },
+            "timeout": false
+          }
+        ]
+      },
+      {
+        "name": "ignora-emissores",
+        "cases": 4,
+        "wins": 4,
+        "seconds": [
+          568,
+          608
+        ],
+        "regens": [
+          28,
+          32
+        ],
+        "missed": [
+          1,
+          5
+        ],
+        "losses": []
+      }
+    ],
+    "runs": [
+      {
+        "name": "equilibrado",
+        "width": 1600,
+        "height": 900,
+        "seed": 1,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cch53-8ik44io709",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 593,
+        "regens": 30,
+        "missed": 2,
+        "earthImpacts": 12,
+        "repairs": 10,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cckoe-ahbfabuidf",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 601,
+        "regens": 32,
+        "missed": 2,
+        "earthImpacts": 10,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ccnyi-oclzhsxlud",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 606,
+        "regens": 29,
+        "missed": 1,
+        "earthImpacts": 8,
+        "repairs": 7,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 1600,
+        "height": 900,
+        "seed": 2026,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ccr9i-br7lm9a3lp",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 599,
+        "regens": 30,
+        "missed": 4,
+        "earthImpacts": 12,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 1100,
+        "height": 800,
+        "seed": 1,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ccuix-339xid29s8",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 566,
+        "regens": 29,
+        "missed": 2,
+        "earthImpacts": 8,
+        "repairs": 6,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 1100,
+        "height": 800,
+        "seed": 42,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ccxlu-waks1nj7n5",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 566,
+        "regens": 28,
+        "missed": 3,
+        "earthImpacts": 10,
+        "repairs": 7,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 1100,
+        "height": 800,
+        "seed": 519,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cd0pg-erzvkbfi15",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 591,
+        "regens": 29,
+        "missed": 1,
+        "earthImpacts": 10,
+        "repairs": 9,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 1100,
+        "height": 800,
+        "seed": 2026,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cd3y5-qxsq0xqql2",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 611,
+        "regens": 28,
+        "missed": 6,
+        "earthImpacts": 13,
+        "repairs": 7,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 390,
+        "height": 700,
+        "seed": 1,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cd7aw-ixxgsjobyi",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 574,
+        "regens": 30,
+        "missed": 5,
+        "earthImpacts": 12,
+        "repairs": 7,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 390,
+        "height": 700,
+        "seed": 42,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cdafi-vhwp1r7bwj",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 573,
+        "regens": 31,
+        "missed": 4,
+        "earthImpacts": 10,
+        "repairs": 6,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 390,
+        "height": 700,
+        "seed": 519,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cddla-i545nkdw1a",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 564,
+        "regens": 28,
+        "missed": 1,
+        "earthImpacts": 7,
+        "repairs": 6,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 390,
+        "height": 700,
+        "seed": 2026,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cdgnp-zd5q9hhk5q",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 558,
+        "regens": 25,
+        "missed": 6,
+        "earthImpacts": 14,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 844,
+        "height": 390,
+        "seed": 1,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cdjpr-w5rzgtp25t",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 605,
+        "regens": 32,
+        "missed": 7,
+        "earthImpacts": 13,
+        "repairs": 6,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 844,
+        "height": 390,
+        "seed": 42,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cdmz4-e2vqmwds0y",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 630,
+        "regens": 35,
+        "missed": 7,
+        "earthImpacts": 15,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 844,
+        "height": 390,
+        "seed": 519,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cdqcm-lnhtm8xtz2",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 611,
+        "regens": 33,
+        "missed": 6,
+        "earthImpacts": 16,
+        "repairs": 10,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 844,
+        "height": 390,
+        "seed": 2026,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cdtnd-duwxdwqf8k",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 611,
+        "regens": 33,
+        "missed": 7,
+        "earthImpacts": 18,
+        "repairs": 11,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 760,
+        "height": 360,
+        "seed": 1,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cdwy6-tfewq5za2r",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 626,
+        "regens": 32,
+        "missed": 7,
+        "earthImpacts": 16,
+        "repairs": 9,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 760,
+        "height": 360,
+        "seed": 42,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ce0cy-1n5g6zor3k",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 612,
+        "regens": 32,
+        "missed": 7,
+        "earthImpacts": 18,
+        "repairs": 11,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 760,
+        "height": 360,
+        "seed": 519,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ce3mf-b5y5r7k0cf",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 605,
+        "regens": 30,
+        "missed": 6,
+        "earthImpacts": 18,
+        "repairs": 12,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "equilibrado",
+        "width": 760,
+        "height": 360,
+        "seed": 2026,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ce6v9-gl5dznqxeq",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 645,
+        "regens": 34,
+        "missed": 7,
+        "earthImpacts": 15,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "meteors",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {
+          "strategy": "meteors"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ceag0-tojw11o25c",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 601,
+        "regens": 32,
+        "missed": 2,
+        "earthImpacts": 10,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "meteors",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "strategy": "meteors"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cedt3-15xifp17dl",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 591,
+        "regens": 30,
+        "missed": 2,
+        "earthImpacts": 11,
+        "repairs": 9,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "meteors",
+        "width": 390,
+        "height": 700,
+        "seed": 42,
+        "options": {
+          "strategy": "meteors"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ceh2k-cqg501zx9e",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 573,
+        "regens": 31,
+        "missed": 4,
+        "earthImpacts": 10,
+        "repairs": 6,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "meteors",
+        "width": 390,
+        "height": 700,
+        "seed": 519,
+        "options": {
+          "strategy": "meteors"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cek8i-vcuywsd7v3",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 571,
+        "regens": 28,
+        "missed": 4,
+        "earthImpacts": 9,
+        "repairs": 5,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "noise",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {
+          "strategy": "noise"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cenbp-sss08lt7qq",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 601,
+        "regens": 32,
+        "missed": 2,
+        "earthImpacts": 11,
+        "repairs": 9,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "noise",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "strategy": "noise"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ceqmv-nglcpxtk9",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 606,
+        "regens": 29,
+        "missed": 1,
+        "earthImpacts": 8,
+        "repairs": 7,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "noise",
+        "width": 390,
+        "height": 700,
+        "seed": 42,
+        "options": {
+          "strategy": "noise"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9ceu0l-xatg4anp01",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 573,
+        "regens": 31,
+        "missed": 4,
+        "earthImpacts": 11,
+        "repairs": 7,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "noise",
+        "width": 390,
+        "height": 700,
+        "seed": 519,
+        "options": {
+          "strategy": "noise"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cex82-e2tko557ng",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 564,
+        "regens": 27,
+        "missed": 4,
+        "earthImpacts": 10,
+        "repairs": 6,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "leitura-300ms",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {
+          "decisionMs": 240,
+          "reactionMs": 300,
+          "input": "held"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cf0ci-8qszp6wb08",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 504,
+        "regens": 28,
+        "missed": 12,
+        "earthImpacts": 18,
+        "repairs": 6,
+        "failure": {
+          "kind": "earth"
+        },
+        "lastPhase": 8
+      },
+      {
+        "name": "leitura-300ms",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "decisionMs": 240,
+          "reactionMs": 300,
+          "input": "held"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cf34v-9hjfdi2scd",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 501,
+        "regens": 22,
+        "missed": 8,
+        "earthImpacts": 13,
+        "repairs": 5,
+        "failure": {
+          "kind": "bossSalvo",
+          "attack": "B"
+        },
+        "lastPhase": 7
+      },
+      {
+        "name": "leitura-300ms",
+        "width": 390,
+        "height": 700,
+        "seed": 42,
+        "options": {
+          "decisionMs": 240,
+          "reactionMs": 300,
+          "input": "held"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cf5u0-cvaecg5o8h",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            false,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 600,
+        "regens": 30,
+        "missed": 2,
+        "earthImpacts": 11,
+        "repairs": 9,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "leitura-300ms",
+        "width": 390,
+        "height": 700,
+        "seed": 519,
+        "options": {
+          "decisionMs": 240,
+          "reactionMs": 300,
+          "input": "held"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cf94n-7k6fs7x122",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 614,
+        "regens": 29,
+        "missed": 0,
+        "earthImpacts": 6,
+        "repairs": 6,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "leitura-500ms",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {
+          "decisionMs": 320,
+          "reactionMs": 500,
+          "input": "held"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cfchb-n84tc3sbuu",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 190,
+        "regens": 7,
+        "missed": 4,
+        "earthImpacts": 6,
+        "repairs": 2,
+        "failure": {
+          "kind": "bossSalvo",
+          "attack": "A"
+        },
+        "lastPhase": 3
+      },
+      {
+        "name": "comando-perdido",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {
+          "reactionMs": 300,
+          "errorEvery": 13
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cfdil-dcqo889zbd",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 585,
+        "regens": 34,
+        "missed": 11,
+        "earthImpacts": 18,
+        "repairs": 7,
+        "failure": {
+          "kind": "bossSalvo",
+          "attack": "B"
+        },
+        "lastPhase": 8
+      },
+      {
+        "name": "canal-com-R",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cfgqf-34v9ivpxse",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 601,
+        "regens": 32,
+        "missed": 2,
+        "earthImpacts": 10,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "canal-sem-R",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cfk0d-a4880558a2",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 651,
+        "regens": 0,
+        "missed": 5,
+        "earthImpacts": 14,
+        "repairs": 9,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "inversao-com-R",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {
+          "reactionMs": 300,
+          "compensate": false
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cfnl3-ccx65evpjc",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 588,
+        "regens": 30,
+        "missed": 6,
+        "earthImpacts": 15,
+        "repairs": 9,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "inversao-sem-R",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {
+          "reactionMs": 300,
+          "compensate": false
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cfque-uq9eau0m8o",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 285,
+        "regens": 0,
+        "missed": 12,
+        "earthImpacts": 13,
+        "repairs": 1,
+        "failure": {
+          "kind": "earth"
+        },
+        "lastPhase": 5
+      },
+      {
+        "name": "leitura-500ms",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "decisionMs": 320,
+          "reactionMs": 500,
+          "input": "held"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cfsew-9q0uu1ejiu",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 196,
+        "regens": 4,
+        "missed": 5,
+        "earthImpacts": 5,
+        "repairs": 0,
+        "failure": {
+          "kind": "bossSalvo",
+          "attack": "A"
+        },
+        "lastPhase": 3
+      },
+      {
+        "name": "comando-perdido",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "reactionMs": 300,
+          "errorEvery": 13
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cfthu-5siuvlw0bm",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 604,
+        "regens": 30,
+        "missed": 8,
+        "earthImpacts": 17,
+        "repairs": 9,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "canal-com-R",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cfwuo-7pbn9njyqi",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 606,
+        "regens": 29,
+        "missed": 1,
+        "earthImpacts": 8,
+        "repairs": 7,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "canal-sem-R",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {},
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cg086-tmuct6lfm0",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 631,
+        "regens": 0,
+        "missed": 7,
+        "earthImpacts": 15,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "inversao-com-R",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "reactionMs": 300,
+          "compensate": false
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cg3pd-xkruymdt04",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 508,
+        "regens": 23,
+        "missed": 12,
+        "earthImpacts": 18,
+        "repairs": 6,
+        "failure": {
+          "kind": "earth"
+        },
+        "lastPhase": 8
+      },
+      {
+        "name": "inversao-sem-R",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "reactionMs": 300,
+          "compensate": false
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cg6hm-2vn50o2yrl",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 332,
+        "regens": 0,
+        "missed": 10,
+        "earthImpacts": 12,
+        "repairs": 2,
+        "failure": {
+          "kind": "bossSalvo",
+          "attack": "B"
+        },
+        "lastPhase": 5
+      },
+      {
+        "name": "imovel",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "idle": true
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cg8ad-jr1ug86kg8",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 36,
+        "regens": 1,
+        "missed": 12,
+        "earthImpacts": 12,
+        "repairs": 0,
+        "failure": {
+          "kind": "earth"
+        },
+        "lastPhase": 1
+      },
+      {
+        "name": "imovel",
+        "width": 390,
+        "height": 700,
+        "seed": 519,
+        "options": {
+          "idle": true
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cg8h5-akbgvc0nac",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 36,
+        "regens": 1,
+        "missed": 12,
+        "earthImpacts": 12,
+        "repairs": 0,
+        "failure": {
+          "kind": "earth"
+        },
+        "lastPhase": 1
+      },
+      {
+        "name": "ignora-canal",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {
+          "channel": "ignore"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cg8ns-r5o7l2wpzy",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 317,
+        "regens": 0,
+        "missed": 9,
+        "earthImpacts": 11,
+        "repairs": 2,
+        "failure": {
+          "kind": "bossSalvo",
+          "attack": "B"
+        },
+        "lastPhase": 5
+      },
+      {
+        "name": "renova-no-alerta",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {
+          "channel": "alert"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cgag5-opwu2wds88",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            false,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 390,
+        "regens": 16,
+        "missed": 1,
+        "earthImpacts": 4,
+        "repairs": 3,
+        "failure": {
+          "kind": "bossSalvo",
+          "attack": "A"
+        },
+        "lastPhase": 6
+      },
+      {
+        "name": "ignora-emissores",
+        "width": 1600,
+        "height": 900,
+        "seed": 42,
+        "options": {
+          "strategy": "ignoreEmitters"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cgcif-ubdvwhddl6",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 608,
+        "regens": 32,
+        "missed": 5,
+        "earthImpacts": 13,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "ignora-canal",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "channel": "ignore"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cgfu5-36yh8knwfh",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 316,
+        "regens": 0,
+        "missed": 12,
+        "earthImpacts": 15,
+        "repairs": 3,
+        "failure": {
+          "kind": "earth"
+        },
+        "lastPhase": 5
+      },
+      {
+        "name": "renova-no-alerta",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "channel": "alert"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cghie-5o6lwney31",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 441,
+        "regens": 20,
+        "missed": 7,
+        "earthImpacts": 15,
+        "repairs": 8,
+        "failure": {
+          "kind": "collision"
+        },
+        "lastPhase": 7
+      },
+      {
+        "name": "ignora-emissores",
+        "width": 1600,
+        "height": 900,
+        "seed": 519,
+        "options": {
+          "strategy": "ignoreEmitters"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cgjx7-nh0vxe0vjo",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 606,
+        "regens": 31,
+        "missed": 2,
+        "earthImpacts": 10,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "ignora-canal",
+        "width": 390,
+        "height": 700,
+        "seed": 42,
+        "options": {
+          "channel": "ignore"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cgn8j-q9oz6qxriq",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 299,
+        "regens": 0,
+        "missed": 8,
+        "earthImpacts": 11,
+        "repairs": 3,
+        "failure": {
+          "kind": "bossSalvo",
+          "attack": "B"
+        },
+        "lastPhase": 5
+      },
+      {
+        "name": "renova-no-alerta",
+        "width": 390,
+        "height": 700,
+        "seed": 42,
+        "options": {
+          "channel": "alert"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cgott-166ulb170l",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 537,
+        "regens": 28,
+        "missed": 9,
+        "earthImpacts": 18,
+        "repairs": 9,
+        "failure": {
+          "kind": "bossSalvo",
+          "attack": "C"
+        },
+        "lastPhase": 8
+      },
+      {
+        "name": "ignora-emissores",
+        "width": 390,
+        "height": 700,
+        "seed": 42,
+        "options": {
+          "strategy": "ignoreEmitters"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cgrrr-lg7eoqdi96",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 568,
+        "regens": 28,
+        "missed": 1,
+        "earthImpacts": 9,
+        "repairs": 8,
+        "failure": null,
+        "lastPhase": 8
+      },
+      {
+        "name": "ignora-canal",
+        "width": 390,
+        "height": 700,
+        "seed": 519,
+        "options": {
+          "channel": "ignore"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cguxc-dbnwyyqfsz",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 331,
+        "regens": 0,
+        "missed": 12,
+        "earthImpacts": 16,
+        "repairs": 4,
+        "failure": {
+          "kind": "earth"
+        },
+        "lastPhase": 6
+      },
+      {
+        "name": "renova-no-alerta",
+        "width": 390,
+        "height": 700,
+        "seed": 519,
+        "options": {
+          "channel": "alert"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cgwoj-9e57sblnfw",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": false,
+        "seconds": 444,
+        "regens": 21,
+        "missed": 10,
+        "earthImpacts": 15,
+        "repairs": 5,
+        "failure": {
+          "kind": "bossSalvo",
+          "attack": "B"
+        },
+        "lastPhase": 7
+      },
+      {
+        "name": "ignora-emissores",
+        "width": 390,
+        "height": 700,
+        "seed": 519,
+        "options": {
+          "strategy": "ignoreEmitters"
+        },
+        "build": {
+          "version": "0.8.0",
+          "rulesVersion": 1
+        },
+        "campaign": {
+          "id": "mv9cgz35-boranr75i8",
+          "attempt": 1,
+          "developerAssisted": false,
+          "developerRevives": 0,
+          "awards": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            false
+          ]
+        },
+        "inputMethods": [
+          "simulation"
+        ],
+        "entry": {
+          "phase": 1,
+          "kind": "wave"
+        },
+        "won": true,
+        "seconds": 584,
+        "regens": 29,
+        "missed": 5,
+        "earthImpacts": 14,
+        "repairs": 9,
+        "failure": null,
+        "lastPhase": 8
+      }
+    ]
+  },
+  "pending": [
+    "5–8 human beginner observations",
+    "Physical modest-device performance and listening assessment",
+    "First remote GitHub Actions run after push"
+  ],
+  "configuration": {
+    "rules": {
+      "phases": 8,
+      "charge": 1000,
+      "maxImpacts": 12,
+      "frameMs": 16.666666666666668,
+      "maxStepMs": 50,
+      "shotCooldownMs": 300,
+      "regenMs": 2000,
+      "regenCooldownMs": 10000,
+      "compromisedMs": 4000,
+      "channel": {
+        "limit": 11,
+        "alert": 7.7,
+        "max": 16
+      }
+    },
+    "preferences": {
+      "keys": {
+        "left": "KeyA",
+        "right": "KeyD",
+        "regen": "KeyR"
+      },
+      "reading": false,
+      "effects": "system",
+      "reducedEffects": false
+    }
+  }
+}

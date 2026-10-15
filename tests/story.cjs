@@ -25,7 +25,7 @@ function opening() {
     makeSpaceBackdrop:() => ({}), drawInterceptor:noop, arcadeActive:false, isPlaying:false, finale:null,
     launches:0, defenses:0, startDefense:() => sandbox.defenses++, startGame:() => sandbox.launches++ };
   const context = vm.createContext(sandbox);
-  for (const file of ['arena.js','training.js','story.js']) vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'), context, {filename:file});
+  for (const file of ['config.js','accessibility.js','arena.js','training.js','story.js']) vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'), context, {filename:file});
   const run = code => vm.runInContext(code, context);
   const click = id => elements.get(id).click();
   const action = name => elements.get('trainingExperiment').click({target:{closest:() => ({dataset:{trainingAction:name}})}});
@@ -70,6 +70,7 @@ test('A conversa inteira aparece por cena sem controles por fala', () => {
 test('O treino congela na pausa e só libera a campanha depois de renovar', () => {
   const g = opening(); reachFlight(g); g.press('Enter'); assert.equal(g.sandbox.launches,0);
   g.press('ArrowLeft'); g.advance(1200); assert.equal(g.elements.get('trainingScore').textContent,'10 pts');
+  g.press('ArrowRight');g.advance(160);g.press('ArrowRight');g.advance(160);
   g.press('KeyR'); g.press('Escape'); g.advance(4000);
   assert.equal(g.elements.get('trainingNext').disabled,true);
   g.press('Escape'); g.advance(2200); assert.equal(g.elements.get('trainingNext').disabled,false);

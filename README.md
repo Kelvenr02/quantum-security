@@ -75,17 +75,21 @@ O escudo começa com uma carga e só é restaurado após vencer um guardião. En
 
 H acrescenta **5 s** de disparos em três trilhas, com duração restante limitada a 7 s. A cápsula **+** remove até **4 pontos percentuais de QBER** e **2 s da recarga**, sem encerrar automaticamente uma inversão. Nas ondas, os suprimentos aparecem a uma a três trilhas de distância, considerando tempo de travessia e perigos já visíveis. Nos chefes 3, 6 e 8, há no máximo uma cápsula por ciclo, anunciada 900 ms antes de cair. O painel informa escudo, duração de H e canal; avisos de salvas iminentes têm prioridade sobre mensagens de recursos.
 
-Na derrota durante o chefe, **Retomar no chefe** restaura o estado da entrada: impactos, escudo, canal, recarga, H, posição e pontos. O chefe reinicia inteiro, incluindo seus estágios; novas tentativas não acumulam recursos ou reparos. **Refazer a fase inteira** restaura o início das ondas. Enter escolhe a retomada disponível; **Recomeçar campanha** volta ao início. Esses pontos ficam somente na memória da sessão, sem gravação após fechar a página.
+Na derrota durante o chefe, **Retomar no chefe** restaura o estado da entrada: impactos, escudo, canal, recarga, H, posição e pontos. O chefe reinicia inteiro, incluindo seus estágios; novas tentativas não acumulam recursos ou reparos. **Refazer a fase inteira** restaura o início das ondas. Enter escolhe a retomada disponível; **Recomeçar campanha** volta ao início. O início de cada fase e chefe também é salvo neste navegador. Após reabrir, **Continuar campanha** restaura esse ponto e mostra o briefing; o combate em andamento não é salvo. A pausa oferece **Voltar ao menu**. O início das ondas acompanha o checkpoint do chefe para permitir refazer a fase inteira. Se o armazenamento estiver indisponível, as retomadas continuam somente na aba, com aviso.
 
-Na derrota, o botão vermelho **DESENVOLVEDOR · RENASCER** continua exatamente do ponto interrompido, preservando a vida restante do chefe e o progresso das ondas. Restaura os impactos da Terra para zero, escudo e canal, libera R e concede 3 s de proteção à nave. Pode ser usado novamente em outras mortes; o diagnóstico marca a partida como `developerAssisted` e registra `developerRevives`. As opções normais de retomada continuam disponíveis.
+Na derrota, o botão vermelho **DESENVOLVEDOR · RENASCER** continua exatamente do ponto interrompido, preservando a vida restante do chefe e o progresso das ondas. Restaura os impactos da Terra para zero, escudo e canal, libera R e concede 3 s de proteção à nave. Pode ser usado novamente em outras mortes; o diagnóstico marca a partida como `developerAssisted` e registra `developerRevives`. A marca assistida e o total de renascimentos acompanham a campanha mesmo após repetir uma fase ou reabrir o jogo, com identificação no cabeçalho e no resultado. Somente uma nova campanha zera essa identidade. As opções normais de retomada continuam disponíveis.
 
 ## Organização
 
 - arena.js: geometria das nove trilhas e pilotagem compartilhada.
+- random.js: sorteios ambientais independentes do desenho, com estado versionado nas retomadas.
 - channel.js: pressão do canal, comprometimento, renovação, respiros e perturbações dos chefes.
 - resources.js: regras de recursos, pontos de retomada, alertas e feedback de combate.
-- encounters.js: roteiro dos três encontros, orçamento de ameaças, drones, sondas e fragmentação.
+- encounters.js: roteiro dos três encontros, variantes planejadas, orçamento de ameaças, drones, sondas e fragmentação.
+- progression.js: objetivos opcionais, medalhas e resumo curto por fase.
+- science.js: experimentos científicos locais, pistas opcionais e preferência de exibição.
 - metrics.js: diagnóstico agregado da partida, apenas em memória.
+- continuity.js: identidade da campanha, pontos de entrada locais versionados e continuação após reabrir.
 - phases.js: objetivos, parâmetros de dificuldade e conceitos das oito fases.
 - script.js: defesa orbital, colisões, pontuação e animação final.
 - quantum.js: briefings de fase, cápsulas, pares conectados e frentes de interferência.
@@ -116,6 +120,16 @@ Abertura e transição: node tests/story.cjs
 
 Guardiões e retomada: node tests/bosses.cjs
 
+Instruções contextuais dos chefes e consulta pela pausa: node tests/feedback.cjs
+
+Salvamento, identidade assistida e retomadas entre sessões: node tests/continuity.cjs
+
+Variantes, medalhas e marcos de aprendizagem: node tests/progression.cjs
+
+Experimentos científicos e isolamento da campanha: node tests/science.cjs
+
+Sorteios independentes e restauração de checkpoints: node tests/random.cjs
+
 Campanha com pilotagem simulada e colisões reais: node tests/balance.cjs
 
 Margens de reação, rotação e ritmo: node tests/fairness.cjs
@@ -126,11 +140,33 @@ Matriz de 58 cenários e comparação de estratégias: node tools/analyze-balanc
 
 Reconstruir o bundle offline a partir dos arquivos preparados: node tools/build-audio.cjs
 
-Os testes do treinamento verificam intercepção, novas tentativas, regeneração, pausa e reinício. Os da abertura cobrem ações obrigatórias, releitura, medição com resultado zero, retorno ao menu e início único da campanha. Todas as suítes são executadas no GitHub Actions.
+Os testes do treinamento verificam intercepção, novas tentativas, regeneração, pausa e reinício. Os da abertura cobrem ações obrigatórias, releitura, medição com resultado zero, retorno ao menu e início único da campanha. O GitHub Actions está configurado para executar regras e interface em jobs separados. A configuração da fase 8 foi validada localmente; sua primeira execução remota depende do próximo push.
 
-As suítes somam 170 verificações e incluem seis campanhas de regressão, além de 576 confrontos estacionários sem vitória. A matriz atual de 58 cenários teve 20 conclusões em 20 combinações de tela/semente com o piloto equilibrado, em 539–624 s; as políticas de ignorar o canal, renovar no alerta e ignorar emissores também foram comparadas. Os controladores consultam o estado interno: demonstram viabilidade e detectam regressões, sem medir a dificuldade ou a diversão para uma pessoa. Consulte [resultados, durações e limites da análise](docs/BALANCEAMENTO.md).
+As suítes Node somam 253 verificações e incluem seis campanhas de regressão e uma campanha adicional validando os salvamentos, além de 576 confrontos estacionários sem vitória. A matriz da fase 4 teve 20 conclusões nas 20 combinações de tela/semente com o piloto equilibrado, em 558–645 s; as políticas de ignorar o canal, renovar no alerta e ignorar emissores também foram comparadas. Os controladores consultam o estado interno: demonstram viabilidade e detectam regressões, sem medir a dificuldade ou a diversão para uma pessoa. Consulte [resultados, durações e limites da análise](docs/BALANCEAMENTO.md).
 
-Para analisar uma partida no console: `quantumDiagnostics.snapshot()` ou `quantumDiagnostics.export()`. O diagnóstico distingue impactos recebidos de reparos e registra QBER, regeneração, movimento, ameaças e dano/acertos por abertura de chefe (incluindo oportunidades sem dano). Os registros não são enviados nem persistidos. Consulte o [detalhamento das métricas e validações](docs/IMPLEMENTACAO.md).
+Para exportar tentativas da rodada, use `quantumDiagnostics.playtest()` e consolide os arquivos com `node tools/summarize-playtest.cjs arquivo.json`. O export inclui até 20 tentativas anteriores ainda em memória; exporte antes de fechar.
+
+Para analisar uma partida no console: `quantumDiagnostics.snapshot()` ou `quantumDiagnostics.export()`. O diagnóstico distingue impactos recebidos de reparos e registra QBER, regeneração, movimento, ameaças e dano/acertos por abertura de chefe (incluindo oportunidades sem dano). O histórico detalhado não é enviado nem persistido. O diagnóstico inclui a identidade da campanha e a tentativa; somente checkpoints e identidade resumida são gravados localmente. Consulte o [detalhamento das métricas e validações](docs/IMPLEMENTACAO.md).
+
+## Melhorias por fases
+
+As fases 1 e 2 entregam HUD compacto em paisagem baixa, sorteios ambientais separados dos efeitos visuais, avisos contextuais dos oito chefes, barra de coerência e estágio da nave-mãe. A pausa permite consultar o objetivo e os três passos do chefe. O treino inclui desviar de uma salva antes de renovar a chave; R não protege de ataques e um erro permite tentar novamente.
+
+A fase 3 acrescenta salvamento local nos pontos de entrada, continuação pelo menu e identificação persistente da campanha assistida. Como jogar oferece consulta direta; uma nova missão só substitui o ponto anterior quando a campanha começa.
+
+A fase 4 acrescenta respiros de 3 s, duas ordens de encontros nas fases 3–8 e medalhas opcionais sem benefícios de combate. O resumo de cada setor fica recolhido no briefing seguinte. A avaliação humana está [preparada e pendente](docs/TESTE-COM-INICIANTES.md); os testes automatizados não a substituem.
+
+A fase 5 oferece seis experimentos opcionais no briefing e na pausa, leitura de síndrome nos módulos e pistas científicas que podem ser desligadas. O laboratório não altera recursos nem combate. Confira [conceitos, limites e fontes](docs/CIENCIA-NO-JOGO.md).
+
+A fase 6 acrescenta **Acessibilidade** no menu/treino e **Leitura e controles** na pausa: leitura ampliada, efeitos reduzidos (ou seguindo o sistema) e teclas de movimento/renovação configuráveis. As setas continuam disponíveis; Esc, Enter e M conservam suas funções. As preferências são locais e não alteram o progresso. Ao fechar as configurações durante o combate, escolha Retomar para voltar a jogar.
+
+A fase 7 separa os sons de rastreamento, mira fixa, salvas e ruído. Estágios da nave-mãe têm transição discreta sem reiniciar a música. O cache de áudio evita acúmulo nas pausas, e o briefing prepara a faixa do combate seguinte. Confira as [medições de desempenho e seus limites](docs/DESEMPENHO.md).
+
+A fase 8 centraliza regras compartilhadas, explicita o modo atual do jogo e preserva versão/configuração nos relatórios. Os comandos `npm test`, `npm run test:stationary` e `npm run test:browser` reproduzem as verificações. O npm é necessário apenas para o desenvolvimento: jogar continua exigindo somente abrir `index.html`. Consulte a [revisão integrada e as pendências](docs/REVISAO-FINAL.md) e os [comandos de testes/CI](docs/TESTES-E-CI.md).
+
+Veja o [acompanhamento das oito fases e suas validações](docs/EVOLUCAO-POR-FASES.md).
+
+Os scripts de navegador requerem Playwright no ambiente de desenvolvimento e Chromium instalado (`npx playwright install chromium`). Execute `node tests/browser/layout.cjs` para 616 estados em 14 resoluções e `node tests/browser/feedback.cjs` para três treinos e 30 consultas de pausa. Execute também `node tests/browser/continuity.cjs` para reabertura, auxílio, menu, retomadas, vitória e falhas de armazenamento em três resoluções. O fluxo de medalhas/resumo está em `node tests/browser/progression.cjs`. Os seis experimentos e a preferência de pistas são verificados por `node tests/browser/science.cjs`. Use também `node tests/browser/accessibility.cjs` para preferências, teclado, foco e efeitos reduzidos. Defina `LARGE_READING=1` ao executar o teste de layout para repetir os 616 estados com leitura ampliada. Os sinais e a síntese real são verificados com `node tests/browser/audio.cjs`. Para medir inicialização, memória, decodificação e quadros, execute `node tests/browser/performance.cjs` separadamente dos outros testes. Se o pacote estiver fora da resolução normal de módulos, defina `PLAYWRIGHT_MODULE` com seu caminho; opcionalmente, `CHROME_EXECUTABLE` seleciona um Chrome instalado. Capturas e resultados ficam em `tmp/layout-check`, `tmp/feedback-check`, `tmp/continuity-check`, `tmp/progression-check` e `tmp/science-check`. O jogo continua sem dependências de execução. O workflow da fase 8 inclui esses cenários e preserva logs, capturas e traces de falhas.
 
 ## Contexto científico
 

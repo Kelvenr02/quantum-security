@@ -7,6 +7,8 @@ let developerReviveState=null;
 
 function captureCheckpoint(kind='wave') {
   return Object.freeze({kind,level,score,combatScore,missed,quantumCollected,seed:campaignSeed,
+    random:campaignRandom.snapshot(),
+    encounterVersion:EncounterDirector.version,variant:encounterDirector?.variant??0,goals:phaseGoals?.snapshot(),
     channel:Object.freeze(channelCheckpoint()),hullShield,
     hullGraceRemaining:Math.max(0,hullInvulUntil-gameTime),hadamardRemaining:Math.max(0,superpositionUntil-gameTime),
     pilot:Object.freeze({position:shipPosition(),lane:shipPilot.lane,from:shipPilot.from,elapsed:shipPilot.elapsed})});
@@ -43,9 +45,11 @@ function refreshCombatHUD() {
   $('powerStatus').textContent=gameTime<superpositionUntil?'H '+((superpositionUntil-gameTime)/1000).toFixed(1)+' s':'H —';
   $('powerStatus').dataset.active=String(gameTime<superpositionUntil);
   const urgent=boss?.status==='fighting'&&boss.model.pulses.some(p=>!p.fired&&!p.tracking&&p.at-boss.model.time<900);
+  const channelUrgent=boss?.channelPulse&&!boss.channelPulse.fired&&boss.channelPulse.releaseAt-boss.model.time<900;
+  flushScienceCue(urgent||channelUrgent);
   for(const [id,visible]of [['phaseFeedback',!boss],['bossFeedback',!!boss]]){
-    const el=$(id),show=visible&&!urgent&&combatNotice&&combatNotice.until>gameTime;
-    el.hidden=!show;if(show){el.textContent=combatNotice.text;el.dataset.priority=combatNotice.priority;}
+    const el=$(id),show=visible&&!urgent&&!(combatNotice?.priority===-1&&scienceCueUnsafe(urgent||channelUrgent))&&combatNotice&&combatNotice.until>gameTime;
+    el.hidden=!show;if(show){el.textContent=controlText(combatNotice.text);el.dataset.priority=combatNotice.priority;}
   }
 }
 function retryCheckpoint() {
@@ -66,6 +70,8 @@ function developerRevive() {
     campaignMetrics.data.outcome='playing';campaignMetrics.data.developerAssisted=true;
     campaignMetrics.count('developerRevives');campaignMetrics.event('developerRevive',{cause});
   }
+  campaignJourney.developerAssisted=true;campaignJourney.developerRevives++;
+  syncCampaignIdentity();saveCampaignIdentity();
   setQber(0,'developerRevive');clearMovementInput();
   isPlaying=true;isPaused=false;isStageBriefing=false;combatNotice=null;
   lastHUDChannel='safe';lastHUDReady=true;
@@ -75,7 +81,9 @@ function developerRevive() {
   $('pauseBtn').disabled=false;$('pauseBtn').innerHTML='Ⅱ <span>PAUSAR</span>';
   $('bossHud').hidden=!boss;$('phaseHud').hidden=!!boss;
   gameAudio.stopEffects();gameAudio.setPaused('game',false);gameAudio.setScene(boss?'boss':'phase',level);gameAudio.sfx('confirm');
+  if(boss)gameAudio.setBossStage(boss.model.stage,{announce:false});
   updateShieldHUD();updateHUD();refreshCombatHUD();if(boss)updateBossHUD();
+  refreshArenaBounds();
   notifyCombat('DESENVOLVEDOR · renascido com proteção por 3 s',2);
   canvas.focus({preventScroll:true});lastTs=0;cancelAnimationFrame(rafId);rafId=requestAnimationFrame(update);
 }

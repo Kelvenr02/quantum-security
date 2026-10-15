@@ -1,0 +1,60 @@
+const {chromium,captureFailure}=require('./harness.cjs');
+const assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs');
+const {pathToFileURL}=require('node:url');
+const url=pathToFileURL(path.resolve(__dirname,'../../index.html')).href;
+const output=path.resolve(__dirname,'../../tmp/continuity-check');
+(async()=>{
+  fs.mkdirSync(output,{recursive:true});
+  const browser=await chromium.launch({headless:true,...(process.env.CHROME_EXECUTABLE?{executablePath:process.env.CHROME_EXECUTABLE}:{})});
+  try{for(const [width,height]of [[1600,900],[390,700],[568,320]]){
+    const context=await browser.newContext({viewport:{width,height},hasTouch:width!==1600});const page=await context.newPage(),errors=[];
+    page.on('pageerror',e=>errors.push(e.message));await page.clock.install({time:new Date('2026-10-15T12:00:00Z')});await page.clock.pauseAt(new Date('2026-10-15T12:00:00Z'));await page.goto(url);
+    await page.locator('[onclick="openDefenseBriefing()"]').click();assert.equal(await page.locator('#helpOverlay').isVisible(),true);
+    assert.equal(await page.evaluate(()=>introActive||isPlaying),false);await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#helpOverlay').isVisible(),false);
+    await page.evaluate(()=>{
+      startIntro();tutorial.stop();startDefense();startGame();cancelAnimationFrame(rafId);
+      score=460;combatScore=300;missed=4;qber=7;hullShield=0;keyReadyAt=4500;superpositionUntil=2500;
+      enterPhase(5);continuePhase();cancelAnimationFrame(rafId);combatScore=600;missed=6;beginBoss();
+      continuePhase();cancelAnimationFrame(rafId);boss.model.hp=[10];gameOver('teste');
+    });
+    await page.clock.runFor(850);await page.evaluate(()=>{developerRevive();cancelAnimationFrame(rafId);});
+    const before=await page.evaluate(()=>JSON.parse(localStorage.getItem(CampaignSaveStore.key)));
+    assert.equal(before.checkpoint.kind,'boss');assert.equal(before.journey.developerRevives,1);
+    await page.reload();assert.equal(await page.locator('#titleContinue').isVisible(),true);
+    assert.match(await page.locator('#continueSummary').textContent(),/Fase 5.*chefe.*assistida/);
+    await page.locator('#titleContinue').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(output,`${width}-continue.png`)});
+    await page.locator('#titleContinue').click();
+    assert.equal(await page.locator('#phaseOverlay').isVisible(),true);
+    assert.equal(await page.evaluate(()=>boss.model.health),20);assert.equal(await page.evaluate(()=>missed),6);
+    assert.equal(await page.evaluate(()=>hullShield),0);assert.equal(await page.evaluate(()=>qber),7);
+    assert.equal(await page.evaluate(()=>campaignJourney.developerRevives),1);assert.equal(await page.evaluate(()=>campaignJourney.attempt),2);
+    assert.equal(await page.evaluate(()=>JSON.stringify(campaignRandom.snapshot())),JSON.stringify(before.checkpoint.random));
+    assert.equal(await page.locator('#campaignBadge').isVisible(),true);
+    await page.locator('#btnContinue').click();await page.evaluate(()=>cancelAnimationFrame(rafId));await page.keyboard.press('Escape');
+    assert.match(await page.locator('#pauseSaveStatus').textContent(),/início do chefe.*vida completa/);
+    await page.locator('#pauseMenu').click();assert.equal(await page.evaluate(()=>arcadeActive||isPlaying),false);
+    await page.locator('#titleContinue').click();assert.equal(await page.evaluate(()=>campaignJourney.developerRevives),1);
+    await page.evaluate(()=>{continuePhase();gameOver('teste');retryPhase();});
+    assert.equal(await page.evaluate(()=>boss),null);assert.equal(await page.evaluate(()=>missed),4);
+    assert.equal(await page.evaluate(()=>combatScore),300);assert.equal(await page.evaluate(()=>campaignJourney.developerAssisted),true);
+    await page.reload();await page.locator('#titleContinue').click();assert.equal(await page.evaluate(()=>level),5);
+    assert.equal(await page.evaluate(()=>boss),null);assert.equal(await page.evaluate(()=>campaignJourney.developerRevives),1);
+    await page.evaluate(()=>{continuePhase();gameOver('teste');});
+    assert.match(await page.locator('#campaignResult').textContent(),/ASSISTIDA.*1 RENASCIMENTO/);
+    await page.evaluate(()=>{startGame();cancelAnimationFrame(rafId);});assert.equal(await page.evaluate(()=>campaignJourney.developerAssisted),false);
+    await page.evaluate(()=>startFinale());assert.equal(await page.evaluate(()=>localStorage.getItem(CampaignSaveStore.key)),null);
+    await page.reload();assert.equal(await page.locator('#titleContinue').isVisible(),false);
+    assert.deepEqual(errors,[]);await context.close();console.log(`${width}x${height}: consulta, reabertura, auxílio, menu, repetição e vitória OK`);
+  }
+  const context=await browser.newContext();const page=await context.newPage();await page.goto(url);
+  await page.evaluate(()=>localStorage.setItem(CampaignSaveStore.key,'{corrompido'));await page.reload();
+  assert.equal(await page.locator('#titleContinue').isVisible(),false);assert.match(await page.locator('#saveNotice').textContent(),/inválido/);
+  await context.close();
+  const denied=await browser.newContext();await denied.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw new Error('bloqueado')}}));
+  const p=await denied.newPage();await p.goto(url);await p.evaluate(()=>{startIntro();tutorial.stop();startDefense();startGame();togglePause();returnToCampaignMenu();});
+  assert.match(await p.locator('#saveNotice').textContent(),/somente nesta aba/);await p.locator('#titleContinue').click();
+  assert.equal(await p.evaluate(()=>isStageBriefing&&isPlaying),true);await denied.close();
+  console.log('TOTAL: 3 fluxos completos com reabertura + dados inválidos + armazenamento bloqueado OK');
+  }catch(error){await captureFailure(browser,'continuity');throw error;}finally{await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

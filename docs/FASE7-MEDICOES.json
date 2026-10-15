@@ -1,0 +1,3468 @@
+{
+  "schema": 1,
+  "units": {
+    "time": "milliseconds unless specified",
+    "memory": "bytes; PCM excludes decoder temporary allocations and total process memory"
+  },
+  "scope": "Local phase 6 baseline vs phase 7; one sample per viewport, not a hardware survey",
+  "limits": [
+    "OS cache may be warm; startup differences are not causal estimates",
+    "Before and firstCorrection use the same rapid paused transitions; final adds steadyMusic and briefing-specific prefetch",
+    "Headless RAF cadence is host-dependent and is not phone FPS",
+    "CDP 4x CPU slowdown does not emulate a phone GPU, RAM or speakers"
+  ],
+  "reports": {
+    "before": {
+      "date": "2026-10-15T09:01:05.475Z",
+      "browser": "155.0.8059.41",
+      "cpuModel": "AMD Ryzen 7 5700X 8-Core Processor             ",
+      "method": "file://, headless Chromium, real RAF, CDP CPU throttle; warm OS cache; PCM is buffer size, not process RAM",
+      "runs": [
+        {
+          "width": 1600,
+          "height": 900,
+          "cpuSlowdown": 1,
+          "startup": {
+            "domReadyMs": 422.20000000298023,
+            "loadMs": 422.5,
+            "heapBytes": 27600000
+          },
+          "initialAudioPcmBytes": 10271280,
+          "frames": [
+            {
+              "phase": 2,
+              "samples": 361,
+              "p50": 6.099999999999909,
+              "p95": 6.199999999999818,
+              "max": 115.20000000000005,
+              "over33ms": 3
+            },
+            {
+              "phase": 8,
+              "samples": 396,
+              "p50": 6.099999999999454,
+              "p95": 6.199999999999818,
+              "max": 6.400000000000546,
+              "over33ms": 0
+            }
+          ],
+          "rapidPausedTransitions": [
+            {
+              "phase": 1,
+              "decoded": 11,
+              "pcmBytes": 45420200,
+              "sources": 2
+            },
+            {
+              "phase": 2,
+              "decoded": 12,
+              "pcmBytes": 73933792,
+              "sources": 3
+            },
+            {
+              "phase": 3,
+              "decoded": 13,
+              "pcmBytes": 95477688,
+              "sources": 4
+            },
+            {
+              "phase": 4,
+              "decoded": 14,
+              "pcmBytes": 123431432,
+              "sources": 5
+            },
+            {
+              "phase": 5,
+              "decoded": 14,
+              "pcmBytes": 123431432,
+              "sources": 6
+            },
+            {
+              "phase": 6,
+              "decoded": 15,
+              "pcmBytes": 131623448,
+              "sources": 7
+            },
+            {
+              "phase": 7,
+              "decoded": 16,
+              "pcmBytes": 163071424,
+              "sources": 8
+            },
+            {
+              "phase": 8,
+              "decoded": 17,
+              "pcmBytes": 210468000,
+              "sources": 9
+            }
+          ],
+          "steadyMusic": null,
+          "heap": {
+            "usedSize": 3927660,
+            "totalSize": 38928384,
+            "embedderHeapUsedSize": 3247216,
+            "backingStorageSize": 22870432
+          },
+          "longTasks": [
+            {
+              "start": 249.20000000298023,
+              "ms": 165
+            },
+            {
+              "start": 1360.9000000059605,
+              "ms": 113
+            },
+            {
+              "start": 1598.9000000059605,
+              "ms": 192
+            },
+            {
+              "start": 6740.20000000298,
+              "ms": 60
+            },
+            {
+              "start": 7124.4000000059605,
+              "ms": 55
+            },
+            {
+              "start": 7405.600000008941,
+              "ms": 58
+            },
+            {
+              "start": 7620.600000008941,
+              "ms": 93
+            }
+          ],
+          "decodeMeasurements": [
+            {
+              "ms": 61.6000000089407,
+              "inputBytes": 6420,
+              "seconds": 0.23629166666666668,
+              "pcmBytes": 90736
+            },
+            {
+              "ms": 60.599999994039536,
+              "inputBytes": 4947,
+              "seconds": 0.119,
+              "pcmBytes": 22848
+            },
+            {
+              "ms": 61.099999994039536,
+              "inputBytes": 6942,
+              "seconds": 0.2444375,
+              "pcmBytes": 93864
+            },
+            {
+              "ms": 59.29999999701977,
+              "inputBytes": 4895,
+              "seconds": 0.24814583333333334,
+              "pcmBytes": 47644
+            },
+            {
+              "ms": 58.5,
+              "inputBytes": 5336,
+              "seconds": 0.152375,
+              "pcmBytes": 29256
+            },
+            {
+              "ms": 59,
+              "inputBytes": 7748,
+              "seconds": 1.1276041666666667,
+              "pcmBytes": 433000
+            },
+            {
+              "ms": 55.29999999701977,
+              "inputBytes": 5056,
+              "seconds": 0.1131875,
+              "pcmBytes": 21732
+            },
+            {
+              "ms": 53.900000005960464,
+              "inputBytes": 27872,
+              "seconds": 1.980125,
+              "pcmBytes": 380184
+            },
+            {
+              "ms": 56.19999998807907,
+              "inputBytes": 46722,
+              "seconds": 5,
+              "pcmBytes": 960000
+            },
+            {
+              "ms": 46,
+              "inputBytes": 158164,
+              "seconds": 11.294125,
+              "pcmBytes": 4336944
+            },
+            {
+              "ms": 58.70000000298023,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 134,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 183.79999999701977,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 156.20000000298023,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 83.3999999910593,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 163.70000000298023,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 129.40000000596046,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 153.40000000596046,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 53.599999994039536,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 167.20000000298023,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 264.79999999701977,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            }
+          ],
+          "engineDecodeStats": null,
+          "peakCachedPcmBytes": null,
+          "errors": []
+        },
+        {
+          "width": 390,
+          "height": 700,
+          "cpuSlowdown": 4,
+          "startup": {
+            "domReadyMs": 719,
+            "loadMs": 719.8000000119209,
+            "heapBytes": 29400000
+          },
+          "initialAudioPcmBytes": 10271280,
+          "frames": [
+            {
+              "phase": 2,
+              "samples": 377,
+              "p50": 6.099999999999454,
+              "p95": 6.199999999999818,
+              "max": 60.5,
+              "over33ms": 1
+            },
+            {
+              "phase": 8,
+              "samples": 397,
+              "p50": 6.099999999999454,
+              "p95": 6.299999999999272,
+              "max": 6.399999999999636,
+              "over33ms": 0
+            }
+          ],
+          "rapidPausedTransitions": [
+            {
+              "phase": 1,
+              "decoded": 11,
+              "pcmBytes": 45420200,
+              "sources": 2
+            },
+            {
+              "phase": 2,
+              "decoded": 12,
+              "pcmBytes": 73933792,
+              "sources": 3
+            },
+            {
+              "phase": 3,
+              "decoded": 13,
+              "pcmBytes": 95477688,
+              "sources": 4
+            },
+            {
+              "phase": 4,
+              "decoded": 14,
+              "pcmBytes": 123431432,
+              "sources": 5
+            },
+            {
+              "phase": 5,
+              "decoded": 14,
+              "pcmBytes": 123431432,
+              "sources": 6
+            },
+            {
+              "phase": 6,
+              "decoded": 15,
+              "pcmBytes": 131623448,
+              "sources": 7
+            },
+            {
+              "phase": 7,
+              "decoded": 16,
+              "pcmBytes": 163071424,
+              "sources": 8
+            },
+            {
+              "phase": 8,
+              "decoded": 17,
+              "pcmBytes": 210468000,
+              "sources": 9
+            }
+          ],
+          "steadyMusic": null,
+          "heap": {
+            "usedSize": 6253000,
+            "totalSize": 58150912,
+            "embedderHeapUsedSize": 3463528,
+            "backingStorageSize": 23962809
+          },
+          "longTasks": [
+            {
+              "start": 328.5,
+              "ms": 348
+            },
+            {
+              "start": 1589.6000000089407,
+              "ms": 312
+            },
+            {
+              "start": 1982.6000000089407,
+              "ms": 934
+            },
+            {
+              "start": 8149,
+              "ms": 284
+            },
+            {
+              "start": 8582.5,
+              "ms": 221
+            },
+            {
+              "start": 8925.70000000298,
+              "ms": 271
+            },
+            {
+              "start": 9490.800000011921,
+              "ms": 290
+            },
+            {
+              "start": 9936.10000000894,
+              "ms": 470
+            },
+            {
+              "start": 10655.60000000894,
+              "ms": 58
+            }
+          ],
+          "decodeMeasurements": [
+            {
+              "ms": 297.70000000298023,
+              "inputBytes": 6420,
+              "seconds": 0.23629166666666668,
+              "pcmBytes": 90736
+            },
+            {
+              "ms": 295.80000001192093,
+              "inputBytes": 6942,
+              "seconds": 0.2444375,
+              "pcmBytes": 93864
+            },
+            {
+              "ms": 294.70000000298023,
+              "inputBytes": 4947,
+              "seconds": 0.119,
+              "pcmBytes": 22848
+            },
+            {
+              "ms": 292.59999999403954,
+              "inputBytes": 4895,
+              "seconds": 0.24814583333333334,
+              "pcmBytes": 47644
+            },
+            {
+              "ms": 289.20000000298023,
+              "inputBytes": 5336,
+              "seconds": 0.152375,
+              "pcmBytes": 29256
+            },
+            {
+              "ms": 291.19999998807907,
+              "inputBytes": 7748,
+              "seconds": 1.1276041666666667,
+              "pcmBytes": 433000
+            },
+            {
+              "ms": 276.69999998807907,
+              "inputBytes": 5056,
+              "seconds": 0.1131875,
+              "pcmBytes": 21732
+            },
+            {
+              "ms": 279.29999999701977,
+              "inputBytes": 46722,
+              "seconds": 5,
+              "pcmBytes": 960000
+            },
+            {
+              "ms": 271.8999999910593,
+              "inputBytes": 27872,
+              "seconds": 1.980125,
+              "pcmBytes": 380184
+            },
+            {
+              "ms": 230.79999999701977,
+              "inputBytes": 158164,
+              "seconds": 11.294125,
+              "pcmBytes": 4336944
+            },
+            {
+              "ms": 78.1000000089407,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 615.7000000029802,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 354.70000000298023,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 167,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 94.29999999701977,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 170.90000000596046,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 138.79999999701977,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 160,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 54.79999999701977,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 179.3999999910593,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 307.20000000298023,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            }
+          ],
+          "engineDecodeStats": null,
+          "peakCachedPcmBytes": null,
+          "errors": []
+        },
+        {
+          "width": 568,
+          "height": 320,
+          "cpuSlowdown": 4,
+          "startup": {
+            "domReadyMs": 680.8000000119209,
+            "loadMs": 681.4000000059605,
+            "heapBytes": 27600000
+          },
+          "initialAudioPcmBytes": 10271280,
+          "frames": [
+            {
+              "phase": 2,
+              "samples": 380,
+              "p50": 6.099999999999454,
+              "p95": 6.199999999999818,
+              "max": 60.70000000000027,
+              "over33ms": 1
+            },
+            {
+              "phase": 8,
+              "samples": 396,
+              "p50": 6.099999999999454,
+              "p95": 6.199999999999818,
+              "max": 6.400000000000546,
+              "over33ms": 0
+            }
+          ],
+          "rapidPausedTransitions": [
+            {
+              "phase": 1,
+              "decoded": 11,
+              "pcmBytes": 45420200,
+              "sources": 2
+            },
+            {
+              "phase": 2,
+              "decoded": 12,
+              "pcmBytes": 73933792,
+              "sources": 3
+            },
+            {
+              "phase": 3,
+              "decoded": 13,
+              "pcmBytes": 95477688,
+              "sources": 4
+            },
+            {
+              "phase": 4,
+              "decoded": 14,
+              "pcmBytes": 123431432,
+              "sources": 5
+            },
+            {
+              "phase": 5,
+              "decoded": 14,
+              "pcmBytes": 123431432,
+              "sources": 6
+            },
+            {
+              "phase": 6,
+              "decoded": 15,
+              "pcmBytes": 131623448,
+              "sources": 7
+            },
+            {
+              "phase": 7,
+              "decoded": 16,
+              "pcmBytes": 163071424,
+              "sources": 8
+            },
+            {
+              "phase": 8,
+              "decoded": 17,
+              "pcmBytes": 210468000,
+              "sources": 9
+            }
+          ],
+          "steadyMusic": null,
+          "heap": {
+            "usedSize": 6202468,
+            "totalSize": 58150912,
+            "embedderHeapUsedSize": 3461656,
+            "backingStorageSize": 23962809
+          },
+          "longTasks": [
+            {
+              "start": 274.90000000596046,
+              "ms": 364
+            },
+            {
+              "start": 1549.300000011921,
+              "ms": 313
+            },
+            {
+              "start": 1939.800000011921,
+              "ms": 947
+            },
+            {
+              "start": 8107.70000000298,
+              "ms": 284
+            },
+            {
+              "start": 8540.60000000894,
+              "ms": 222
+            },
+            {
+              "start": 8880.800000011921,
+              "ms": 274
+            },
+            {
+              "start": 9450,
+              "ms": 289
+            },
+            {
+              "start": 9894,
+              "ms": 487
+            }
+          ],
+          "decodeMeasurements": [
+            {
+              "ms": 299,
+              "inputBytes": 6420,
+              "seconds": 0.23629166666666668,
+              "pcmBytes": 90736
+            },
+            {
+              "ms": 296.6000000089407,
+              "inputBytes": 6942,
+              "seconds": 0.2444375,
+              "pcmBytes": 93864
+            },
+            {
+              "ms": 295.69999998807907,
+              "inputBytes": 4947,
+              "seconds": 0.119,
+              "pcmBytes": 22848
+            },
+            {
+              "ms": 294.5,
+              "inputBytes": 4895,
+              "seconds": 0.24814583333333334,
+              "pcmBytes": 47644
+            },
+            {
+              "ms": 293,
+              "inputBytes": 7748,
+              "seconds": 1.1276041666666667,
+              "pcmBytes": 433000
+            },
+            {
+              "ms": 291.5,
+              "inputBytes": 5336,
+              "seconds": 0.152375,
+              "pcmBytes": 29256
+            },
+            {
+              "ms": 279.20000000298023,
+              "inputBytes": 5056,
+              "seconds": 0.1131875,
+              "pcmBytes": 21732
+            },
+            {
+              "ms": 281.5,
+              "inputBytes": 46722,
+              "seconds": 5,
+              "pcmBytes": 960000
+            },
+            {
+              "ms": 274.29999999701977,
+              "inputBytes": 27872,
+              "seconds": 1.980125,
+              "pcmBytes": 380184
+            },
+            {
+              "ms": 234.40000000596046,
+              "inputBytes": 158164,
+              "seconds": 11.294125,
+              "pcmBytes": 4336944
+            },
+            {
+              "ms": 84.5,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 618.6999999880791,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 351.79999999701977,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 169.59999999403954,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 92.90000000596046,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 171.40000000596046,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 135,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 161,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 55.20000000298023,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 181.6000000089407,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 275.5,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            }
+          ],
+          "engineDecodeStats": null,
+          "peakCachedPcmBytes": null,
+          "errors": []
+        }
+      ]
+    },
+    "firstCorrection": {
+      "date": "2026-10-15T09:04:06.761Z",
+      "browser": "155.0.8059.41",
+      "cpuModel": "AMD Ryzen 7 5700X 8-Core Processor             ",
+      "method": "file://, headless Chromium, real RAF, CDP CPU throttle; warm OS cache; PCM is buffer size, not process RAM",
+      "runs": [
+        {
+          "width": 1600,
+          "height": 900,
+          "cpuSlowdown": 1,
+          "startup": {
+            "domReadyMs": 234,
+            "loadMs": 234.20000000298023,
+            "heapBytes": 27600000
+          },
+          "initialAudioPcmBytes": 10271280,
+          "frames": [
+            {
+              "phase": 2,
+              "samples": 360,
+              "p50": 6.099999999999909,
+              "p95": 6.100000000000364,
+              "max": 72.70000000000005,
+              "over33ms": 4
+            },
+            {
+              "phase": 8,
+              "samples": 397,
+              "p50": 6.099999999999454,
+              "p95": 6.200000000000728,
+              "max": 6.399999999999636,
+              "over33ms": 0
+            }
+          ],
+          "rapidPausedTransitions": [
+            {
+              "phase": 1,
+              "decoded": 10,
+              "pcmBytes": 17878128,
+              "sources": 1
+            },
+            {
+              "phase": 2,
+              "decoded": 10,
+              "pcmBytes": 30592856,
+              "sources": 1
+            },
+            {
+              "phase": 3,
+              "decoded": 10,
+              "pcmBytes": 23623160,
+              "sources": 1
+            },
+            {
+              "phase": 4,
+              "decoded": 10,
+              "pcmBytes": 30033008,
+              "sources": 1
+            },
+            {
+              "phase": 5,
+              "decoded": 10,
+              "pcmBytes": 29621336,
+              "sources": 1
+            },
+            {
+              "phase": 6,
+              "decoded": 10,
+              "pcmBytes": 10271280,
+              "sources": 1
+            },
+            {
+              "phase": 7,
+              "decoded": 10,
+              "pcmBytes": 33527240,
+              "sources": 1
+            },
+            {
+              "phase": 8,
+              "decoded": 10,
+              "pcmBytes": 49475840,
+              "sources": 1
+            }
+          ],
+          "steadyMusic": null,
+          "heap": {
+            "usedSize": 10233532,
+            "totalSize": 15265792,
+            "embedderHeapUsedSize": 4388376,
+            "backingStorageSize": 28554249
+          },
+          "longTasks": [
+            {
+              "start": 106.6000000089407,
+              "ms": 121
+            },
+            {
+              "start": 1196.300000011921,
+              "ms": 68
+            },
+            {
+              "start": 1386.300000011921,
+              "ms": 50
+            }
+          ],
+          "decodeMeasurements": [
+            {
+              "ms": 31.400000005960464,
+              "inputBytes": 4947,
+              "seconds": 0.119,
+              "pcmBytes": 22848
+            },
+            {
+              "ms": 31.600000008940697,
+              "inputBytes": 4895,
+              "seconds": 0.24814583333333334,
+              "pcmBytes": 47644
+            },
+            {
+              "ms": 31.100000008940697,
+              "inputBytes": 5336,
+              "seconds": 0.152375,
+              "pcmBytes": 29256
+            },
+            {
+              "ms": 32,
+              "inputBytes": 6420,
+              "seconds": 0.23629166666666668,
+              "pcmBytes": 90736
+            },
+            {
+              "ms": 30.299999997019768,
+              "inputBytes": 5056,
+              "seconds": 0.1131875,
+              "pcmBytes": 21732
+            },
+            {
+              "ms": 31.900000005960464,
+              "inputBytes": 6942,
+              "seconds": 0.2444375,
+              "pcmBytes": 93864
+            },
+            {
+              "ms": 31.700000002980232,
+              "inputBytes": 7748,
+              "seconds": 1.1276041666666667,
+              "pcmBytes": 433000
+            },
+            {
+              "ms": 30.099999994039536,
+              "inputBytes": 27872,
+              "seconds": 1.980125,
+              "pcmBytes": 380184
+            },
+            {
+              "ms": 31.200000002980232,
+              "inputBytes": 46722,
+              "seconds": 5,
+              "pcmBytes": 960000
+            },
+            {
+              "ms": 29.799999997019768,
+              "inputBytes": 158164,
+              "seconds": 11.294125,
+              "pcmBytes": 4336944
+            },
+            {
+              "ms": 55.29999999701977,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 98.19999998807907,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 169,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 190.6000000089407,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 82.90000000596046,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 152.3999999910593,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 120.5,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 146,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 141.5,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 50,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 157.5,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 255.5,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            }
+          ],
+          "engineDecodeStats": [
+            {
+              "key": "explosion",
+              "bytes": 4947,
+              "convertMs": 0.09999999403953552,
+              "decodeMs": 31.600000008940697
+            },
+            {
+              "key": "impact",
+              "bytes": 4895,
+              "convertMs": 0,
+              "decodeMs": 31.600000008940697
+            },
+            {
+              "key": "spy",
+              "bytes": 5336,
+              "convertMs": 0.29999999701976776,
+              "decodeMs": 31.100000008940697
+            },
+            {
+              "key": "shot",
+              "bytes": 6420,
+              "convertMs": 0.10000000894069672,
+              "decodeMs": 32.099999994039536
+            },
+            {
+              "key": "cannon",
+              "bytes": 5056,
+              "convertMs": 0.20000000298023224,
+              "decodeMs": 30.399999991059303
+            },
+            {
+              "key": "shotAlt",
+              "bytes": 6942,
+              "convertMs": 0.09999999403953552,
+              "decodeMs": 31.900000005960464
+            },
+            {
+              "key": "earth",
+              "bytes": 7748,
+              "convertMs": 0.20000000298023224,
+              "decodeMs": 31.700000002980232
+            },
+            {
+              "key": "mothership",
+              "bytes": 27872,
+              "convertMs": 0.5,
+              "decodeMs": 30.099999994039536
+            },
+            {
+              "key": "noise",
+              "bytes": 46722,
+              "convertMs": 0.6000000089406967,
+              "decodeMs": 31.200000002980232
+            },
+            {
+              "key": "menu",
+              "bytes": 158164,
+              "convertMs": 2.2000000029802322,
+              "decodeMs": 29.799999997019768
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 3.2000000029802322,
+              "decodeMs": 55.29999999701977
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 4.700000002980232,
+              "decodeMs": 98.29999999701977
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 2.7999999970197678,
+              "decodeMs": 169.1000000089407
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 3.3999999910593033,
+              "decodeMs": 190.6000000089407
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 4.199999988079071,
+              "decodeMs": 82.90000000596046
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 3,
+              "decodeMs": 152.5
+            },
+            {
+              "key": "adventure2",
+              "bytes": 762204,
+              "convertMs": 2.5,
+              "decodeMs": 120.5
+            },
+            {
+              "key": "action2",
+              "bytes": 981192,
+              "convertMs": 3.300000011920929,
+              "decodeMs": 146
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 2.4000000059604645,
+              "decodeMs": 141.5
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 1,
+              "decodeMs": 50
+            },
+            {
+              "key": "action3",
+              "bytes": 1092380,
+              "convertMs": 3.5,
+              "decodeMs": 157.59999999403954
+            },
+            {
+              "key": "boss",
+              "bytes": 1640037,
+              "convertMs": 5,
+              "decodeMs": 255.5
+            }
+          ],
+          "peakCachedPcmBytes": 80923816,
+          "errors": []
+        },
+        {
+          "width": 390,
+          "height": 700,
+          "cpuSlowdown": 4,
+          "startup": {
+            "domReadyMs": 675,
+            "loadMs": 675.7000000029802,
+            "heapBytes": 29400000
+          },
+          "initialAudioPcmBytes": 10271280,
+          "frames": [
+            {
+              "phase": 2,
+              "samples": 367,
+              "p50": 6.099999999999909,
+              "p95": 6.200000000000273,
+              "max": 30.40000000000009,
+              "over33ms": 0
+            },
+            {
+              "phase": 8,
+              "samples": 397,
+              "p50": 6.099999999999454,
+              "p95": 6.199999999999818,
+              "max": 6.399999999999636,
+              "over33ms": 0
+            }
+          ],
+          "rapidPausedTransitions": [
+            {
+              "phase": 1,
+              "decoded": 10,
+              "pcmBytes": 17878128,
+              "sources": 1
+            },
+            {
+              "phase": 2,
+              "decoded": 10,
+              "pcmBytes": 30592856,
+              "sources": 1
+            },
+            {
+              "phase": 3,
+              "decoded": 10,
+              "pcmBytes": 23623160,
+              "sources": 1
+            },
+            {
+              "phase": 4,
+              "decoded": 10,
+              "pcmBytes": 30033008,
+              "sources": 1
+            },
+            {
+              "phase": 5,
+              "decoded": 10,
+              "pcmBytes": 29621336,
+              "sources": 1
+            },
+            {
+              "phase": 6,
+              "decoded": 10,
+              "pcmBytes": 10271280,
+              "sources": 1
+            },
+            {
+              "phase": 7,
+              "decoded": 10,
+              "pcmBytes": 33527240,
+              "sources": 1
+            },
+            {
+              "phase": 8,
+              "decoded": 10,
+              "pcmBytes": 49475840,
+              "sources": 1
+            }
+          ],
+          "steadyMusic": null,
+          "heap": {
+            "usedSize": 3934280,
+            "totalSize": 9306112,
+            "embedderHeapUsedSize": 4000616,
+            "backingStorageSize": 22873171
+          },
+          "longTasks": [
+            {
+              "start": 274.5,
+              "ms": 359
+            },
+            {
+              "start": 1553.5,
+              "ms": 175
+            },
+            {
+              "start": 1810.7000000029802,
+              "ms": 264
+            },
+            {
+              "start": 8085.899999991059,
+              "ms": 52
+            }
+          ],
+          "decodeMeasurements": [
+            {
+              "ms": 159.70000000298023,
+              "inputBytes": 6420,
+              "seconds": 0.23629166666666668,
+              "pcmBytes": 90736
+            },
+            {
+              "ms": 158.8999999910593,
+              "inputBytes": 4947,
+              "seconds": 0.119,
+              "pcmBytes": 22848
+            },
+            {
+              "ms": 159.59999999403954,
+              "inputBytes": 6942,
+              "seconds": 0.2444375,
+              "pcmBytes": 93864
+            },
+            {
+              "ms": 158.70000000298023,
+              "inputBytes": 4895,
+              "seconds": 0.24814583333333334,
+              "pcmBytes": 47644
+            },
+            {
+              "ms": 157.90000000596046,
+              "inputBytes": 5336,
+              "seconds": 0.152375,
+              "pcmBytes": 29256
+            },
+            {
+              "ms": 158.8999999910593,
+              "inputBytes": 7748,
+              "seconds": 1.1276041666666667,
+              "pcmBytes": 433000
+            },
+            {
+              "ms": 155.70000000298023,
+              "inputBytes": 5056,
+              "seconds": 0.1131875,
+              "pcmBytes": 21732
+            },
+            {
+              "ms": 154.8999999910593,
+              "inputBytes": 27872,
+              "seconds": 1.980125,
+              "pcmBytes": 380184
+            },
+            {
+              "ms": 158,
+              "inputBytes": 46722,
+              "seconds": 5,
+              "pcmBytes": 960000
+            },
+            {
+              "ms": 152.69999998807907,
+              "inputBytes": 158164,
+              "seconds": 11.294125,
+              "pcmBytes": 4336944
+            },
+            {
+              "ms": 79,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 112.90000000596046,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 187.5,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 198.90000000596046,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 93.20000000298023,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 170.90000000596046,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 141.20000000298023,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 161.29999999701977,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 163.59999999403954,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 55.5,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 176.5,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 285.20000000298023,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            }
+          ],
+          "engineDecodeStats": [
+            {
+              "key": "shot",
+              "bytes": 6420,
+              "convertMs": 0.800000011920929,
+              "decodeMs": 160.3999999910593
+            },
+            {
+              "key": "explosion",
+              "bytes": 4947,
+              "convertMs": 0.29999999701976776,
+              "decodeMs": 158.8999999910593
+            },
+            {
+              "key": "shotAlt",
+              "bytes": 6942,
+              "convertMs": 0.7000000029802322,
+              "decodeMs": 159.79999999701977
+            },
+            {
+              "key": "impact",
+              "bytes": 4895,
+              "convertMs": 0.3999999910593033,
+              "decodeMs": 158.70000000298023
+            },
+            {
+              "key": "spy",
+              "bytes": 5336,
+              "convertMs": 0.3999999910593033,
+              "decodeMs": 158
+            },
+            {
+              "key": "earth",
+              "bytes": 7748,
+              "convertMs": 0.6000000089406967,
+              "decodeMs": 159
+            },
+            {
+              "key": "cannon",
+              "bytes": 5056,
+              "convertMs": 0.29999999701976776,
+              "decodeMs": 155.70000000298023
+            },
+            {
+              "key": "mothership",
+              "bytes": 27872,
+              "convertMs": 1.2999999970197678,
+              "decodeMs": 154.8999999910593
+            },
+            {
+              "key": "noise",
+              "bytes": 46722,
+              "convertMs": 2.5,
+              "decodeMs": 158
+            },
+            {
+              "key": "menu",
+              "bytes": 158164,
+              "convertMs": 8.600000008940697,
+              "decodeMs": 152.8999999910593
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 17.200000002980232,
+              "decodeMs": 79.1000000089407
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 12.899999991059303,
+              "decodeMs": 113.1000000089407
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 16.400000005960464,
+              "decodeMs": 187.59999999403954
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 15.5,
+              "decodeMs": 198.90000000596046
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 11.399999991059303,
+              "decodeMs": 93.20000000298023
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 13.799999997019768,
+              "decodeMs": 171.20000000298023
+            },
+            {
+              "key": "adventure2",
+              "bytes": 762204,
+              "convertMs": 10.399999991059303,
+              "decodeMs": 141.29999999701977
+            },
+            {
+              "key": "action2",
+              "bytes": 981192,
+              "convertMs": 15,
+              "decodeMs": 161.29999999701977
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 12.900000005960464,
+              "decodeMs": 163.59999999403954
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 4.4000000059604645,
+              "decodeMs": 55.599999994039536
+            },
+            {
+              "key": "action3",
+              "bytes": 1092380,
+              "convertMs": 17.099999994039536,
+              "decodeMs": 176.5
+            },
+            {
+              "key": "boss",
+              "bytes": 1640037,
+              "convertMs": 27,
+              "decodeMs": 285.20000000298023
+            }
+          ],
+          "peakCachedPcmBytes": 80923816,
+          "errors": []
+        },
+        {
+          "width": 568,
+          "height": 320,
+          "cpuSlowdown": 4,
+          "startup": {
+            "domReadyMs": 674.2000000029802,
+            "loadMs": 675.1000000089407,
+            "heapBytes": 29400000
+          },
+          "initialAudioPcmBytes": 10271280,
+          "frames": [
+            {
+              "phase": 2,
+              "samples": 375,
+              "p50": 6.099999999999909,
+              "p95": 6.199999999999818,
+              "max": 30.300000000000182,
+              "over33ms": 0
+            },
+            {
+              "phase": 8,
+              "samples": 396,
+              "p50": 6.099999999999454,
+              "p95": 6.200000000000728,
+              "max": 6.400000000000546,
+              "over33ms": 0
+            }
+          ],
+          "rapidPausedTransitions": [
+            {
+              "phase": 1,
+              "decoded": 10,
+              "pcmBytes": 17878128,
+              "sources": 1
+            },
+            {
+              "phase": 2,
+              "decoded": 10,
+              "pcmBytes": 30592856,
+              "sources": 1
+            },
+            {
+              "phase": 3,
+              "decoded": 10,
+              "pcmBytes": 23623160,
+              "sources": 1
+            },
+            {
+              "phase": 4,
+              "decoded": 10,
+              "pcmBytes": 30033008,
+              "sources": 1
+            },
+            {
+              "phase": 5,
+              "decoded": 10,
+              "pcmBytes": 29621336,
+              "sources": 1
+            },
+            {
+              "phase": 6,
+              "decoded": 10,
+              "pcmBytes": 10271280,
+              "sources": 1
+            },
+            {
+              "phase": 7,
+              "decoded": 10,
+              "pcmBytes": 33527240,
+              "sources": 1
+            },
+            {
+              "phase": 8,
+              "decoded": 10,
+              "pcmBytes": 49475840,
+              "sources": 1
+            }
+          ],
+          "steadyMusic": null,
+          "heap": {
+            "usedSize": 6178340,
+            "totalSize": 11489280,
+            "embedderHeapUsedSize": 4150040,
+            "backingStorageSize": 23965551
+          },
+          "longTasks": [
+            {
+              "start": 278.30000001192093,
+              "ms": 355
+            },
+            {
+              "start": 1547.9000000059605,
+              "ms": 179
+            },
+            {
+              "start": 1804.9000000059605,
+              "ms": 279
+            },
+            {
+              "start": 6996,
+              "ms": 51
+            }
+          ],
+          "decodeMeasurements": [
+            {
+              "ms": 163.29999999701977,
+              "inputBytes": 6420,
+              "seconds": 0.23629166666666668,
+              "pcmBytes": 90736
+            },
+            {
+              "ms": 163.20000000298023,
+              "inputBytes": 6942,
+              "seconds": 0.2444375,
+              "pcmBytes": 93864
+            },
+            {
+              "ms": 162.8999999910593,
+              "inputBytes": 4947,
+              "seconds": 0.119,
+              "pcmBytes": 22848
+            },
+            {
+              "ms": 162.30000001192093,
+              "inputBytes": 4895,
+              "seconds": 0.24814583333333334,
+              "pcmBytes": 47644
+            },
+            {
+              "ms": 161.5,
+              "inputBytes": 5336,
+              "seconds": 0.152375,
+              "pcmBytes": 29256
+            },
+            {
+              "ms": 162.6000000089407,
+              "inputBytes": 7748,
+              "seconds": 1.1276041666666667,
+              "pcmBytes": 433000
+            },
+            {
+              "ms": 159.70000000298023,
+              "inputBytes": 5056,
+              "seconds": 0.1131875,
+              "pcmBytes": 21732
+            },
+            {
+              "ms": 158.8999999910593,
+              "inputBytes": 27872,
+              "seconds": 1.980125,
+              "pcmBytes": 380184
+            },
+            {
+              "ms": 162,
+              "inputBytes": 46722,
+              "seconds": 5,
+              "pcmBytes": 960000
+            },
+            {
+              "ms": 156.90000000596046,
+              "inputBytes": 158164,
+              "seconds": 11.294125,
+              "pcmBytes": 4336944
+            },
+            {
+              "ms": 74.70000000298023,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 107.1000000089407,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 192.80000001192093,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 204.3999999910593,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 91.5,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 170.40000000596046,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 135.70000000298023,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 159.70000000298023,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 158.1000000089407,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 56.29999999701977,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 180.5,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 289,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            }
+          ],
+          "engineDecodeStats": [
+            {
+              "key": "shot",
+              "bytes": 6420,
+              "convertMs": 1,
+              "decodeMs": 164
+            },
+            {
+              "key": "shotAlt",
+              "bytes": 6942,
+              "convertMs": 0.5999999940395355,
+              "decodeMs": 163.20000000298023
+            },
+            {
+              "key": "explosion",
+              "bytes": 4947,
+              "convertMs": 0.4000000059604645,
+              "decodeMs": 162.8999999910593
+            },
+            {
+              "key": "impact",
+              "bytes": 4895,
+              "convertMs": 0.699999988079071,
+              "decodeMs": 162.30000001192093
+            },
+            {
+              "key": "spy",
+              "bytes": 5336,
+              "convertMs": 0.5,
+              "decodeMs": 161.5
+            },
+            {
+              "key": "earth",
+              "bytes": 7748,
+              "convertMs": 0.29999999701976776,
+              "decodeMs": 162.6000000089407
+            },
+            {
+              "key": "cannon",
+              "bytes": 5056,
+              "convertMs": 0.20000000298023224,
+              "decodeMs": 159.70000000298023
+            },
+            {
+              "key": "mothership",
+              "bytes": 27872,
+              "convertMs": 1.5,
+              "decodeMs": 158.8999999910593
+            },
+            {
+              "key": "noise",
+              "bytes": 46722,
+              "convertMs": 2.300000011920929,
+              "decodeMs": 162.09999999403954
+            },
+            {
+              "key": "menu",
+              "bytes": 158164,
+              "convertMs": 8.399999991059303,
+              "decodeMs": 156.90000000596046
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 17.700000002980232,
+              "decodeMs": 74.70000000298023
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 12.599999994039536,
+              "decodeMs": 107.29999999701977
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 16.099999994039536,
+              "decodeMs": 192.90000000596046
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 15.200000002980232,
+              "decodeMs": 204.59999999403954
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 10.399999991059303,
+              "decodeMs": 91.5
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 14.299999997019768,
+              "decodeMs": 170.40000000596046
+            },
+            {
+              "key": "adventure2",
+              "bytes": 762204,
+              "convertMs": 11.799999997019768,
+              "decodeMs": 135.70000000298023
+            },
+            {
+              "key": "action2",
+              "bytes": 981192,
+              "convertMs": 14.200000002980232,
+              "decodeMs": 159.70000000298023
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 12.099999994039536,
+              "decodeMs": 158.1000000089407
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 4.200000002980232,
+              "decodeMs": 56.29999999701977
+            },
+            {
+              "key": "action3",
+              "bytes": 1092380,
+              "convertMs": 16.599999994039536,
+              "decodeMs": 180.59999999403954
+            },
+            {
+              "key": "boss",
+              "bytes": 1640037,
+              "convertMs": 22.600000008940697,
+              "decodeMs": 289
+            }
+          ],
+          "peakCachedPcmBytes": 80923816,
+          "errors": []
+        }
+      ]
+    },
+    "final": {
+      "date": "2026-10-15T09:11:41.010Z",
+      "browser": "155.0.8059.41",
+      "cpuModel": "AMD Ryzen 7 5700X 8-Core Processor             ",
+      "method": "file://, headless Chromium, real RAF, CDP CPU throttle; warm OS cache; PCM is buffer size, not process RAM; music is rapid paused stress, steadyMusic is normal fade retirement",
+      "runs": [
+        {
+          "width": 1600,
+          "height": 900,
+          "cpuSlowdown": 1,
+          "startup": {
+            "domReadyMs": 234.29999999701977,
+            "loadMs": 234.5,
+            "heapBytes": 29400000
+          },
+          "initialAudioPcmBytes": 10271280,
+          "frames": [
+            {
+              "phase": 2,
+              "samples": 361,
+              "p50": 6.099999999999909,
+              "p95": 6.100000000000364,
+              "max": 109.09999999999991,
+              "over33ms": 3
+            },
+            {
+              "phase": 8,
+              "samples": 397,
+              "p50": 6.099999999999454,
+              "p95": 6.199999999999818,
+              "max": 6.400000000000546,
+              "over33ms": 0
+            }
+          ],
+          "rapidPausedTransitions": [
+            {
+              "phase": 1,
+              "decoded": 10,
+              "pcmBytes": 17878128,
+              "sources": 1
+            },
+            {
+              "phase": 2,
+              "decoded": 10,
+              "pcmBytes": 30592856,
+              "sources": 1
+            },
+            {
+              "phase": 3,
+              "decoded": 10,
+              "pcmBytes": 23623160,
+              "sources": 1
+            },
+            {
+              "phase": 4,
+              "decoded": 10,
+              "pcmBytes": 30033008,
+              "sources": 1
+            },
+            {
+              "phase": 5,
+              "decoded": 10,
+              "pcmBytes": 29621336,
+              "sources": 1
+            },
+            {
+              "phase": 6,
+              "decoded": 10,
+              "pcmBytes": 10271280,
+              "sources": 1
+            },
+            {
+              "phase": 7,
+              "decoded": 10,
+              "pcmBytes": 33527240,
+              "sources": 1
+            },
+            {
+              "phase": 8,
+              "decoded": 10,
+              "pcmBytes": 49475840,
+              "sources": 1
+            }
+          ],
+          "steadyMusic": [
+            {
+              "phase": 1,
+              "pcmBytes": 17878128,
+              "sources": 1,
+              "tracks": [
+                "adventure1"
+              ]
+            },
+            {
+              "phase": 2,
+              "pcmBytes": 30592856,
+              "sources": 1,
+              "tracks": [
+                "action1"
+              ]
+            },
+            {
+              "phase": 3,
+              "pcmBytes": 23623160,
+              "sources": 1,
+              "tracks": [
+                "adventure2"
+              ]
+            },
+            {
+              "phase": 4,
+              "pcmBytes": 30033008,
+              "sources": 1,
+              "tracks": [
+                "action2"
+              ]
+            },
+            {
+              "phase": 5,
+              "pcmBytes": 29621336,
+              "sources": 1,
+              "tracks": [
+                "adventureBoss"
+              ]
+            },
+            {
+              "phase": 6,
+              "pcmBytes": 10271280,
+              "sources": 1,
+              "tracks": [
+                "briefing"
+              ]
+            },
+            {
+              "phase": 7,
+              "pcmBytes": 33527240,
+              "sources": 1,
+              "tracks": [
+                "action3"
+              ]
+            },
+            {
+              "phase": 8,
+              "pcmBytes": 49475840,
+              "sources": 1,
+              "tracks": [
+                "boss"
+              ]
+            }
+          ],
+          "heap": {
+            "usedSize": 11811780,
+            "totalSize": 16646144,
+            "embedderHeapUsedSize": 5036880,
+            "backingStorageSize": 28554115
+          },
+          "longTasks": [
+            {
+              "start": 111.09999999403954,
+              "ms": 116
+            },
+            {
+              "start": 1196,
+              "ms": 68
+            }
+          ],
+          "decodeMeasurements": [
+            {
+              "ms": 31.200000002980232,
+              "inputBytes": 4947,
+              "seconds": 0.119,
+              "pcmBytes": 22848
+            },
+            {
+              "ms": 31,
+              "inputBytes": 5336,
+              "seconds": 0.152375,
+              "pcmBytes": 29256
+            },
+            {
+              "ms": 31.599999994039536,
+              "inputBytes": 6942,
+              "seconds": 0.2444375,
+              "pcmBytes": 93864
+            },
+            {
+              "ms": 31.299999997019768,
+              "inputBytes": 4895,
+              "seconds": 0.24814583333333334,
+              "pcmBytes": 47644
+            },
+            {
+              "ms": 30.200000002980232,
+              "inputBytes": 5056,
+              "seconds": 0.1131875,
+              "pcmBytes": 21732
+            },
+            {
+              "ms": 31.799999997019768,
+              "inputBytes": 6420,
+              "seconds": 0.23629166666666668,
+              "pcmBytes": 90736
+            },
+            {
+              "ms": 31.400000005960464,
+              "inputBytes": 7748,
+              "seconds": 1.1276041666666667,
+              "pcmBytes": 433000
+            },
+            {
+              "ms": 30,
+              "inputBytes": 27872,
+              "seconds": 1.980125,
+              "pcmBytes": 380184
+            },
+            {
+              "ms": 30.899999991059303,
+              "inputBytes": 46722,
+              "seconds": 5,
+              "pcmBytes": 960000
+            },
+            {
+              "ms": 29.5,
+              "inputBytes": 158164,
+              "seconds": 11.294125,
+              "pcmBytes": 4336944
+            },
+            {
+              "ms": 54.1000000089407,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 94.29999999701977,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 151.3999999910593,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 90.59999999403954,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 154,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 121,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 144.79999999701977,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 142.90000000596046,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 50.29999999701977,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 158,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 245.3999999910593,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            },
+            {
+              "ms": 82.59999999403954,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 153.79999999701977,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 121.59999999403954,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 146.1000000089407,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 142.6000000089407,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 51.400000005960464,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 157.79999999701977,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 260.29999999701977,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            }
+          ],
+          "engineDecodeStats": [
+            {
+              "key": "explosion",
+              "bytes": 4947,
+              "convertMs": 0.09999999403953552,
+              "decodeMs": 31.200000002980232
+            },
+            {
+              "key": "spy",
+              "bytes": 5336,
+              "convertMs": 0.10000000894069672,
+              "decodeMs": 31
+            },
+            {
+              "key": "shotAlt",
+              "bytes": 6942,
+              "convertMs": 0,
+              "decodeMs": 31.599999994039536
+            },
+            {
+              "key": "impact",
+              "bytes": 4895,
+              "convertMs": 0.10000000894069672,
+              "decodeMs": 31.299999997019768
+            },
+            {
+              "key": "cannon",
+              "bytes": 5056,
+              "convertMs": 0.09999999403953552,
+              "decodeMs": 30.200000002980232
+            },
+            {
+              "key": "shot",
+              "bytes": 6420,
+              "convertMs": 0.29999999701976776,
+              "decodeMs": 31.799999997019768
+            },
+            {
+              "key": "earth",
+              "bytes": 7748,
+              "convertMs": 0.09999999403953552,
+              "decodeMs": 31.400000005960464
+            },
+            {
+              "key": "mothership",
+              "bytes": 27872,
+              "convertMs": 0.5,
+              "decodeMs": 30
+            },
+            {
+              "key": "noise",
+              "bytes": 46722,
+              "convertMs": 0.7999999970197678,
+              "decodeMs": 30.899999991059303
+            },
+            {
+              "key": "menu",
+              "bytes": 158164,
+              "convertMs": 2.0999999940395355,
+              "decodeMs": 29.5
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 3.2999999970197678,
+              "decodeMs": 54.1000000089407
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 4.5,
+              "decodeMs": 94.40000000596046
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 3.1000000089406967,
+              "decodeMs": 151.3999999910593
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 3.800000011920929,
+              "decodeMs": 90.59999999403954
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 3.0999999940395355,
+              "decodeMs": 154.1000000089407
+            },
+            {
+              "key": "adventure2",
+              "bytes": 762204,
+              "convertMs": 2.300000011920929,
+              "decodeMs": 121
+            },
+            {
+              "key": "action2",
+              "bytes": 981192,
+              "convertMs": 3.1000000089406967,
+              "decodeMs": 144.8999999910593
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 2.5,
+              "decodeMs": 142.90000000596046
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 0.8999999910593033,
+              "decodeMs": 50.29999999701977
+            },
+            {
+              "key": "action3",
+              "bytes": 1092380,
+              "convertMs": 3.7000000029802322,
+              "decodeMs": 158
+            },
+            {
+              "key": "boss",
+              "bytes": 1640037,
+              "convertMs": 5.300000011920929,
+              "decodeMs": 245.3999999910593
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 1.4000000059604645,
+              "decodeMs": 82.59999999403954
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 3.4000000059604645,
+              "decodeMs": 153.79999999701977
+            },
+            {
+              "key": "adventure2",
+              "bytes": 762204,
+              "convertMs": 2.7999999970197678,
+              "decodeMs": 121.59999999403954
+            },
+            {
+              "key": "action2",
+              "bytes": 981192,
+              "convertMs": 3.2000000029802322,
+              "decodeMs": 146.20000000298023
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 2.7000000029802322,
+              "decodeMs": 142.6000000089407
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 1,
+              "decodeMs": 51.400000005960464
+            },
+            {
+              "key": "action3",
+              "bytes": 1092380,
+              "convertMs": 3.2000000029802322,
+              "decodeMs": 157.79999999701977
+            },
+            {
+              "key": "boss",
+              "bytes": 1640037,
+              "convertMs": 5.299999997019768,
+              "decodeMs": 260.3999999910593
+            }
+          ],
+          "peakCachedPcmBytes": 80923816,
+          "errors": []
+        },
+        {
+          "width": 390,
+          "height": 700,
+          "cpuSlowdown": 4,
+          "startup": {
+            "domReadyMs": 695.3999999910593,
+            "loadMs": 696.2999999970198,
+            "heapBytes": 29400000
+          },
+          "initialAudioPcmBytes": 10271280,
+          "frames": [
+            {
+              "phase": 2,
+              "samples": 371,
+              "p50": 6.099999999999909,
+              "p95": 6.200000000000273,
+              "max": 30.40000000000009,
+              "over33ms": 0
+            },
+            {
+              "phase": 8,
+              "samples": 397,
+              "p50": 6.099999999999454,
+              "p95": 6.199999999999818,
+              "max": 6.400000000000546,
+              "over33ms": 0
+            }
+          ],
+          "rapidPausedTransitions": [
+            {
+              "phase": 1,
+              "decoded": 10,
+              "pcmBytes": 17878128,
+              "sources": 1
+            },
+            {
+              "phase": 2,
+              "decoded": 10,
+              "pcmBytes": 30592856,
+              "sources": 1
+            },
+            {
+              "phase": 3,
+              "decoded": 10,
+              "pcmBytes": 23623160,
+              "sources": 1
+            },
+            {
+              "phase": 4,
+              "decoded": 10,
+              "pcmBytes": 30033008,
+              "sources": 1
+            },
+            {
+              "phase": 5,
+              "decoded": 10,
+              "pcmBytes": 29621336,
+              "sources": 1
+            },
+            {
+              "phase": 6,
+              "decoded": 10,
+              "pcmBytes": 10271280,
+              "sources": 1
+            },
+            {
+              "phase": 7,
+              "decoded": 10,
+              "pcmBytes": 33527240,
+              "sources": 1
+            },
+            {
+              "phase": 8,
+              "decoded": 10,
+              "pcmBytes": 49475840,
+              "sources": 1
+            }
+          ],
+          "steadyMusic": [
+            {
+              "phase": 1,
+              "pcmBytes": 17878128,
+              "sources": 1,
+              "tracks": [
+                "adventure1"
+              ]
+            },
+            {
+              "phase": 2,
+              "pcmBytes": 30592856,
+              "sources": 1,
+              "tracks": [
+                "action1"
+              ]
+            },
+            {
+              "phase": 3,
+              "pcmBytes": 23623160,
+              "sources": 1,
+              "tracks": [
+                "adventure2"
+              ]
+            },
+            {
+              "phase": 4,
+              "pcmBytes": 30033008,
+              "sources": 1,
+              "tracks": [
+                "action2"
+              ]
+            },
+            {
+              "phase": 5,
+              "pcmBytes": 29621336,
+              "sources": 1,
+              "tracks": [
+                "adventureBoss"
+              ]
+            },
+            {
+              "phase": 6,
+              "pcmBytes": 10271280,
+              "sources": 1,
+              "tracks": [
+                "briefing"
+              ]
+            },
+            {
+              "phase": 7,
+              "pcmBytes": 33527240,
+              "sources": 1,
+              "tracks": [
+                "action3"
+              ]
+            },
+            {
+              "phase": 8,
+              "pcmBytes": 49475840,
+              "sources": 1,
+              "tracks": [
+                "boss"
+              ]
+            }
+          ],
+          "heap": {
+            "usedSize": 3980700,
+            "totalSize": 6160384,
+            "embedderHeapUsedSize": 3987952,
+            "backingStorageSize": 25217723
+          },
+          "longTasks": [
+            {
+              "start": 321.5,
+              "ms": 336
+            },
+            {
+              "start": 1571.699999988079,
+              "ms": 173
+            },
+            {
+              "start": 1825.8999999910593,
+              "ms": 244
+            }
+          ],
+          "decodeMeasurements": [
+            {
+              "ms": 157,
+              "inputBytes": 6420,
+              "seconds": 0.23629166666666668,
+              "pcmBytes": 90736
+            },
+            {
+              "ms": 156.70000000298023,
+              "inputBytes": 6942,
+              "seconds": 0.2444375,
+              "pcmBytes": 93864
+            },
+            {
+              "ms": 156.29999999701977,
+              "inputBytes": 4947,
+              "seconds": 0.119,
+              "pcmBytes": 22848
+            },
+            {
+              "ms": 155.69999998807907,
+              "inputBytes": 4895,
+              "seconds": 0.24814583333333334,
+              "pcmBytes": 47644
+            },
+            {
+              "ms": 155.09999999403954,
+              "inputBytes": 5336,
+              "seconds": 0.152375,
+              "pcmBytes": 29256
+            },
+            {
+              "ms": 156.1000000089407,
+              "inputBytes": 7748,
+              "seconds": 1.1276041666666667,
+              "pcmBytes": 433000
+            },
+            {
+              "ms": 153.20000000298023,
+              "inputBytes": 5056,
+              "seconds": 0.1131875,
+              "pcmBytes": 21732
+            },
+            {
+              "ms": 152.09999999403954,
+              "inputBytes": 27872,
+              "seconds": 1.980125,
+              "pcmBytes": 380184
+            },
+            {
+              "ms": 155.8999999910593,
+              "inputBytes": 46722,
+              "seconds": 5,
+              "pcmBytes": 960000
+            },
+            {
+              "ms": 150,
+              "inputBytes": 158164,
+              "seconds": 11.294125,
+              "pcmBytes": 4336944
+            },
+            {
+              "ms": 76.09999999403954,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 97.70000000298023,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 165.40000000596046,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 93.79999999701977,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 173.29999999701977,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 136.3999999910593,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 163,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 159.59999999403954,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 55.099999994039536,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 190.1000000089407,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 281.59999999403954,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            },
+            {
+              "ms": 93.29999999701977,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 172.69999998807907,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 136.70000000298023,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 164.59999999403954,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 159.09999999403954,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 54.70000000298023,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 176,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 283.6000000089407,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            }
+          ],
+          "engineDecodeStats": [
+            {
+              "key": "shot",
+              "bytes": 6420,
+              "convertMs": 1,
+              "decodeMs": 157.5
+            },
+            {
+              "key": "shotAlt",
+              "bytes": 6942,
+              "convertMs": 0.6000000089406967,
+              "decodeMs": 156.70000000298023
+            },
+            {
+              "key": "explosion",
+              "bytes": 4947,
+              "convertMs": 0.3999999910593033,
+              "decodeMs": 156.29999999701977
+            },
+            {
+              "key": "impact",
+              "bytes": 4895,
+              "convertMs": 0.6000000089406967,
+              "decodeMs": 155.79999999701977
+            },
+            {
+              "key": "spy",
+              "bytes": 5336,
+              "convertMs": 0.4000000059604645,
+              "decodeMs": 155.09999999403954
+            },
+            {
+              "key": "earth",
+              "bytes": 7748,
+              "convertMs": 0.3999999910593033,
+              "decodeMs": 156.1000000089407
+            },
+            {
+              "key": "cannon",
+              "bytes": 5056,
+              "convertMs": 0.5999999940395355,
+              "decodeMs": 153.20000000298023
+            },
+            {
+              "key": "mothership",
+              "bytes": 27872,
+              "convertMs": 1.6000000089406967,
+              "decodeMs": 152.09999999403954
+            },
+            {
+              "key": "noise",
+              "bytes": 46722,
+              "convertMs": 2,
+              "decodeMs": 155.8999999910593
+            },
+            {
+              "key": "menu",
+              "bytes": 158164,
+              "convertMs": 8.299999997019768,
+              "decodeMs": 150.20000000298023
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 17.299999997019768,
+              "decodeMs": 76.20000000298023
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 12.599999994039536,
+              "decodeMs": 97.70000000298023
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 14.5,
+              "decodeMs": 165.40000000596046
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 23.100000008940697,
+              "decodeMs": 93.8999999910593
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 15.799999997019768,
+              "decodeMs": 173.29999999701977
+            },
+            {
+              "key": "adventure2",
+              "bytes": 762204,
+              "convertMs": 11.799999997019768,
+              "decodeMs": 136.3999999910593
+            },
+            {
+              "key": "action2",
+              "bytes": 981192,
+              "convertMs": 16.200000002980232,
+              "decodeMs": 163
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 12.700000002980232,
+              "decodeMs": 159.59999999403954
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 4.299999997019768,
+              "decodeMs": 55.20000000298023
+            },
+            {
+              "key": "action3",
+              "bytes": 1092380,
+              "convertMs": 19.099999994039536,
+              "decodeMs": 190.20000000298023
+            },
+            {
+              "key": "boss",
+              "bytes": 1640037,
+              "convertMs": 28.400000005960464,
+              "decodeMs": 281.59999999403954
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 7.399999991059303,
+              "decodeMs": 93.29999999701977
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 14.5,
+              "decodeMs": 172.79999999701977
+            },
+            {
+              "key": "adventure2",
+              "bytes": 762204,
+              "convertMs": 10.200000002980232,
+              "decodeMs": 136.90000000596046
+            },
+            {
+              "key": "action2",
+              "bytes": 981192,
+              "convertMs": 12.600000008940697,
+              "decodeMs": 164.59999999403954
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 13.100000008940697,
+              "decodeMs": 159.20000000298023
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 4.5,
+              "decodeMs": 54.900000005960464
+            },
+            {
+              "key": "action3",
+              "bytes": 1092380,
+              "convertMs": 14.799999997019768,
+              "decodeMs": 176.20000000298023
+            },
+            {
+              "key": "boss",
+              "bytes": 1640037,
+              "convertMs": 25.399999991059303,
+              "decodeMs": 283.6000000089407
+            }
+          ],
+          "peakCachedPcmBytes": 80923816,
+          "errors": []
+        },
+        {
+          "width": 568,
+          "height": 320,
+          "cpuSlowdown": 4,
+          "startup": {
+            "domReadyMs": 678.8999999910593,
+            "loadMs": 679.7000000029802,
+            "heapBytes": 27600000
+          },
+          "initialAudioPcmBytes": 10271280,
+          "frames": [
+            {
+              "phase": 2,
+              "samples": 377,
+              "p50": 6.099999999999909,
+              "p95": 6.199999999999818,
+              "max": 30.300000000000182,
+              "over33ms": 0
+            },
+            {
+              "phase": 8,
+              "samples": 396,
+              "p50": 6.099999999999454,
+              "p95": 6.199999999999818,
+              "max": 6.699999999999818,
+              "over33ms": 0
+            }
+          ],
+          "rapidPausedTransitions": [
+            {
+              "phase": 1,
+              "decoded": 10,
+              "pcmBytes": 17878128,
+              "sources": 1
+            },
+            {
+              "phase": 2,
+              "decoded": 10,
+              "pcmBytes": 30592856,
+              "sources": 1
+            },
+            {
+              "phase": 3,
+              "decoded": 10,
+              "pcmBytes": 23623160,
+              "sources": 1
+            },
+            {
+              "phase": 4,
+              "decoded": 10,
+              "pcmBytes": 30033008,
+              "sources": 1
+            },
+            {
+              "phase": 5,
+              "decoded": 10,
+              "pcmBytes": 29621336,
+              "sources": 1
+            },
+            {
+              "phase": 6,
+              "decoded": 10,
+              "pcmBytes": 10271280,
+              "sources": 1
+            },
+            {
+              "phase": 7,
+              "decoded": 10,
+              "pcmBytes": 33527240,
+              "sources": 1
+            },
+            {
+              "phase": 8,
+              "decoded": 10,
+              "pcmBytes": 49475840,
+              "sources": 1
+            }
+          ],
+          "steadyMusic": [
+            {
+              "phase": 1,
+              "pcmBytes": 17878128,
+              "sources": 1,
+              "tracks": [
+                "adventure1"
+              ]
+            },
+            {
+              "phase": 2,
+              "pcmBytes": 30592856,
+              "sources": 1,
+              "tracks": [
+                "action1"
+              ]
+            },
+            {
+              "phase": 3,
+              "pcmBytes": 23623160,
+              "sources": 1,
+              "tracks": [
+                "adventure2"
+              ]
+            },
+            {
+              "phase": 4,
+              "pcmBytes": 30033008,
+              "sources": 1,
+              "tracks": [
+                "action2"
+              ]
+            },
+            {
+              "phase": 5,
+              "pcmBytes": 29621336,
+              "sources": 1,
+              "tracks": [
+                "adventureBoss"
+              ]
+            },
+            {
+              "phase": 6,
+              "pcmBytes": 10271280,
+              "sources": 1,
+              "tracks": [
+                "briefing"
+              ]
+            },
+            {
+              "phase": 7,
+              "pcmBytes": 33527240,
+              "sources": 1,
+              "tracks": [
+                "action3"
+              ]
+            },
+            {
+              "phase": 8,
+              "pcmBytes": 49475840,
+              "sources": 1,
+              "tracks": [
+                "boss"
+              ]
+            }
+          ],
+          "heap": {
+            "usedSize": 11983804,
+            "totalSize": 16646144,
+            "embedderHeapUsedSize": 34999368,
+            "backingStorageSize": 28567224
+          },
+          "longTasks": [
+            {
+              "start": 272.79999999701977,
+              "ms": 365
+            },
+            {
+              "start": 1548.5999999940395,
+              "ms": 174
+            },
+            {
+              "start": 1797.8999999910593,
+              "ms": 263
+            },
+            {
+              "start": 6971,
+              "ms": 52
+            }
+          ],
+          "decodeMeasurements": [
+            {
+              "ms": 158.29999999701977,
+              "inputBytes": 6420,
+              "seconds": 0.23629166666666668,
+              "pcmBytes": 90736
+            },
+            {
+              "ms": 158,
+              "inputBytes": 6942,
+              "seconds": 0.2444375,
+              "pcmBytes": 93864
+            },
+            {
+              "ms": 157.59999999403954,
+              "inputBytes": 4947,
+              "seconds": 0.119,
+              "pcmBytes": 22848
+            },
+            {
+              "ms": 157,
+              "inputBytes": 4895,
+              "seconds": 0.24814583333333334,
+              "pcmBytes": 47644
+            },
+            {
+              "ms": 156.20000000298023,
+              "inputBytes": 5336,
+              "seconds": 0.152375,
+              "pcmBytes": 29256
+            },
+            {
+              "ms": 157.09999999403954,
+              "inputBytes": 7748,
+              "seconds": 1.1276041666666667,
+              "pcmBytes": 433000
+            },
+            {
+              "ms": 153.70000000298023,
+              "inputBytes": 5056,
+              "seconds": 0.1131875,
+              "pcmBytes": 21732
+            },
+            {
+              "ms": 152.8999999910593,
+              "inputBytes": 27872,
+              "seconds": 1.980125,
+              "pcmBytes": 380184
+            },
+            {
+              "ms": 156.40000000596046,
+              "inputBytes": 46722,
+              "seconds": 5,
+              "pcmBytes": 960000
+            },
+            {
+              "ms": 150.5,
+              "inputBytes": 158164,
+              "seconds": 11.294125,
+              "pcmBytes": 4336944
+            },
+            {
+              "ms": 73.29999999701977,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 106.6000000089407,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 161.90000000596046,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 92.3999999910593,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 170.5,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 136.70000000298023,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 161.20000000298023,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 165.09999999403954,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 56.70000000298023,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 174.6000000089407,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 277.19999998807907,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            },
+            {
+              "ms": 92.29999999701977,
+              "inputBytes": 544716,
+              "seconds": 41.142875,
+              "pcmBytes": 15798864
+            },
+            {
+              "ms": 176.90000000596046,
+              "inputBytes": 1036514,
+              "seconds": 74.25414583333334,
+              "pcmBytes": 28513592
+            },
+            {
+              "ms": 134.79999999701977,
+              "inputBytes": 762204,
+              "seconds": 56.10389583333333,
+              "pcmBytes": 21543896
+            },
+            {
+              "ms": 159.90000000596046,
+              "inputBytes": 981192,
+              "seconds": 72.79620833333334,
+              "pcmBytes": 27953744
+            },
+            {
+              "ms": 157.09999999403954,
+              "inputBytes": 930750,
+              "seconds": 71.72414583333334,
+              "pcmBytes": 27542072
+            },
+            {
+              "ms": 54.79999999701977,
+              "inputBytes": 321545,
+              "seconds": 21.333375,
+              "pcmBytes": 8192016
+            },
+            {
+              "ms": 180.8999999910593,
+              "inputBytes": 1092380,
+              "seconds": 81.89577083333333,
+              "pcmBytes": 31447976
+            },
+            {
+              "ms": 272.8999999910593,
+              "inputBytes": 1640037,
+              "seconds": 123.42858333333334,
+              "pcmBytes": 47396576
+            }
+          ],
+          "engineDecodeStats": [
+            {
+              "key": "shot",
+              "bytes": 6420,
+              "convertMs": 0.9000000059604645,
+              "decodeMs": 159
+            },
+            {
+              "key": "shotAlt",
+              "bytes": 6942,
+              "convertMs": 0.7000000029802322,
+              "decodeMs": 158
+            },
+            {
+              "key": "explosion",
+              "bytes": 4947,
+              "convertMs": 0.6000000089406967,
+              "decodeMs": 157.59999999403954
+            },
+            {
+              "key": "impact",
+              "bytes": 4895,
+              "convertMs": 0.4000000059604645,
+              "decodeMs": 157
+            },
+            {
+              "key": "spy",
+              "bytes": 5336,
+              "convertMs": 0.20000000298023224,
+              "decodeMs": 156.20000000298023
+            },
+            {
+              "key": "earth",
+              "bytes": 7748,
+              "convertMs": 0.3999999910593033,
+              "decodeMs": 157.20000000298023
+            },
+            {
+              "key": "cannon",
+              "bytes": 5056,
+              "convertMs": 0.4000000059604645,
+              "decodeMs": 153.79999999701977
+            },
+            {
+              "key": "mothership",
+              "bytes": 27872,
+              "convertMs": 1.5,
+              "decodeMs": 152.8999999910593
+            },
+            {
+              "key": "noise",
+              "bytes": 46722,
+              "convertMs": 2.3999999910593033,
+              "decodeMs": 156.40000000596046
+            },
+            {
+              "key": "menu",
+              "bytes": 158164,
+              "convertMs": 8.700000002980232,
+              "decodeMs": 150.70000000298023
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 17.700000002980232,
+              "decodeMs": 73.29999999701977
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 12.799999997019768,
+              "decodeMs": 106.70000000298023
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 15.099999994039536,
+              "decodeMs": 162
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 11.100000008940697,
+              "decodeMs": 92.5
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 15.900000005960464,
+              "decodeMs": 170.59999999403954
+            },
+            {
+              "key": "adventure2",
+              "bytes": 762204,
+              "convertMs": 11.900000005960464,
+              "decodeMs": 136.79999999701977
+            },
+            {
+              "key": "action2",
+              "bytes": 981192,
+              "convertMs": 15.100000008940697,
+              "decodeMs": 161.3999999910593
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 12.100000008940697,
+              "decodeMs": 165.29999999701977
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 4,
+              "decodeMs": 56.70000000298023
+            },
+            {
+              "key": "action3",
+              "bytes": 1092380,
+              "convertMs": 16.899999991059303,
+              "decodeMs": 174.6000000089407
+            },
+            {
+              "key": "boss",
+              "bytes": 1640037,
+              "convertMs": 28.5,
+              "decodeMs": 277.3999999910593
+            },
+            {
+              "key": "adventure1",
+              "bytes": 544716,
+              "convertMs": 7,
+              "decodeMs": 92.40000000596046
+            },
+            {
+              "key": "action1",
+              "bytes": 1036514,
+              "convertMs": 14.700000002980232,
+              "decodeMs": 177.09999999403954
+            },
+            {
+              "key": "adventure2",
+              "bytes": 762204,
+              "convertMs": 9.700000002980232,
+              "decodeMs": 134.79999999701977
+            },
+            {
+              "key": "action2",
+              "bytes": 981192,
+              "convertMs": 13.5,
+              "decodeMs": 159.90000000596046
+            },
+            {
+              "key": "adventureBoss",
+              "bytes": 930750,
+              "convertMs": 12.100000008940697,
+              "decodeMs": 157.09999999403954
+            },
+            {
+              "key": "briefing",
+              "bytes": 321545,
+              "convertMs": 4.700000002980232,
+              "decodeMs": 55
+            },
+            {
+              "key": "action3",
+              "bytes": 1092380,
+              "convertMs": 15.299999997019768,
+              "decodeMs": 181.09999999403954
+            },
+            {
+              "key": "boss",
+              "bytes": 1640037,
+              "convertMs": 25.799999997019768,
+              "decodeMs": 273
+            }
+          ],
+          "peakCachedPcmBytes": 80923816,
+          "errors": []
+        }
+      ]
+    }
+  }
+}

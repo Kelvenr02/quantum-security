@@ -1,6 +1,6 @@
 /* Regras do canal fictício da missão; os percentuais não são critérios universais de QKD. */
 const channelRules=Object.freeze({
-  limit:11,alert:7.7,max:16,earlyDecay:.20,lateDecay:.10,
+  ...GameRules.channel,earlyDecay:.20,lateDecay:.10,
   recoveryQber:9,criticalGraceMs:2500,contactGraceMs:600,victoryRecovery:1.5,
   bossDrift:Object.freeze([.24,.30,.34,.40,.50,.60,.70,.80]),
   jamWarningMs:1200,jamEarlyQber:2.5,jamLateQber:3,reactionMarginMs:400
@@ -15,6 +15,8 @@ function checkChannelCritical() {
   if(qber<=qberLimit||isRegen||isCompromised||gameTime<criticalGraceUntil)return;
   isCompromised=true;compEnd=gameTime+compromisedDuration;
   campaignMetrics?.count('compromises');campaignMetrics?.event('compromised',{qber});
+  recordPhaseGoal('compromises');
+  queueScienceCue('noise');
   gameAudio.sfx('compromised');
 }
 function channelCheckpoint() {
@@ -39,6 +41,7 @@ function updateChannel(milliseconds) {
     isRegen=false;setQber(0,'regeneration');criticalGraceUntil=gameTime+channelRules.contactGraceMs;
     invulUntil=gameTime+channelRules.contactGraceMs;
     campaignMetrics?.count('regenerationsCompleted');gameAudio.stopLoop('regen');gameAudio.sfx('regenReady');
+    queueScienceCue('validated');
   }
   if(isCompromised&&gameTime>=compEnd) {
     isCompromised=false;setQber(Math.min(qber,channelRules.recoveryQber),'automaticRecovery');
@@ -70,9 +73,10 @@ function renderChannelWarning() {
   const visible=isRegen||isCompromised||qber>=channelRules.alert;
   $('keyStatus').hidden=visible;$('warning').hidden=!visible;
   if(isRegen)showWarning('RENOVANDO · '+Math.max(0,(regenEnd-gameTime)/1000).toFixed(1)+' s<br>Parado e sem disparar','transparent','#91c7ff','regen');
-  else if(isCompromised)showWarning('INVERTIDOS · '+Math.max(0,(compEnd-gameTime)/1000).toFixed(1)+' s<br>'+(gameTime>=keyReadyAt?'R pronta para renovar':'R em '+((keyReadyAt-gameTime)/1000).toFixed(1)+' s'),'transparent','#ef7976','compromised');
-  else if(visible)showWarning('QBER '+(qber>qberLimit?'CRÍTICO':'ALTO')+' · '+(gameTime>=keyReadyAt?'R pronta':'R '+((keyReadyAt-gameTime)/1000).toFixed(1)+' s'),'transparent','#e6c491','channel');
+  else if(isCompromised)showWarning('⇄ '+Math.max(0,(compEnd-gameTime)/1000).toFixed(1)+'s · '+keyLabel('regen')+' '+(gameTime>=keyReadyAt?'pronta':((keyReadyAt-gameTime)/1000).toFixed(1)+'s')+'<br>←/'+keyLabel('left')+' = direita · →/'+keyLabel('right')+' = esquerda','transparent','#ef7976','compromised');
+  else if(visible)showWarning('QBER '+(qber>qberLimit?'CRÍTICO':'ALTO')+' · '+(gameTime>=keyReadyAt?keyLabel('regen')+' pronta':keyLabel('regen')+' '+((keyReadyAt-gameTime)/1000).toFixed(1)+' s'),'transparent','#e6c491','channel');
   else $('warning').style.display='none';
+
 }
 
 // Perturbação anunciada e independente das salvas físicas. A mira trava ao aparecer.
@@ -82,11 +86,12 @@ function updateBossChannel() {
   if(boss.jamRound!==m.round && m.elapsed>=m.openingStart+400) {
     const lane=occupiedShipLane();
     boss.channelPulse={lanes:[lane-1,lane,lane+1].filter(l=>l>=0&&l<numLanes),releaseAt:m.time+channelRules.jamWarningMs,fired:false};
-    boss.jamRound=m.round;campaignMetrics?.count('channelPulses');gameAudio.sfx('interference');
+    boss.jamRound=m.round;campaignMetrics?.count('channelPulses');gameAudio.sfx('noiseWarning');
   }
   const pulse=boss.channelPulse;
   if(!pulse||pulse.fired||m.time<pulse.releaseAt)return;
   pulse.fired=true;
+  gameAudio.sfx('noisePulse');
   if(!noImpact()&&shipOverlapsLanes(pulse.lanes)) {
     campaignMetrics?.count('channelPulseContacts');
     addQber(level>=5?channelRules.jamLateQber:channelRules.jamEarlyQber,'bossJammer');
@@ -100,6 +105,7 @@ function drawBossChannel() {
   ctx.save();ctx.setLineDash(fired?[]:[3,8]);ctx.strokeStyle='#e6c49188';ctx.fillStyle=fired?'#e6c49126':'#e6c49108';
   for(const lane of pulse.lanes){const x=lane*laneWidth;ctx.fillRect(x+3,top,laneWidth-6,bottom-top);ctx.strokeRect(x+3,top,laneWidth-6,bottom-top);}
   ctx.fillStyle='#e6c491';ctx.textAlign='center';ctx.font='10px Consolas,monospace';
-  ctx.fillText(fired?'PERTURBAÇÃO DO CANAL':'RUÍDO · '+(level>=5?'3':'2,5')+'% · '+(remaining/1000).toFixed(1)+' s',width/2,top-10);
+  // The same countdown is in bossThreat; avoid drawing its duplicate beneath a HUD.
+  if(top-10>arenaBounds.top+12)ctx.fillText(fired?'PERTURBAÇÃO DO CANAL':'RUÍDO · '+(level>=5?'3':'2,5')+'% · '+(remaining/1000).toFixed(1)+' s',width/2,top-10);
   ctx.restore();
 }

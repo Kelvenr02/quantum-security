@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const { OrbitalAudioEngine, ORBITAL_PHASE_TRACKS } = require('../audio.js');
+const { OrbitalAudioEngine, ORBITAL_PHASE_TRACKS,ORBITAL_CUES } = require('../audio.js');
 const { TrainingSimulation } = require('../training.js');
 
 class Param {
@@ -61,6 +61,9 @@ const test=async(name,fn)=>{await fn();results.push(name);};
     const {audio}=engine();audio.setScene('briefing',4);await settle();
     assert.equal(audio.buffers.has(ORBITAL_PHASE_TRACKS[3]),true);
     audio.setScene('phase',4);await settle();assert.equal(audio.musicVoice.key,ORBITAL_PHASE_TRACKS[3]);
+    audio.setScene('briefing',4,{nextScene:'boss'});await settle();assert.equal(audio.buffers.has('adventureBoss'),true);
+    audio.setScene('boss',4);await settle();assert.equal(audio.musicVoice.key,'adventureBoss');
+    audio.setScene('phase',7);await settle();assert.equal(audio.preparedTrack,null);assert.equal(audio.loading.has('boss'),false);
   });
   await test('Eventos são imediatos, panorâmica é limitada e efeitos frequentes respeitam intervalos',async()=>{
     const {audio,c}=engine();await settle();c.advance(.1);assert.equal(audio.sfx('shot',{pan:10}),true);assert.equal(audio.sfx('shot'),false);
@@ -74,6 +77,32 @@ const test=async(name,fn)=>{await fn();results.push(name);};
     audio.setPreferences({muted:false,effects:.6});assert.equal(audio.preferences.music,1);assert.equal(audio.preferences.effects,.6);
     assert.equal(JSON.parse(store.get('qubit-audio')).muted,false);audio.stopLoop('regen');assert.equal(audio.loops.size,0);
   });
+  await test('Rastreio, fixação, salva, ruído e estágio possuem identidades distintas e não se acumulam na pausa',async()=>{
+    const names=['tracking','targetLock','salvoWarning','salvo','noiseWarning','noisePulse','bossStage'];
+    assert.equal(new Set(names.map(n=>JSON.stringify(ORBITAL_CUES[n].notes))).size,names.length);
+    const {audio,c}=engine();await settle();for(const name of names){c.advance(1);assert.equal(audio.sfx(name),true);assert.equal(audio.sfx(name),false);}
+    audio.setPaused('game',true);await settle();for(const name of names)assert.equal(audio.sfx(name),false);
+    c.advance(2);audio.setPaused('game',false);await settle();assert.equal(audio.voices.size,1,'A pausa não enfileira outros avisos');
+  });
+  await test('Transições rápidas e pausadas mantêm no máximo duas vozes musicais',async()=>{
+    const {audio,c}=engine();await settle();
+    for(let phase=1;phase<=8;phase++){audio.setScene('phase',phase);await settle();assert.ok(audio.musicVoices.size<=2);}
+    audio.setPaused('game',true);await settle();
+    for(let phase=1;phase<=8;phase++){audio.setScene('phase',phase);await settle();assert.equal(audio.musicVoices.size,1);}
+    assert.ok([...audio.buffers.keys()].filter(k=>audio.assets[k].kind==='music').length<=2);
+    audio.setPaused('game',false);await settle();c.advance(1);assert.equal(audio.musicVoices.size,1);
+  });
+  await test('Estágios alteram discretamente a mixagem sem reiniciar a faixa',async()=>{
+    const {audio,c}=engine();await settle();audio.setScene('boss',8);await settle();const voice=audio.musicVoice,initial=audio.sceneGain();
+    assert.equal(audio.setBossStage(1),true);assert.equal(audio.setBossStage(1),false);c.advance(1);assert.equal(audio.setBossStage(2),true);
+    assert.equal(audio.musicVoice,voice);assert.ok(audio.sceneGain()>initial&&audio.sceneGain()<=initial*1.12+1e-10);
+    audio.setScene('menu');assert.equal(audio.bossStage,0);assert.equal(audio.setBossStage(2),false);
+  });
+  await test('Saturação de vozes preserva avisos prioritários e rejeita sons repetitivos',async()=>{
+    const {audio}=engine();await settle();for(let i=0;i<18;i++)audio.toneVoice([440],.01,2,0,'alert',3);
+    assert.equal(audio.sfx('shot'),false);assert.equal(audio.sfx('ui'),false);assert.equal(audio.sfx('bossStage'),false);
+    assert.equal(audio.sfx('targetLock'),true);assert.equal(audio.voices.size,18);assert.equal([...audio.voices].every(v=>v.priority===3),true);
+  });
   await test('Navegador sem Web Audio e armazenamento indisponível não interrompem o jogo',async()=>{
     const audio=new OrbitalAudioEngine({createContext:()=>null,storage:{getItem:()=>{throw Error()},setItem:()=>{throw Error()}}});audio.unlock();audio.setScene('phase',8);audio.setPreferences({music:.2});audio.setPaused('game',true);
     assert.equal(audio.sfx('shot'),false);audio.startLoop('regen');audio.stopEffects();assert.equal(audio.context,null);
@@ -82,8 +111,15 @@ const test=async(name,fn)=>{await fn();results.push(name);};
   await test('Treino emite sons no evento real e suspende disparos durante a regeneração',async()=>{
     const sounds=[];const sim=new TrainingSimulation(name=>sounds.push(name));sim.move(-1);
     for(let i=0;i<50;i++)sim.update(20);assert.equal(sounds.filter(n=>n==='explosion').length,1);assert.equal(sounds.includes('noise'),true);
+    sim.press('evade',1);for(let i=0;i<16;i++)sim.update(20);sim.release('evade');
     sim.regenerate();const shots=sounds.filter(n=>n==='shot').length;for(let i=0;i<99;i++)sim.update(20);
     assert.equal(sounds.filter(n=>n==='shot').length,shots);sim.update(20);assert.equal(sounds.filter(n=>n==='regenStart').length,1);assert.equal(sounds.filter(n=>n==='regenReady').length,1);
+  });
+  await test('Salva interrompe renovação insegura sem emitir sucesso da nova chave',async()=>{
+    const sounds=[],sim=new TrainingSimulation(name=>sounds.push(name));sim.move(-1);
+    for(let i=0;i<50;i++)sim.update(20);sim.regenerate();for(let i=0;i<100;i++)sim.update(20);
+    assert.equal(sounds.filter(n=>n==='regenCancel').length,1);assert.equal(sounds.includes('regenReady'),false);
+    assert.equal(sim.complete,false);
   });
   await test('Bundle offline corresponde aos 19 arquivos OGG com fonte e licença registradas',async()=>{
     const root=path.resolve(__dirname,'../assets/audio');const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.json'),'utf8'));const context=vm.createContext({});vm.runInContext(fs.readFileSync(path.join(root,'bundle.js'),'utf8'),context);

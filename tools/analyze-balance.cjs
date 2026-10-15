@@ -54,9 +54,9 @@ if(require.main===module) {
     const row=runScenario(config);rows.push(row);
     process.stderr.write(`${rows.length}: ${row.name} ${row.width}×${row.height} seed=${row.seed}: ${row.won?'vitória':'fase '+row.lastPhase+' / '+(row.failure?.kind||'limite de tempo')} (${row.seconds}s)\n`);
   }
-  const report={schemaVersion:2,description:'Controladores determinísticos com acesso ao estado interno; resultados não estimam habilidade ou sucesso humano.',controllerPolicies,
+  const report={schemaVersion:3,build:rows[0]?.build,randomVersion:rows[0]?.randomVersion,encounterVersion:rows[0]?.encounterVersion,description:'Controladores determinísticos com acesso ao estado interno; resultados não estimam habilidade ou sucesso humano.',controllerPolicies,
     maxActionSeconds:900,summary:summarize(rows),runs:rows};
-  if(output){fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report.summary,null,2));}
+  if(output){fs.mkdirSync(require('node:path').dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report.summary,null,2));}
   else console.log(JSON.stringify(report,null,2));
 }
 module.exports={scenarios,runScenario,summarize,controllerPolicies};

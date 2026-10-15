@@ -1,0 +1,2775 @@
+{
+  "schemaVersion": 3,
+  "randomVersion": 1,
+  "encounterVersion": 2,
+  "description": "Controladores determinísticos com acesso ao estado interno; resultados não estimam habilidade ou sucesso humano.",
+  "summary": [
+    {
+      "name": "equilibrado",
+      "cases": 20,
+      "wins": 20,
+      "seconds": [
+        558,
+        645
+      ],
+      "regens": [
+        25,
+        35
+      ],
+      "missed": [
+        1,
+        7
+      ],
+      "losses": []
+    },
+    {
+      "name": "meteors",
+      "cases": 4,
+      "wins": 4,
+      "seconds": [
+        571,
+        601
+      ],
+      "regens": [
+        28,
+        32
+      ],
+      "missed": [
+        2,
+        4
+      ],
+      "losses": []
+    },
+    {
+      "name": "noise",
+      "cases": 4,
+      "wins": 4,
+      "seconds": [
+        564,
+        606
+      ],
+      "regens": [
+        27,
+        32
+      ],
+      "missed": [
+        1,
+        4
+      ],
+      "losses": []
+    },
+    {
+      "name": "leitura-300ms",
+      "cases": 4,
+      "wins": 2,
+      "seconds": [
+        600,
+        614
+      ],
+      "regens": [
+        29,
+        30
+      ],
+      "missed": [
+        0,
+        2
+      ],
+      "losses": [
+        {
+          "seed": 42,
+          "width": 1600,
+          "height": 900,
+          "phase": 8,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 7,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "B"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "leitura-500ms",
+      "cases": 2,
+      "wins": 0,
+      "seconds": null,
+      "regens": null,
+      "missed": null,
+      "losses": [
+        {
+          "seed": 42,
+          "width": 1600,
+          "height": 900,
+          "phase": 3,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "A"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 3,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "A"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "comando-perdido",
+      "cases": 2,
+      "wins": 1,
+      "seconds": [
+        604,
+        604
+      ],
+      "regens": [
+        30,
+        30
+      ],
+      "missed": [
+        8,
+        8
+      ],
+      "losses": [
+        {
+          "seed": 42,
+          "width": 1600,
+          "height": 900,
+          "phase": 8,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "B"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "canal-com-R",
+      "cases": 2,
+      "wins": 2,
+      "seconds": [
+        601,
+        606
+      ],
+      "regens": [
+        29,
+        32
+      ],
+      "missed": [
+        1,
+        2
+      ],
+      "losses": []
+    },
+    {
+      "name": "canal-sem-R",
+      "cases": 2,
+      "wins": 2,
+      "seconds": [
+        631,
+        651
+      ],
+      "regens": [
+        0,
+        0
+      ],
+      "missed": [
+        5,
+        7
+      ],
+      "losses": []
+    },
+    {
+      "name": "inversao-com-R",
+      "cases": 2,
+      "wins": 1,
+      "seconds": [
+        588,
+        588
+      ],
+      "regens": [
+        30,
+        30
+      ],
+      "missed": [
+        6,
+        6
+      ],
+      "losses": [
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 8,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "inversao-sem-R",
+      "cases": 2,
+      "wins": 0,
+      "seconds": null,
+      "regens": null,
+      "missed": null,
+      "losses": [
+        {
+          "seed": 42,
+          "width": 1600,
+          "height": 900,
+          "phase": 5,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 5,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "B"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "imovel",
+      "cases": 2,
+      "wins": 0,
+      "seconds": null,
+      "regens": null,
+      "missed": null,
+      "losses": [
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 1,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 390,
+          "height": 700,
+          "phase": 1,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "ignora-canal",
+      "cases": 4,
+      "wins": 0,
+      "seconds": null,
+      "regens": null,
+      "missed": null,
+      "losses": [
+        {
+          "seed": 42,
+          "width": 1600,
+          "height": 900,
+          "phase": 5,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "B"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 5,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 42,
+          "width": 390,
+          "height": 700,
+          "phase": 5,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "B"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 390,
+          "height": 700,
+          "phase": 6,
+          "cause": {
+            "kind": "earth"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "renova-no-alerta",
+      "cases": 4,
+      "wins": 0,
+      "seconds": null,
+      "regens": null,
+      "missed": null,
+      "losses": [
+        {
+          "seed": 42,
+          "width": 1600,
+          "height": 900,
+          "phase": 6,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "A"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 1600,
+          "height": 900,
+          "phase": 7,
+          "cause": {
+            "kind": "collision"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 42,
+          "width": 390,
+          "height": 700,
+          "phase": 8,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "C"
+          },
+          "timeout": false
+        },
+        {
+          "seed": 519,
+          "width": 390,
+          "height": 700,
+          "phase": 7,
+          "cause": {
+            "kind": "bossSalvo",
+            "attack": "B"
+          },
+          "timeout": false
+        }
+      ]
+    },
+    {
+      "name": "ignora-emissores",
+      "cases": 4,
+      "wins": 4,
+      "seconds": [
+        568,
+        608
+      ],
+      "regens": [
+        28,
+        32
+      ],
+      "missed": [
+        1,
+        5
+      ],
+      "losses": []
+    }
+  ],
+  "runs": [
+    {
+      "name": "equilibrado",
+      "width": 1600,
+      "height": 900,
+      "seed": 1,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 593,
+      "regens": 30,
+      "missed": 2,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 29.3,
+        "2": 33.8,
+        "3": 36.8,
+        "4": 34.3,
+        "5": 40.8,
+        "6": 45.5,
+        "7": 44,
+        "8": 46.8
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 31.9,
+        "3": 32.6,
+        "4": 34,
+        "5": 33.8,
+        "6": 25,
+        "7": 42.5,
+        "8": 58.7
+      },
+      "earthImpacts": 12,
+      "repairs": 10,
+      "hullHits": 0,
+      "compromises": 12
+    },
+    {
+      "name": "equilibrado",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 601,
+      "regens": 32,
+      "missed": 2,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.6,
+        "2": 30.4,
+        "3": 34.3,
+        "4": 34.1,
+        "5": 44.8,
+        "6": 47.3,
+        "7": 47.1,
+        "8": 43
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 32.2,
+        "3": 40.6,
+        "4": 31.1,
+        "5": 33.5,
+        "6": 24.4,
+        "7": 33.5,
+        "8": 70.6
+      },
+      "earthImpacts": 10,
+      "repairs": 8,
+      "hullHits": 0,
+      "compromises": 8
+    },
+    {
+      "name": "equilibrado",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 606,
+      "regens": 29,
+      "missed": 1,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 32.2,
+        "3": 33.9,
+        "4": 36.5,
+        "5": 39.1,
+        "6": 46.5,
+        "7": 44.1,
+        "8": 49.2
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 34.5,
+        "3": 40.6,
+        "4": 34.2,
+        "5": 33.8,
+        "6": 24.6,
+        "7": 42.8,
+        "8": 58.7
+      },
+      "earthImpacts": 8,
+      "repairs": 7,
+      "hullHits": 1,
+      "compromises": 16
+    },
+    {
+      "name": "equilibrado",
+      "width": 1600,
+      "height": 900,
+      "seed": 2026,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 599,
+      "regens": 30,
+      "missed": 4,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 30.1,
+        "2": 33.3,
+        "3": 36.3,
+        "4": 36,
+        "5": 45.1,
+        "6": 46.6,
+        "7": 47.6,
+        "8": 42.5
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 25.6,
+        "3": 32.8,
+        "4": 34.3,
+        "5": 25.6,
+        "6": 24.6,
+        "7": 42.7,
+        "8": 72.9
+      },
+      "earthImpacts": 12,
+      "repairs": 8,
+      "hullHits": 0,
+      "compromises": 9
+    },
+    {
+      "name": "equilibrado",
+      "width": 1100,
+      "height": 800,
+      "seed": 1,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 566,
+      "regens": 29,
+      "missed": 2,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 29.2,
+        "2": 30.8,
+        "3": 37.1,
+        "4": 33.9,
+        "5": 39.2,
+        "6": 45.7,
+        "7": 44.5,
+        "8": 49.6
+      },
+      "bossSeconds": {
+        "1": 22.9,
+        "2": 34,
+        "3": 23.3,
+        "4": 34.2,
+        "5": 25.6,
+        "6": 24.7,
+        "7": 33.4,
+        "8": 58
+      },
+      "earthImpacts": 8,
+      "repairs": 6,
+      "hullHits": 0,
+      "compromises": 9
+    },
+    {
+      "name": "equilibrado",
+      "width": 1100,
+      "height": 800,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 566,
+      "regens": 28,
+      "missed": 3,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 30.8,
+        "3": 33.7,
+        "4": 33.7,
+        "5": 39.9,
+        "6": 45.4,
+        "7": 45.7,
+        "8": 43.8
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 32.4,
+        "3": 23.2,
+        "4": 31.6,
+        "5": 25.5,
+        "6": 24.4,
+        "7": 42.7,
+        "8": 58.3
+      },
+      "earthImpacts": 10,
+      "repairs": 7,
+      "hullHits": 0,
+      "compromises": 11
+    },
+    {
+      "name": "equilibrado",
+      "width": 1100,
+      "height": 800,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 591,
+      "regens": 29,
+      "missed": 1,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 32.2,
+        "3": 35.9,
+        "4": 36.3,
+        "5": 41.8,
+        "6": 45.4,
+        "7": 44.8,
+        "8": 44.4
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 34.5,
+        "3": 32.6,
+        "4": 34,
+        "5": 33.4,
+        "6": 24.6,
+        "7": 33.1,
+        "8": 62.8
+      },
+      "earthImpacts": 10,
+      "repairs": 9,
+      "hullHits": 0,
+      "compromises": 12
+    },
+    {
+      "name": "equilibrado",
+      "width": 1100,
+      "height": 800,
+      "seed": 2026,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 611,
+      "regens": 28,
+      "missed": 6,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 30,
+        "2": 33.2,
+        "3": 37.7,
+        "4": 36,
+        "5": 44.7,
+        "6": 43,
+        "7": 49.3,
+        "8": 43.3
+      },
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 32.1,
+        "3": 40.8,
+        "4": 34,
+        "5": 33.5,
+        "6": 24.6,
+        "7": 42.8,
+        "8": 62.7
+      },
+      "earthImpacts": 13,
+      "repairs": 7,
+      "hullHits": 0,
+      "compromises": 14
+    },
+    {
+      "name": "equilibrado",
+      "width": 390,
+      "height": 700,
+      "seed": 1,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 574,
+      "regens": 30,
+      "missed": 5,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 29.2,
+        "2": 30.9,
+        "3": 33.1,
+        "4": 34.6,
+        "5": 41.2,
+        "6": 45.8,
+        "7": 45,
+        "8": 46.3
+      },
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 25.8,
+        "3": 22.7,
+        "4": 31.9,
+        "5": 33.3,
+        "6": 24.5,
+        "7": 35.8,
+        "8": 70.9
+      },
+      "earthImpacts": 12,
+      "repairs": 7,
+      "hullHits": 1,
+      "compromises": 11
+    },
+    {
+      "name": "equilibrado",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 573,
+      "regens": 31,
+      "missed": 4,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 30.2,
+        "3": 33.6,
+        "4": 33.9,
+        "5": 39.8,
+        "6": 45.5,
+        "7": 46.2,
+        "8": 43.9
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.6,
+        "3": 22.8,
+        "4": 33.8,
+        "5": 25.5,
+        "6": 24.4,
+        "7": 35.8,
+        "8": 70.9
+      },
+      "earthImpacts": 10,
+      "repairs": 6,
+      "hullHits": 0,
+      "compromises": 11
+    },
+    {
+      "name": "equilibrado",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 564,
+      "regens": 28,
+      "missed": 1,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 29.7,
+        "3": 33.7,
+        "4": 36.8,
+        "5": 36,
+        "6": 46.5,
+        "7": 43.8,
+        "8": 52.1
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 34.5,
+        "3": 22.9,
+        "4": 34.3,
+        "5": 25.7,
+        "6": 24.9,
+        "7": 33,
+        "8": 55.5
+      },
+      "earthImpacts": 7,
+      "repairs": 6,
+      "hullHits": 0,
+      "compromises": 12
+    },
+    {
+      "name": "equilibrado",
+      "width": 390,
+      "height": 700,
+      "seed": 2026,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 558,
+      "regens": 25,
+      "missed": 6,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 29.8,
+        "2": 30.4,
+        "3": 33.4,
+        "4": 34.9,
+        "5": 42.3,
+        "6": 46.2,
+        "7": 50.8,
+        "8": 41.3
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 25.5,
+        "3": 22.7,
+        "4": 34,
+        "5": 25.4,
+        "6": 24.4,
+        "7": 35.8,
+        "8": 58.1
+      },
+      "earthImpacts": 14,
+      "repairs": 8,
+      "hullHits": 0,
+      "compromises": 12
+    },
+    {
+      "name": "equilibrado",
+      "width": 844,
+      "height": 390,
+      "seed": 1,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 605,
+      "regens": 32,
+      "missed": 7,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 32.6,
+        "2": 32.7,
+        "3": 37.9,
+        "4": 36.6,
+        "5": 44.1,
+        "6": 41.8,
+        "7": 50.1,
+        "8": 53.9
+      },
+      "bossSeconds": {
+        "1": 24,
+        "2": 16.9,
+        "3": 23.7,
+        "4": 49.1,
+        "5": 33.3,
+        "6": 24.4,
+        "7": 33.1,
+        "8": 71.2
+      },
+      "earthImpacts": 13,
+      "repairs": 6,
+      "hullHits": 0,
+      "compromises": 14
+    },
+    {
+      "name": "equilibrado",
+      "width": 844,
+      "height": 390,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 630,
+      "regens": 35,
+      "missed": 7,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.4,
+        "2": 32,
+        "3": 38.7,
+        "4": 36,
+        "5": 47.5,
+        "6": 54.4,
+        "7": 51.6,
+        "8": 50.7
+      },
+      "bossSeconds": {
+        "1": 24.1,
+        "2": 31.8,
+        "3": 23,
+        "4": 51.3,
+        "5": 33.1,
+        "6": 24.5,
+        "7": 33.1,
+        "8": 66.4
+      },
+      "earthImpacts": 15,
+      "repairs": 8,
+      "hullHits": 0,
+      "compromises": 13
+    },
+    {
+      "name": "equilibrado",
+      "width": 844,
+      "height": 390,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 611,
+      "regens": 33,
+      "missed": 6,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 33.9,
+        "2": 29.6,
+        "3": 35.6,
+        "4": 34.6,
+        "5": 49.4,
+        "6": 47.3,
+        "7": 49.3,
+        "8": 50.3
+      },
+      "bossSeconds": {
+        "1": 24.5,
+        "2": 25.2,
+        "3": 22.7,
+        "4": 49.2,
+        "5": 25.2,
+        "6": 24.6,
+        "7": 35.3,
+        "8": 74.7
+      },
+      "earthImpacts": 16,
+      "repairs": 10,
+      "hullHits": 0,
+      "compromises": 17
+    },
+    {
+      "name": "equilibrado",
+      "width": 844,
+      "height": 390,
+      "seed": 2026,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 611,
+      "regens": 33,
+      "missed": 7,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 33.8,
+        "2": 31.8,
+        "3": 33.8,
+        "4": 37.2,
+        "5": 54.7,
+        "6": 51.5,
+        "7": 54.5,
+        "8": 46
+      },
+      "bossSeconds": {
+        "1": 24.1,
+        "2": 25.2,
+        "3": 22.7,
+        "4": 42.7,
+        "5": 25.2,
+        "6": 24.5,
+        "7": 35.6,
+        "8": 67.6
+      },
+      "earthImpacts": 18,
+      "repairs": 11,
+      "hullHits": 0,
+      "compromises": 17
+    },
+    {
+      "name": "equilibrado",
+      "width": 760,
+      "height": 360,
+      "seed": 1,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 626,
+      "regens": 32,
+      "missed": 7,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 33.6,
+        "2": 34.8,
+        "3": 39.5,
+        "4": 36.4,
+        "5": 48.4,
+        "6": 49,
+        "7": 47.9,
+        "8": 50
+      },
+      "bossSeconds": {
+        "1": 24,
+        "2": 25.2,
+        "3": 32.1,
+        "4": 49.2,
+        "5": 25.2,
+        "6": 24.5,
+        "7": 34.9,
+        "8": 71.6
+      },
+      "earthImpacts": 16,
+      "repairs": 9,
+      "hullHits": 0,
+      "compromises": 11
+    },
+    {
+      "name": "equilibrado",
+      "width": 760,
+      "height": 360,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 612,
+      "regens": 32,
+      "missed": 7,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 32.8,
+        "2": 32.2,
+        "3": 37.3,
+        "4": 38,
+        "5": 45.8,
+        "6": 51.9,
+        "7": 58.2,
+        "8": 50.8
+      },
+      "bossSeconds": {
+        "1": 23.9,
+        "2": 23,
+        "3": 22.9,
+        "4": 40.3,
+        "5": 25.2,
+        "6": 24.7,
+        "7": 33.1,
+        "8": 71.6
+      },
+      "earthImpacts": 18,
+      "repairs": 11,
+      "hullHits": 0,
+      "compromises": 12
+    },
+    {
+      "name": "equilibrado",
+      "width": 760,
+      "height": 360,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 605,
+      "regens": 30,
+      "missed": 6,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 35,
+        "2": 29.9,
+        "3": 36.2,
+        "4": 38.8,
+        "5": 49.6,
+        "6": 47.5,
+        "7": 49.1,
+        "8": 49.6
+      },
+      "bossSeconds": {
+        "1": 23.9,
+        "2": 32.1,
+        "3": 23.8,
+        "4": 40.1,
+        "5": 25.2,
+        "6": 24.6,
+        "7": 35,
+        "8": 64.4
+      },
+      "earthImpacts": 18,
+      "repairs": 12,
+      "hullHits": 0,
+      "compromises": 16
+    },
+    {
+      "name": "equilibrado",
+      "width": 760,
+      "height": 360,
+      "seed": 2026,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 645,
+      "regens": 34,
+      "missed": 7,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 34.6,
+        "2": 32.2,
+        "3": 34.8,
+        "4": 35.8,
+        "5": 56.2,
+        "6": 55,
+        "7": 49.9,
+        "8": 47.2
+      },
+      "bossSeconds": {
+        "1": 23.9,
+        "2": 31.5,
+        "3": 23.3,
+        "4": 52,
+        "5": 33.1,
+        "6": 24.5,
+        "7": 36.8,
+        "8": 74.3
+      },
+      "earthImpacts": 15,
+      "repairs": 8,
+      "hullHits": 0,
+      "compromises": 14
+    },
+    {
+      "name": "meteors",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "strategy": "meteors"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 601,
+      "regens": 32,
+      "missed": 2,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.6,
+        "2": 30.4,
+        "3": 34.3,
+        "4": 34.1,
+        "5": 44.8,
+        "6": 47.3,
+        "7": 47.1,
+        "8": 43
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 32.2,
+        "3": 40.6,
+        "4": 31.1,
+        "5": 33.5,
+        "6": 24.4,
+        "7": 33.5,
+        "8": 70.6
+      },
+      "earthImpacts": 10,
+      "repairs": 8,
+      "hullHits": 0,
+      "compromises": 8
+    },
+    {
+      "name": "meteors",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "strategy": "meteors"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 591,
+      "regens": 30,
+      "missed": 2,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 32.2,
+        "3": 35.9,
+        "4": 36.4,
+        "5": 41.2,
+        "6": 46.4,
+        "7": 45.2,
+        "8": 48.2
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 34.5,
+        "3": 32.8,
+        "4": 31.1,
+        "5": 25.5,
+        "6": 24.7,
+        "7": 42.8,
+        "8": 58.7
+      },
+      "earthImpacts": 11,
+      "repairs": 9,
+      "hullHits": 0,
+      "compromises": 9
+    },
+    {
+      "name": "meteors",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {
+        "strategy": "meteors"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 573,
+      "regens": 31,
+      "missed": 4,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 30.2,
+        "3": 33.7,
+        "4": 33.7,
+        "5": 38.8,
+        "6": 45.9,
+        "7": 46.2,
+        "8": 43.9
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.6,
+        "3": 22.9,
+        "4": 34.2,
+        "5": 25.4,
+        "6": 24.5,
+        "7": 35.8,
+        "8": 70.9
+      },
+      "earthImpacts": 10,
+      "repairs": 6,
+      "hullHits": 0,
+      "compromises": 12
+    },
+    {
+      "name": "meteors",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "strategy": "meteors"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 571,
+      "regens": 28,
+      "missed": 4,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 29.7,
+        "3": 33.7,
+        "4": 36.8,
+        "5": 36.3,
+        "6": 46.5,
+        "7": 43.8,
+        "8": 48.4
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 34.5,
+        "3": 22.9,
+        "4": 34.3,
+        "5": 25.4,
+        "6": 24.5,
+        "7": 32.9,
+        "8": 66.1
+      },
+      "earthImpacts": 9,
+      "repairs": 5,
+      "hullHits": 0,
+      "compromises": 12
+    },
+    {
+      "name": "noise",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "strategy": "noise"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 601,
+      "regens": 32,
+      "missed": 2,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.6,
+        "2": 30.4,
+        "3": 34.3,
+        "4": 34.1,
+        "5": 44.8,
+        "6": 47.3,
+        "7": 47.1,
+        "8": 43
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 32.2,
+        "3": 40.6,
+        "4": 31.1,
+        "5": 33.5,
+        "6": 24.4,
+        "7": 33.5,
+        "8": 70.6
+      },
+      "earthImpacts": 11,
+      "repairs": 9,
+      "hullHits": 0,
+      "compromises": 8
+    },
+    {
+      "name": "noise",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "strategy": "noise"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 606,
+      "regens": 29,
+      "missed": 1,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 32.2,
+        "3": 33.9,
+        "4": 36.5,
+        "5": 39.1,
+        "6": 46.5,
+        "7": 44.1,
+        "8": 49.2
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 34.5,
+        "3": 40.6,
+        "4": 34.2,
+        "5": 33.8,
+        "6": 24.6,
+        "7": 42.8,
+        "8": 58.7
+      },
+      "earthImpacts": 8,
+      "repairs": 7,
+      "hullHits": 1,
+      "compromises": 16
+    },
+    {
+      "name": "noise",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {
+        "strategy": "noise"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 573,
+      "regens": 31,
+      "missed": 4,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 30.2,
+        "3": 33.6,
+        "4": 33.9,
+        "5": 39.8,
+        "6": 45.5,
+        "7": 46.2,
+        "8": 43.9
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.6,
+        "3": 22.8,
+        "4": 33.8,
+        "5": 25.5,
+        "6": 24.4,
+        "7": 35.8,
+        "8": 70.9
+      },
+      "earthImpacts": 11,
+      "repairs": 7,
+      "hullHits": 0,
+      "compromises": 11
+    },
+    {
+      "name": "noise",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "strategy": "noise"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 564,
+      "regens": 27,
+      "missed": 4,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 29.7,
+        "3": 33.7,
+        "4": 36.8,
+        "5": 37.1,
+        "6": 46.5,
+        "7": 43.8,
+        "8": 48.4
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 34.5,
+        "3": 22.9,
+        "4": 34.3,
+        "5": 25.5,
+        "6": 24.5,
+        "7": 32.9,
+        "8": 58.7
+      },
+      "earthImpacts": 10,
+      "repairs": 6,
+      "hullHits": 0,
+      "compromises": 11
+    },
+    {
+      "name": "leitura-300ms",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "decisionMs": 240,
+        "reactionMs": 300,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 504,
+      "regens": 28,
+      "missed": 12,
+      "lastPhase": 8,
+      "failure": {
+        "kind": "earth"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.8,
+        "2": 30.5,
+        "3": 36.2,
+        "4": 37,
+        "5": 46.5,
+        "6": 49,
+        "7": 47.7,
+        "8": 4.7
+      },
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 41.3,
+        "3": 23.5,
+        "4": 40.1,
+        "5": 34.2,
+        "6": 24.8,
+        "7": 33.5
+      },
+      "earthImpacts": 18,
+      "repairs": 6,
+      "hullHits": 1,
+      "compromises": 11
+    },
+    {
+      "name": "leitura-300ms",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "decisionMs": 240,
+        "reactionMs": 300,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 501,
+      "regens": 22,
+      "missed": 8,
+      "lastPhase": 7,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "B"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.7,
+        "2": 32,
+        "3": 33.9,
+        "4": 36.3,
+        "5": 40.5,
+        "6": 45.9,
+        "7": 47.5
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 52.4,
+        "3": 41,
+        "4": 34.1,
+        "5": 33.7,
+        "6": 45,
+        "7": 4
+      },
+      "earthImpacts": 13,
+      "repairs": 5,
+      "hullHits": 2,
+      "compromises": 12
+    },
+    {
+      "name": "leitura-300ms",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {
+        "decisionMs": 240,
+        "reactionMs": 300,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 600,
+      "regens": 30,
+      "missed": 2,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 30.4,
+        "3": 34.3,
+        "4": 35.3,
+        "5": 43.3,
+        "6": 45.6,
+        "7": 48.6,
+        "8": 43.1
+      },
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 23.5,
+        "3": 23,
+        "4": 31.5,
+        "5": 33.9,
+        "6": 34.1,
+        "7": 27.6,
+        "8": 90.9
+      },
+      "earthImpacts": 11,
+      "repairs": 9,
+      "hullHits": 0,
+      "compromises": 9
+    },
+    {
+      "name": "leitura-300ms",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "decisionMs": 240,
+        "reactionMs": 300,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 614,
+      "regens": 29,
+      "missed": 0,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 29.9,
+        "3": 33.1,
+        "4": 35.1,
+        "5": 44.5,
+        "6": 44.9,
+        "7": 47.5,
+        "8": 46.7
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 34.9,
+        "3": 22.6,
+        "4": 31.5,
+        "5": 33.3,
+        "6": 34.1,
+        "7": 35.2,
+        "8": 85.7
+      },
+      "earthImpacts": 6,
+      "repairs": 6,
+      "hullHits": 0,
+      "compromises": 14
+    },
+    {
+      "name": "leitura-500ms",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "decisionMs": 320,
+        "reactionMs": 500,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 190,
+      "regens": 7,
+      "missed": 4,
+      "lastPhase": 3,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "A"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 32.6,
+        "2": 32.1,
+        "3": 38
+      },
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 34.9,
+        "3": 29.2
+      },
+      "earthImpacts": 6,
+      "repairs": 2,
+      "hullHits": 3,
+      "compromises": 0
+    },
+    {
+      "name": "comando-perdido",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "reactionMs": 300,
+        "errorEvery": 13
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 585,
+      "regens": 34,
+      "missed": 11,
+      "lastPhase": 8,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "B"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.6,
+        "2": 30.8,
+        "3": 36,
+        "4": 34.4,
+        "5": 45.2,
+        "6": 46.1,
+        "7": 49.9,
+        "8": 40.9
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 34.3,
+        "3": 31.2,
+        "4": 34.3,
+        "5": 25.9,
+        "6": 24.7,
+        "7": 34.1,
+        "8": 62.9
+      },
+      "earthImpacts": 18,
+      "repairs": 7,
+      "hullHits": 3,
+      "compromises": 10
+    },
+    {
+      "name": "canal-com-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 601,
+      "regens": 32,
+      "missed": 2,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.6,
+        "2": 30.4,
+        "3": 34.3,
+        "4": 34.1,
+        "5": 44.8,
+        "6": 47.3,
+        "7": 47.1,
+        "8": 43
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 32.2,
+        "3": 40.6,
+        "4": 31.1,
+        "5": 33.5,
+        "6": 24.4,
+        "7": 33.5,
+        "8": 70.6
+      },
+      "earthImpacts": 10,
+      "repairs": 8,
+      "hullHits": 0,
+      "compromises": 8
+    },
+    {
+      "name": "canal-sem-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {},
+      "manageChannel": false,
+      "won": true,
+      "seconds": 651,
+      "regens": 0,
+      "missed": 5,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.6,
+        "2": 30.2,
+        "3": 33.6,
+        "4": 34.1,
+        "5": 44.5,
+        "6": 46.5,
+        "7": 47.3,
+        "8": 41.3
+      },
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 23.6,
+        "3": 32.5,
+        "4": 31.1,
+        "5": 25.2,
+        "6": 24.6,
+        "7": 27.1,
+        "8": 155.3
+      },
+      "earthImpacts": 14,
+      "repairs": 9,
+      "hullHits": 1,
+      "compromises": 55
+    },
+    {
+      "name": "inversao-com-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "reactionMs": 300,
+        "compensate": false
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 588,
+      "regens": 30,
+      "missed": 6,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.6,
+        "2": 30.4,
+        "3": 34.3,
+        "4": 34.1,
+        "5": 45.9,
+        "6": 46.5,
+        "7": 46.3,
+        "8": 41.3
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 32.2,
+        "3": 40.6,
+        "4": 31.1,
+        "5": 33.5,
+        "6": 24.6,
+        "7": 33.5,
+        "8": 58.7
+      },
+      "earthImpacts": 15,
+      "repairs": 9,
+      "hullHits": 0,
+      "compromises": 9
+    },
+    {
+      "name": "inversao-sem-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "reactionMs": 300,
+        "compensate": false
+      },
+      "manageChannel": false,
+      "won": false,
+      "seconds": 285,
+      "regens": 0,
+      "missed": 12,
+      "lastPhase": 5,
+      "failure": {
+        "kind": "earth"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.6,
+        "2": 30.2,
+        "3": 33.6,
+        "4": 34.1,
+        "5": 44.8
+      },
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 23.6,
+        "3": 32.5,
+        "4": 31.1
+      },
+      "earthImpacts": 13,
+      "repairs": 1,
+      "hullHits": 0,
+      "compromises": 9
+    },
+    {
+      "name": "leitura-500ms",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "decisionMs": 320,
+        "reactionMs": 500,
+        "input": "held"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 196,
+      "regens": 4,
+      "missed": 5,
+      "lastPhase": 3,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "A"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 33.2,
+        "2": 32.1,
+        "3": 35.9
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 42.9,
+        "3": 29.2
+      },
+      "earthImpacts": 5,
+      "repairs": 0,
+      "hullHits": 2,
+      "compromises": 1
+    },
+    {
+      "name": "comando-perdido",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "reactionMs": 300,
+        "errorEvery": 13
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 604,
+      "regens": 30,
+      "missed": 8,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 32.4,
+        "3": 36,
+        "4": 36.2,
+        "5": 40.4,
+        "6": 45.7,
+        "7": 44.6,
+        "8": 49.4
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 34,
+        "3": 40.1,
+        "4": 31.2,
+        "5": 25.8,
+        "6": 24.4,
+        "7": 35.3,
+        "8": 73.3
+      },
+      "earthImpacts": 17,
+      "repairs": 9,
+      "hullHits": 0,
+      "compromises": 15
+    },
+    {
+      "name": "canal-com-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {},
+      "manageChannel": true,
+      "won": true,
+      "seconds": 606,
+      "regens": 29,
+      "missed": 1,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 32.2,
+        "3": 33.9,
+        "4": 36.5,
+        "5": 39.1,
+        "6": 46.5,
+        "7": 44.1,
+        "8": 49.2
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 34.5,
+        "3": 40.6,
+        "4": 34.2,
+        "5": 33.8,
+        "6": 24.6,
+        "7": 42.8,
+        "8": 58.7
+      },
+      "earthImpacts": 8,
+      "repairs": 7,
+      "hullHits": 1,
+      "compromises": 16
+    },
+    {
+      "name": "canal-sem-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {},
+      "manageChannel": false,
+      "won": true,
+      "seconds": 631,
+      "regens": 0,
+      "missed": 7,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 32.2,
+        "3": 36.2,
+        "4": 36.8,
+        "5": 39.1,
+        "6": 43.7,
+        "7": 46.9,
+        "8": 46.8
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 23.3,
+        "3": 23.7,
+        "4": 31.2,
+        "5": 25.5,
+        "6": 24.5,
+        "7": 32.9,
+        "8": 132.7
+      },
+      "earthImpacts": 15,
+      "repairs": 8,
+      "hullHits": 1,
+      "compromises": 53
+    },
+    {
+      "name": "inversao-com-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "reactionMs": 300,
+        "compensate": false
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 508,
+      "regens": 23,
+      "missed": 12,
+      "lastPhase": 8,
+      "failure": {
+        "kind": "earth"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.9,
+        "2": 32.2,
+        "3": 33.9,
+        "4": 36.5,
+        "5": 39.1,
+        "6": 46.8,
+        "7": 46,
+        "8": 23.6
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 34.5,
+        "3": 40.6,
+        "4": 34.2,
+        "5": 25.7,
+        "6": 24.6,
+        "7": 35.6
+      },
+      "earthImpacts": 18,
+      "repairs": 6,
+      "hullHits": 1,
+      "compromises": 14
+    },
+    {
+      "name": "inversao-sem-R",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "reactionMs": 300,
+        "compensate": false
+      },
+      "manageChannel": false,
+      "won": false,
+      "seconds": 332,
+      "regens": 0,
+      "missed": 10,
+      "lastPhase": 5,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "B"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.9,
+        "2": 32.2,
+        "3": 36.1,
+        "4": 37.6,
+        "5": 41.1
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 42.5,
+        "3": 32.8,
+        "4": 31.2,
+        "5": 23.2
+      },
+      "earthImpacts": 12,
+      "repairs": 2,
+      "hullHits": 2,
+      "compromises": 15
+    },
+    {
+      "name": "imovel",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "idle": true
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 36,
+      "regens": 1,
+      "missed": 12,
+      "lastPhase": 1,
+      "failure": {
+        "kind": "earth"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 36.4
+      },
+      "bossSeconds": {},
+      "earthImpacts": 12,
+      "repairs": 0,
+      "hullHits": 0,
+      "compromises": 0
+    },
+    {
+      "name": "imovel",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "idle": true
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 36,
+      "regens": 1,
+      "missed": 12,
+      "lastPhase": 1,
+      "failure": {
+        "kind": "earth"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 36.3
+      },
+      "bossSeconds": {},
+      "earthImpacts": 12,
+      "repairs": 0,
+      "hullHits": 0,
+      "compromises": 0
+    },
+    {
+      "name": "ignora-canal",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "channel": "ignore"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 317,
+      "regens": 0,
+      "missed": 9,
+      "lastPhase": 5,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "B"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.6,
+        "2": 30.2,
+        "3": 33.7,
+        "4": 34.4,
+        "5": 44.8
+      },
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 32.3,
+        "3": 23.4,
+        "4": 31.1,
+        "5": 32.8
+      },
+      "earthImpacts": 11,
+      "repairs": 2,
+      "hullHits": 3,
+      "compromises": 15
+    },
+    {
+      "name": "renova-no-alerta",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "channel": "alert"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 390,
+      "regens": 16,
+      "missed": 1,
+      "lastPhase": 6,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "A"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.6,
+        "2": 30.6,
+        "3": 34.7,
+        "4": 34.2,
+        "5": 44,
+        "6": 50.4
+      },
+      "bossSeconds": {
+        "1": 23.2,
+        "2": 31.8,
+        "3": 32.8,
+        "4": 31.1,
+        "5": 34.2,
+        "6": 11.8
+      },
+      "earthImpacts": 4,
+      "repairs": 3,
+      "hullHits": 4,
+      "compromises": 2
+    },
+    {
+      "name": "ignora-emissores",
+      "width": 1600,
+      "height": 900,
+      "seed": 42,
+      "options": {
+        "strategy": "ignoreEmitters"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 608,
+      "regens": 32,
+      "missed": 5,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.6,
+        "2": 30.4,
+        "3": 35.9,
+        "4": 37.2,
+        "5": 43.8,
+        "6": 49.7,
+        "7": 52.1,
+        "8": 46.4
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 32.2,
+        "3": 40.4,
+        "4": 34.3,
+        "5": 25.5,
+        "6": 24.6,
+        "7": 42.6,
+        "8": 58.1
+      },
+      "earthImpacts": 13,
+      "repairs": 8,
+      "hullHits": 0,
+      "compromises": 11
+    },
+    {
+      "name": "ignora-canal",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "channel": "ignore"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 316,
+      "regens": 0,
+      "missed": 12,
+      "lastPhase": 5,
+      "failure": {
+        "kind": "earth"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.9,
+        "2": 32,
+        "3": 35.7,
+        "4": 35.5,
+        "5": 43.6
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 42.5,
+        "3": 40.1,
+        "4": 31.1
+      },
+      "earthImpacts": 15,
+      "repairs": 3,
+      "hullHits": 0,
+      "compromises": 15
+    },
+    {
+      "name": "renova-no-alerta",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "channel": "alert"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 441,
+      "regens": 20,
+      "missed": 7,
+      "lastPhase": 7,
+      "failure": {
+        "kind": "collision"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.9,
+        "2": 33.8,
+        "3": 35.1,
+        "4": 36.2,
+        "5": 37.6,
+        "6": 43.6,
+        "7": 33
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.9,
+        "3": 40.3,
+        "4": 34.1,
+        "5": 35.7,
+        "6": 24.6
+      },
+      "earthImpacts": 15,
+      "repairs": 8,
+      "hullHits": 2,
+      "compromises": 2
+    },
+    {
+      "name": "ignora-emissores",
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "options": {
+        "strategy": "ignoreEmitters"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 606,
+      "regens": 31,
+      "missed": 2,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 32.2,
+        "3": 35.9,
+        "4": 36.5,
+        "5": 38.8,
+        "6": 49.4,
+        "7": 47.6,
+        "8": 52.3
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 34.5,
+        "3": 32.8,
+        "4": 31.3,
+        "5": 33.7,
+        "6": 24.6,
+        "7": 42.5,
+        "8": 58.9
+      },
+      "earthImpacts": 10,
+      "repairs": 8,
+      "hullHits": 2,
+      "compromises": 16
+    },
+    {
+      "name": "ignora-canal",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {
+        "channel": "ignore"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 299,
+      "regens": 0,
+      "missed": 8,
+      "lastPhase": 5,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "B"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.9,
+        "2": 31.1,
+        "3": 34.1,
+        "4": 33.9,
+        "5": 46.3
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 32.3,
+        "3": 22.7,
+        "4": 40.2,
+        "5": 4
+      },
+      "earthImpacts": 11,
+      "repairs": 3,
+      "hullHits": 3,
+      "compromises": 16
+    },
+    {
+      "name": "renova-no-alerta",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {
+        "channel": "alert"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 537,
+      "regens": 28,
+      "missed": 9,
+      "lastPhase": 8,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "C"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.9,
+        "2": 30.8,
+        "3": 34.4,
+        "4": 34.2,
+        "5": 41.6,
+        "6": 48.4,
+        "7": 43.6,
+        "8": 42.4
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 17,
+        "3": 23,
+        "4": 31.5,
+        "5": 34.8,
+        "6": 24.6,
+        "7": 33.5,
+        "8": 41.9
+      },
+      "earthImpacts": 18,
+      "repairs": 9,
+      "hullHits": 3,
+      "compromises": 4
+    },
+    {
+      "name": "ignora-emissores",
+      "width": 390,
+      "height": 700,
+      "seed": 42,
+      "options": {
+        "strategy": "ignoreEmitters"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 568,
+      "regens": 28,
+      "missed": 1,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 30.2,
+        "3": 35.5,
+        "4": 33.9,
+        "5": 41.4,
+        "6": 49.9,
+        "7": 49.1,
+        "8": 47.1
+      },
+      "bossSeconds": {
+        "1": 23.1,
+        "2": 31.6,
+        "3": 22.7,
+        "4": 31,
+        "5": 25.4,
+        "6": 24.4,
+        "7": 35,
+        "8": 55.6
+      },
+      "earthImpacts": 9,
+      "repairs": 8,
+      "hullHits": 0,
+      "compromises": 11
+    },
+    {
+      "name": "ignora-canal",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "channel": "ignore"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 331,
+      "regens": 0,
+      "missed": 12,
+      "lastPhase": 6,
+      "failure": {
+        "kind": "earth"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.9,
+        "2": 29.7,
+        "3": 33.1,
+        "4": 35.1,
+        "5": 40.8,
+        "6": 34.5
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 23.4,
+        "3": 22.8,
+        "4": 31.4,
+        "5": 25.1
+      },
+      "earthImpacts": 16,
+      "repairs": 4,
+      "hullHits": 0,
+      "compromises": 17
+    },
+    {
+      "name": "renova-no-alerta",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "channel": "alert"
+      },
+      "manageChannel": true,
+      "won": false,
+      "seconds": 444,
+      "regens": 21,
+      "missed": 10,
+      "lastPhase": 7,
+      "failure": {
+        "kind": "bossSalvo",
+        "attack": "B"
+      },
+      "outcome": "defeat",
+      "waves": {
+        "1": 31.9,
+        "2": 29.7,
+        "3": 33.2,
+        "4": 37.3,
+        "5": 35.4,
+        "6": 40.4,
+        "7": 41.5
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 25.4,
+        "3": 22.9,
+        "4": 31.4,
+        "5": 43.3,
+        "6": 25,
+        "7": 23.2
+      },
+      "earthImpacts": 15,
+      "repairs": 5,
+      "hullHits": 4,
+      "compromises": 4
+    },
+    {
+      "name": "ignora-emissores",
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "options": {
+        "strategy": "ignoreEmitters"
+      },
+      "manageChannel": true,
+      "won": true,
+      "seconds": 584,
+      "regens": 29,
+      "missed": 5,
+      "lastPhase": 8,
+      "failure": null,
+      "outcome": "victory",
+      "waves": {
+        "1": 31.9,
+        "2": 29.7,
+        "3": 35.6,
+        "4": 37,
+        "5": 35.9,
+        "6": 46.8,
+        "7": 47.8,
+        "8": 55.6
+      },
+      "bossSeconds": {
+        "1": 23,
+        "2": 34.5,
+        "3": 22.9,
+        "4": 34.2,
+        "5": 25.8,
+        "6": 24.4,
+        "7": 35.4,
+        "8": 63.4
+      },
+      "earthImpacts": 14,
+      "repairs": 9,
+      "hullHits": 0,
+      "compromises": 14
+    }
+  ],
+  "pacingRegressions": [
+    {
+      "width": 1600,
+      "height": 900,
+      "seed": 519,
+      "seconds": 606,
+      "pacing": {
+        "noDecisionMs": 133950,
+        "emptyTravelMs": 8467,
+        "waitingForOpeningMs": 81467
+      }
+    },
+    {
+      "width": 1100,
+      "height": 800,
+      "seed": 519,
+      "seconds": 591,
+      "pacing": {
+        "noDecisionMs": 133850,
+        "emptyTravelMs": 9033,
+        "waitingForOpeningMs": 77000
+      }
+    },
+    {
+      "width": 390,
+      "height": 700,
+      "seed": 519,
+      "seconds": 564,
+      "pacing": {
+        "noDecisionMs": 125433,
+        "emptyTravelMs": 9317,
+        "waitingForOpeningMs": 69983
+      }
+    },
+    {
+      "width": 390,
+      "height": 700,
+      "seed": 2026,
+      "seconds": 558,
+      "pacing": {
+        "noDecisionMs": 121683,
+        "emptyTravelMs": 8350,
+        "waitingForOpeningMs": 65600
+      }
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "seed": 519,
+      "seconds": 611,
+      "pacing": {
+        "noDecisionMs": 130167,
+        "emptyTravelMs": 9883,
+        "waitingForOpeningMs": 77083
+      }
+    },
+    {
+      "width": 760,
+      "height": 360,
+      "seed": 519,
+      "seconds": 605,
+      "pacing": {
+        "noDecisionMs": 132983,
+        "emptyTravelMs": 8950,
+        "waitingForOpeningMs": 75367
+      }
+    }
+  ]
+}

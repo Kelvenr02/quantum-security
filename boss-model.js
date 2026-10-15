@@ -90,6 +90,7 @@ class QuantumBoss {
   get stabilizing(){return this.phase===5||(this.phase===8&&this.stage===1);}
   get bell(){return this.phase===4||(this.phase===8&&this.stage===0);}
   get syndrome(){return this.phase===6||(this.phase===8&&this.stage===2);}
+  get syndromeReading(){return this.syndrome?{code:['10','11','01'][this.selection],module:this.selection+1}:null;}
   get hadamard(){return this.phase===3||(this.phase===8&&this.stage===1);}
   get zone(){return [...this.zonePlans].reverse().find(z=>this.elapsed>=z.at)?.lanes||this.zonePlans[0].lanes;}
   get nextZone(){
@@ -147,7 +148,7 @@ class QuantumBoss {
       this.phase===2?(this.pressure?[[3000,4200],[4800,6700]]:[[3000,5800]]):
       this.syndrome&&this.pressure?[[2600,4250],[4850,6600]]:
       this.phase===1?(this.pressure?[[2550,3850],[4450,6500]]:[[2550,5900]]):[[2600,6500]];
-    this.pulses=[];
+    this.pulses=[];this.announcedPulses=new Set();
     // Antecipar B/C facilita a leitura sem mudar impactos, aberturas ou respiros.
     const add=(center,at,label)=>this.pulses.push({id:this.round+':'+label,label,at:this.roundStart+at,
       announceAt:this.roundStart+Math.max(0,at-2400),lanes:this.lanes.filter(l=>!this.corridor(center).includes(l)),fired:false});
@@ -176,7 +177,8 @@ class QuantumBoss {
       this.coherence=Math.max(0,Math.min(100,this.coherence+(this.inZone?34:this.pressure?-16:-14)*elapsed/1000));
     }
     for(const pulse of this.pulses){
-      if(pulse.tracking){pulse.lanes=this.corridor(player.lane);if(this.time>=pulse.lockAt){pulse.tracking=false;this.events.push({type:'lock'});}}
+      if(!this.announcedPulses.has(pulse.id)&&this.time>=pulse.announceAt){this.announcedPulses.add(pulse.id);this.events.push({type:'telegraph',tracking:!!pulse.tracking,lanes:pulse.lanes,label:pulse.label});}
+      if(pulse.tracking){pulse.lanes=this.corridor(player.lane);if(this.time>=pulse.lockAt){pulse.tracking=false;this.events.push({type:'lock',lanes:pulse.lanes});}}
       if(!pulse.fired&&this.time>=pulse.at){pulse.fired=true;this.events.push({type:'pulse',id:pulse.id,lanes:pulse.lanes,label:pulse.label});}
     }
     return this.drainEvents();
@@ -221,35 +223,65 @@ class QuantumBoss {
   }
   hint(qber) {
     if(this.complete)return 'CHEFE VENCIDO · aguarde a conclusão';
-    const mode=this.pressure?'PRESSÃO · ':this.enraged?'PRÓXIMO CICLO MAIS INTENSO · ':'';
-    if(this.phase===1)return qber>=8?'QBER alto: use R no RESPIRO para abrir o relé.':
-      this.hp[this.relay]<=0?'RELÉ VALIDADO · desvie e espere o próximo abrir.':
-      mode+'Mire no relé ATIVO · TRILHA '+(this.lane([1,5,3][this.relay])+1);
+    const nodes=this.targets(qber),active=nodes.filter(n=>n.open);
+    const lanes=list=>list.map(n=>n.lane+1).join('/');
+    const wait=this.windows.find(([from])=>from>this.elapsed)?.[0];
+    const opens=wait===undefined?'no próximo ciclo':'em '+((wait-this.elapsed)/1000).toFixed(1)+' s';
+    if(this.phase===1){
+      if(this.hp[this.relay]<=0){const next=this.hp.findIndex(h=>h>0);return 'RELÉ VALIDADO · próximo: R'+(next+1)+' na TRILHA '+(this.lane([1,5,3][next])+1)+'. Desvie até abrir.';}
+      if(qber>=8)return 'RELÉ BLOQUEADO · QBER precisa ficar abaixo de 8%. Use R no RESPIRO.';
+      return active.length?'ATAQUE R'+(this.relay+1)+' · TRILHA '+lanes(active):'RELÉ FECHADO · abre '+opens+'. Desvie das salvas.';
+    }
     if(this.phase===2){
       if(this.elapsed<650)return 'A mira segue você. Quando fixar, saia das faixas A.';
       if(this.elapsed<2400)return 'Mira fixa: saia de A. Depois, procure o ✓.';
       const real=this.targets(qber).find(n=>n.label==='✓');
-      return 'Mire no ✓ quando ATIVO · TRILHA '+(real.lane+1)+
+      return (active.length?'ATAQUE ✓':'✓ FECHADO · abre '+opens)+' · TRILHA '+(real.lane+1)+
         (this.pressure&&this.elapsed<4400?' · nova varredura em '+((4400-this.elapsed)/1000).toFixed(1)+' s':'');
     }
-    if(this.stabilizing)return (this.phase===8?'2/3 · ':'')+'COERÊNCIA '+Math.round(this.coherence)+'% · '+
-      ((this.inZone?this.coherence<90:this.coherence<65)?'recupere na faixa verde até perto de 100%.':'mire no '+(this.hadamard?'H':'C')+' ATIVO fora da faixa; depois volte.')+
-      (this.nextZone?' Muda em '+((this.nextZone.at-this.elapsed)/1000).toFixed(1)+' s.':'');
+    if(this.stabilizing){
+      const recover=this.coherence<50?'SEM DANO · volte à faixa RECUPERAR.':
+        this.inZone&&this.coherence<90?'RECUPERE até perto de 100%; depois saia para atacar.':
+        active.length?'ATAQUE '+(this.hadamard?'H':'C')+' · TRILHA '+lanes(active)+'. Depois volte para recuperar.':
+        'ALVO FECHADO · abre '+opens+'. Aproveite para recuperar.';
+      return (this.phase===8?'2/3 · ':'')+'COERÊNCIA '+Math.round(this.coherence)+'% · '+recover+
+        (this.nextZone?' Faixa muda em '+((this.nextZone.at-this.elapsed)/1000).toFixed(1)+' s.':'');
+    }
     if(this.syndrome){
       if(this.phase!==8&&this.hp[this.selection]<=0)return 'MÓDULO CORRIGIDO · desvie até aparecer outro +.';
-      return (this.phase===8?'3/3 · ':'')+'Mire no + quando ATIVO · TRILHA '+(this.lane([1,3,5][this.selection])+1)+
-        (this.nextSelection!==null?' · próximo +: TRILHA '+(this.lane([1,3,5][this.nextSelection])+1):'');
+      const capped=this.phase===8&&this.opening&&(this.slotHits[this.windowIndex]||0)>=3;
+      return (this.phase===8?'3/3 · ':'')+'LEITURA '+this.syndromeReading.code+' → M'+this.syndromeReading.module+' · '+(capped?'COTA ATINGIDA · aguarde nova abertura.':
+        active.length?'ATAQUE MÓDULO + · TRILHA '+lanes(active):'MÓDULO + FECHADO · TRILHA '+(this.lane([1,3,5][this.selection])+1)+' · abre '+opens)+
+        (this.nextSelection!==null?' · próximo MÓDULO +: TRILHA '+(this.lane([1,3,5][this.nextSelection])+1):'');
     }
     if(this.bell){
       const stage=this.phase===8?'1/3 · ':'';
       if(this.phase===8&&qber>=9)return stage+'QBER alto: use R no RESPIRO; precisa ficar abaixo de 9%.';
-      const target=this.targets(qber).find(n=>n.open);
-      return stage+(target?'Mire no BELL ATIVO · TRILHA '+(target.lane+1)+' · até '+(this.pressure?2:3)+' acertos.':
-        'BELL fechado: desvie de A/B e espere ATIVO.');
+      const target=active[0],remaining=(this.pressure?2:3)-(this.slotHits[this.windowIndex]||0);
+      const nextSide=(this.round+(wait===undefined||wait>=4400?1:0))%2,nextLane=this.lane([1,5][nextSide])+1;
+      return stage+(target?'ATAQUE BELL · TRILHA '+(target.lane+1)+' · RESTAM '+remaining+' ACERTO(S).':
+        this.opening&&remaining<=0?'COTA ATINGIDA · desvie; próximo BELL na TRILHA '+nextLane+'.':
+        'BELL FECHADO · abre '+opens+'. Próximo BELL: TRILHA '+nextLane+'.');
     }
-    if(this.phase===3)return this.nextTriadCenter!==null?'Os núcleos vão mudar: prepare as posições azuis.':
-      'Mire nos H ATIVOS: pontas primeiro, meio depois. Pegue a cápsula H.';
-    return mode+'Mire no − ATIVO · TRILHA '+(this.targets(qber)[0].lane+1)+' · desvie de A/B'+(this.pressure?'/C':'')+'.';
+    if(this.phase===3){
+      const movement=this.nextTriadCenter!==null?' · MUDANÇA: siga os contornos azuis':
+        ' · '+(this.triadLanes[2]-this.triadLanes[0]>2?'SEPARADOS':'PRÓXIMOS');
+      if(active.length)return 'ATAQUE H · TRILHA '+lanes(active)+movement;
+      if(this.hp[1]>0&&this.elapsed>=this.openingStart&&this.elapsed<4000)return 'MEIO FECHADO · abre em '+((4000-this.elapsed)/1000).toFixed(1)+' s'+movement;
+      return 'H VIVOS FECHADOS · '+(this.hp[1]<=0&&this.elapsed>=4500?'Pontas abrem no próximo ciclo.':'Abrem '+opens+'.')+' Desvie.'+movement;
+    }
+    return active.length?'ATAQUE − · TRILHA '+lanes(active)+' · continue desviando da próxima letra.':
+      'NÚCLEO − FECHADO · abre '+opens+'. Siga o corredor da próxima salva.';
+  }
+  targetStatus(node,qber=0) {
+    if(node.hp<=0)return 'FEITO';
+    if(node.label==='?')return 'AGUARDE';
+    if(node.decoy)return 'NÃO MIRAR';
+    if(node.open)return this.syndrome?'+ ATIVO':'ATIVO';
+    if(this.phase===1&&node.id!==this.relay)return 'AGUARDE';
+    if((this.phase===1&&qber>=8)||(this.phase===8&&this.stage===0&&qber>=9))return 'QBER ALTO';
+    if(this.stabilizing&&this.coherence<50)return 'C <50%';
+    return this.syndrome&&node.label==='+'?'MÓD +':'FECHADO';
   }
 }
 if(typeof module!=='undefined'&&module.exports)module.exports={QuantumBoss,quantumBosses};

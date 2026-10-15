@@ -12,7 +12,7 @@ permissions:
 jobs:
   gameplay:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 12
     steps:
       - name: Obter o projeto
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -20,32 +20,47 @@ jobs:
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24'
-      - name: Verificar a sintaxe dos scripts
-        run: |
-          for file in arena.js channel.js resources.js encounters.js metrics.js audio.js training.js story.js graphics.js phases.js boss-model.js bosses.js script.js quantum.js presentation.js tools/build-audio.cjs tools/analyze-balance.cjs tests/stationary.cjs tests/fairness.cjs tests/resources.cjs tests/encounters.cjs tests/channel.cjs tests/arena.cjs tests/gameplay.cjs tests/bosses.cjs tests/balance.cjs tests/training.cjs tests/story.cjs tests/audio.cjs; do
-            node --check "$file"
-          done
-      - name: Verificar as mecânicas e a campanha
-        run: node tests/gameplay.cjs
-      - name: Verificar arena ampliada, pilotagem e métricas
-        run: node tests/arena.cjs
-      - name: Verificar pressão do canal e renovação das chaves
-        run: node tests/channel.cjs
-      - name: Verificar recursos, feedback e retomada no chefe
-        run: node tests/resources.cjs
-      - name: Verificar encontros, novas ameaças e progressão
-        run: node tests/encounters.cjs
-      - name: Verificar o treinamento interativo
-        run: node tests/training.cjs
-      - name: Verificar os oito guardiões e pontos de retomada
-        run: node tests/bosses.cjs
-      - name: Concluir a campanha com pilotagem simulada
-        run: node tests/balance.cjs
-      - name: Verificar margens de reação, rotação e ritmo
-        run: node tests/fairness.cjs
-      - name: Impedir vitórias estacionárias em todos os chefes
-        run: node tests/stationary.cjs
-      - name: Verificar a abertura e a transição para a missão
-        run: node tests/story.cjs
-      - name: Verificar o áudio e os arquivos locais
-        run: node tests/audio.cjs
+      - name: Verificar sintaxe e todas as suítes Node
+        run: npm test
+      - name: Verificar as 576 estratégias estacionárias
+        run: npm run test:stationary
+      - name: Guardar relatórios Node
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: node-results
+          path: tmp/node-tests/
+          retention-days: 14
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Obter o projeto
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Preparar Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Instalar dependência de desenvolvimento fixada no lockfile
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Instalar Chromium e bibliotecas do sistema
+        run: npx playwright install --with-deps chromium
+      - name: Verificar interface e integração em Chromium
+        run: npm run test:browser
+      - name: Guardar resultados, capturas e traces de falhas
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: browser-results
+          path: |
+            tmp/browser-tests/
+            tmp/layout-check*/
+            tmp/feedback-check/
+            tmp/continuity-check/
+            tmp/progression-check/
+            tmp/science-check/
+            tmp/accessibility-check/
+            tmp/phase7-audio.json
+          retention-days: 14

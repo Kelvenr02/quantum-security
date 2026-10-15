@@ -1,5 +1,29 @@
 # Balanceamento final — revisão de 14/10/2026
 
+## Fase 5 — ciência sem mudar o combate
+
+Os experimentos locais e as pistas opcionais não alteram canal, recursos, dano ou sorteio de perigos. A leitura de síndrome mantém o módulo + e a seleção anterior. As 232 verificações passaram; seis campanhas repetiram os mesmos resultados da fase 4 (558–611 s, 25–33 usos de R, 1–6 impactos líquidos nessa regressão). A matriz completa de 58 cenários abaixo é da fase 4 e não foi refeita integralmente. Aprendizagem com pessoas continua sem validação. [Ciência e fontes](CIENCIA-NO-JOGO.md).
+
+## Fase 4 — ritmo, variantes e observação de iniciantes
+
+Os respiros entre encontros aumentaram de 1,8 para 3 s: a oportunidade de R agora exige sua duração real e 400 ms de margem. Duas ordens planejadas nas fases 3–8 mantêm a apresentação, o conjunto/HP de ameaças e os limites simultâneos. Velocidades, chefes e recompensas de combate foram preservados; medalhas opcionais não dão vantagens físicas.
+
+A matriz refeita de 58 cenários está em [FASE4-RESULTADOS.json](FASE4-RESULTADOS.json). O piloto equilibrado venceu 20/20 em 558–645 s, com 25–35 renovações e 1–7 impactos líquidos. Reação de 300 ms venceu 2/4; 500 ms perdeu 2/2 no chefe 3. Ignorar o canal perdeu 4/4, e renovar assim que entra em alerta perdeu 4/4. Não usar R ainda permite 2/2 vitórias ao evitar ruído e compensar inversões; isso não equivale a ignorar o canal. Ignorar emissores venceu 4/4 com possíveis acertos incidentais. São evidências de estratégias simuladas, não taxas de sucesso humano.
+
+219 verificações passaram, além dos testes reais de interface. Os indicadores de espera/deslocamento vazio servem para localizar trechos a observar; não justificam reduzir automaticamente a duração. A rodada de 5–8 pessoas está [preparada e pendente](TESTE-COM-INICIANTES.md). A fase 4 técnica está entregue; dificuldade percebida e diversão permanecem sem validação humana.
+
+Os registros seguintes são históricos, anteriores ao roteiro versão 2.
+
+## Fase 3 — continuidade sem alterar o balanceamento
+
+A fase 3 mantém parâmetros de combate e recursos dos pontos de entrada. Identidade e marca assistida são independentes da tentativa; continuar restaura a entrada da fase/chefe, sem acumular recompensas. Foram aprovadas 207 verificações Node, incluindo as seis campanhas de regressão com os mesmos tempos, usos de R e impactos registrados na fase 2, e uma campanha adicional validando cada salvamento. Os fluxos reais de reabertura/menu/auxílio foram conferidos em três resoluções. [Detalhes e limites](EVOLUCAO-POR-FASES.md).
+
+## Fases 1 e 2 — visibilidade, sorteio e instruções
+
+A interface baixa e os avisos foram corrigidos. A geometria dos núcleos foi adaptada às telas baixas, igualmente no desenho e nas colisões. O sorteio ambiental é separado do desenho e identificado como versão 1; sementes anteriores não descrevem o mesmo ambiente desta versão. A fase 2 acrescenta feedback contextual dos chefes, consulta pela pausa e uma escolha jogável de R no treino, preservando os parâmetros de combate da campanha.
+
+Registro da fase 2: 191 verificações Node, seis campanhas vencidas em 553–638 s (25–34 renovações, 4–7 impactos líquidos), 616 estados de layout no Chrome e três treinos completos/30 consultas de pausa no navegador. A regressão estacionária da fase 1 teve 576 confrontos, zero vitórias, 560 derrotas e 16 sem conclusão no limite de 180 s. Os testes são automatizados, sem avaliação humana; a matriz histórica de 58 cenários não foi refeita. [Escopo e fases restantes](EVOLUCAO-POR-FASES.md).
+
 ## Fechamento dos defeitos da auditoria
 
 A revisão atual corrigiu a vitória parada da Tríade, separou recuperação/ataque no chefe 5 e no estágio H final e reposicionou os suprimentos. As instruções acompanham as novas regras. As velocidades reduzidas, recuperação passiva e avisos adiantados do ajuste leve continuam ativos.

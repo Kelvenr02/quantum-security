@@ -160,7 +160,7 @@
 @keyframes characterBreath{50%{translate:0 -3px}}@keyframes reveal{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.hero-content{animation:reveal .8s ease-out both}.screen{animation:reveal .6s ease-out both}
 @media(min-width:1500px){.hero-content{margin-left:11%}}@media(max-height:850px) and (min-width:761px){.masthead{height:80px}.hero-content{margin-top:35px;margin-bottom:75px}#title h1{font-size:clamp(58px,5.8vw,82px);margin:18px 0 12px}.hero-subtitle{font-size:22px;margin:14px 0 12px}.hero-description{margin-bottom:22px}.mission-specs{margin-top:28px;padding-top:18px}.title-footer{height:50px!important}#intro{padding:16px}.screen{min-height:600px}#ui{padding-top:28px;padding-bottom:28px}.briefing-tag{margin-top:0;margin-bottom:16px}.threat-card{padding:13px 17px}.threat-icon{margin-bottom:10px}.control-grid{margin-top:17px;padding:13px 0}.science-details{margin:15px 0 18px}}
 @media(max-width:760px){#title{min-height:830px}.masthead{height:80px;margin:0 7%}.system-status{font-size:7px;letter-spacing:1px}.system-status .header-divider{margin:0 2px}.brand{font-size:13px}.brand-symbol{width:33px;height:33px;font-size:22px}.brand-small{font-size:6px}.hero-content{width:86%;margin:55px 7% 230px;max-width:none}.hero-content .eyebrow{font-size:8px;letter-spacing:1.5px}#title h1{font-size:clamp(58px,12vw,84px);letter-spacing:-3px;margin-top:24px}.hero-subtitle{font-size:23px}.hero-description{font-size:11px;color:#9db0bf}.hero-actions{gap:20px}#title #titleBtn{min-width:185px;padding:14px 18px;gap:23px;font-size:9px}#title .secondary-button{font-size:8px;gap:8px}.mission-specs{gap:24px;margin-top:30px;max-width:390px}.mission-specs span{font-size:6px;letter-spacing:.5px}.mission-specs b{font-size:20px}#title .orbit-label{top:72%;left:51%;font-size:6px;padding:7px 10px}#title .planet-coordinate{top:auto;bottom:95px;left:10%;font-size:7px}.planet-coordinate b{font-size:6px}#title .title-footer{height:60px;font-size:6px;line-height:1.8}.footer-code{max-width:110px;text-align:right}#intro{padding:14px}.screen{min-height:730px;border-radius:10px}.title h1{font-size:20px}.title .eyebrow{font-size:7px}.title p{font-size:7px}#intro .skip-briefing{top:15%;right:4%}.hud{top:24%;right:4%;font-size:7px}.window{top:27%;left:22%;width:58%;height:29%;border-width:5px;border-radius:45px 45px 8px 8px}.planet{width:100px;height:100px;left:37%;top:35%}.planet:after{width:125px;height:20px;top:35px;left:-17px;border-width:5px}.character{bottom:33%;scale:.83;transform:scale(.75)}.pilot{left:6%}.scientist{right:6%}.dialogue{bottom:3%;min-height:28%;padding:20px 17px 14px}.speaker{font-size:8px}#line{font-size:13px;max-width:100%;min-height:85px}.controls{gap:6px}.controls .hint{font-size:7px;gap:5px}#sceneCount{padding-left:8px;margin-left:3px}#intro #nextBtn{font-size:8px;padding:11px 13px}.overlay{padding:25px 20px}.overlay h2{font-size:20px}.cards{grid-template-columns:1fr 1fr;gap:10px}.card{padding:13px}.card h3{font-size:11px}.card p{font-size:10px}.overlay button{font-size:9px!important}.game-topline{padding:0 15px;height:50px}.game-sector{font-size:6px;letter-spacing:1px}.qhud,#hudDisplay{top:65px;padding:12px;backdrop-filter:blur(6px)}.qhud{left:10px;width:calc(50% - 15px)}#hudDisplay{right:10px;width:calc(50% - 15px)}.panel-label{font-size:6px;letter-spacing:.8px}.qhud h2{font-size:9px;margin:7px 0 10px}.qber-value b{font-size:23px}.qber-value span{font-size:6px}.qber-value small{font-size:6px}.score-display{font-size:25px}#keyStatus{font-size:6px;gap:4px}.hud-metrics{font-size:6px}.impact-display{margin-top:12px;font-size:6px;letter-spacing:.5px}.game-bottomline{gap:12px;font-size:6px;height:38px}.game-bottomline>span:last-child{display:none}#arcade h1{font-size:27px;letter-spacing:-1px}#ui{padding:35px 20px}#arcade p.desc{font-size:12px;margin-bottom:20px}.threat-card{padding:13px 10px}.threat-card h3{font-size:6px}.threat-card p{font-size:10px}.threat-card small{font-size:8px}.mission-goal{padding:15px}.mission-goal p{font-size:16px}.mission-goal small{font-size:9px}.control-grid{gap:5px}.control-grid b{font-size:8px}.control-grid small{display:block;margin-top:5px;text-align:center}.control-grid>div{justify-content:space-between}.protocol-note{font-size:9px}.briefing-tag{font-size:7px;letter-spacing:1px}.pause-card{padding:30px 20px;margin:15px}.game-bottomline kbd{font-size:7px;min-width:16px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(prefers-reduced-motion:reduce){html:not([data-effects="full"]) *,html:not([data-effects="full"]) *:before,html:not([data-effects="full"]) *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 .touch-controls{display:none}.science-details[open] summary span{transform:rotate(45deg)}#missionInstructions[hidden]{display:none}#pauseBtn:disabled{opacity:.3;pointer-events:none}
 @media(pointer:coarse){.touch-controls{position:absolute;bottom:43px;left:12px;right:12px;display:flex;justify-content:center;gap:10px;pointer-events:none}.touch-controls button{pointer-events:auto;touch-action:none;background:#0e2630b0!important;color:#a1decf!important;border-color:#6ce8cd45!important;box-shadow:none!important;padding:12px 20px!important;font-size:10px!important;backdrop-filter:blur(8px)}.game-bottomline{display:none}}
@@ -213,7 +213,7 @@
 @keyframes qubitPulse { 50% { box-shadow:0 0 36px #6ce8cd90; transform:scale(1.15); } }
 @media(max-width:900px) { .training-layout { gap:24px; grid-template-columns:minmax(230px,.9fr) minmax(0,1.2fr); }.training-route>span { font-size:9px; gap:5px; }.training-route { gap:6px; }.training-workbench { padding:15px; }.training-header a span { font-size:8px; }.connection-map { gap:0; }.station-node { padding:15px 8px; }.station-node>span { font-size:6px; }.link-path span { font-size:6px; }.qubit-lab { gap:10px; }.sample-row { gap:5px; }.training-flight-controls { gap:6px; } }
 @media(max-width:700px) { #intro { padding:17px 15px; }.training-header { gap:10px; padding-bottom:16px; }.training-header a span { font-size:7px; letter-spacing:1px; }.training-mode { display:none; }.training-route { margin-top:20px; gap:4px; }.training-route>span { flex-direction:column; font-size:8px; gap:7px; }.training-route b { width:23px; height:23px; }.training-layout { grid-template-columns:1fr; gap:22px; margin-top:26px; min-height:0; }.training-brief h1 { font-size:29px; margin:12px 0; }.training-brief>p { font-size:13px; margin-bottom:15px; }.training-guide { padding:13px; }.training-guide p { font-size:12px; }.training-science { margin-top:16px; }.training-science p { font-size:12px; margin-top:8px; line-height:1.65; }.training-workbench { padding:15px; }.training-feedback { font-size:11px; min-height:36px; margin-top:14px; }.training-footer { align-items:flex-start; flex-direction:column; gap:13px; }.training-footer>div { width:100%; }#intro #trainingNext { flex:1; }.sample-row { grid-template-columns:38px repeat(8,minmax(0,1fr)); gap:4px; }.sample-row span { height:31px; font-size:13px; }.key-heading { margin:12px 0 22px; font-size:9px; }.key-heading b { font-size:8px; }.qubit-lab { gap:10px; }.bit-console,.qubit-console { padding:17px 9px; }.bit-value { font-size:65px; }.qubit-lab .panel-label { font-size:6px; letter-spacing:.5px; }.training-flight-hud { font-size:8px; }.training-flight-hud>span:nth-child(2) { font-size:6px; }.training-flight-controls { gap:6px; }#intro .training-flight-controls button { padding:13px 7px; }#intro .training-flight-controls button small { font-size:8px; margin-left:3px; }#intro .training-noise-controls button { font-size:9px; }.training-mission-goal b { font-size:22px; }.training-mission-goal span { font-size:8px; } }
-@media(prefers-reduced-motion:reduce) { .qubit-orbit.superposed>i { animation:none; } }
+@media(prefers-reduced-motion:reduce) { html:not([data-effects="full"]) .qubit-orbit.superposed>i { animation:none; } }
 
 @media(max-width:700px) {
  .training-layout { gap:15px; }
@@ -374,3 +374,121 @@
 #arcade #btnDevRevive:not(:disabled):hover { background:#c33746; }
 #btnDevRevive[hidden] { display:none!important; }
 #ui:has(#btnRetry:not([hidden])) #btnDevRevive { order:5; }
+
+/* Paisagem baixa: três painéis compactos, sem uma segunda faixa sobre a nave. */
+@media(max-height:620px) and (min-aspect-ratio:1/1) {
+ #screen { --side-hud:clamp(86px,24vw,176px); }
+ .game-topline { height:24px; padding:0 8px; }.game-brand { font-size:16px; }
+ #arcade #pauseBtn { padding:3px 7px; font-size:9px; }
+ .qhud,#hudDisplay { top:28px; width:var(--side-hud); min-height:0; padding:4px 6px; }
+ .qhud { left:6px; }#hudDisplay { right:6px; }
+ .qhud h2,.qhud>.panel-label,#hudDisplay>.panel-label,.qber-value small,#qberBar,.charge-track,.hud-metrics { display:none; }
+ .qber-value b { font-size:17px; line-height:20px; }.qber-value { font-size:8px; }
+ #keyStatus { height:auto; font-size:9px; line-height:12px; }#keyStatus kbd { font-size:8px; padding:1px 3px; }
+ #screen #warning { font-size:9px!important; line-height:12px!important; margin:0; }
+ .score-display { font-size:17px; line-height:20px; margin:0; }
+ .hud-metrics { display:flex; position:absolute; top:7px; right:6px; }
+ .hud-metrics>span { font-size:0; }.hud-metrics>span b { font-size:9px; margin:0; }.hud-metrics>span small { font-size:8px; }
+ .hud-metrics>span:last-child { display:none; }
+ .impact-display { font-size:8px; line-height:12px; margin:0; padding:0; }
+ .resource-strip { font-size:8px; line-height:12px; margin:0; }.resource-strip .shield-status { font-size:8px; }
+ .phase-hud,.boss-hud { top:28px; left:calc(var(--side-hud) + 12px); right:calc(var(--side-hud) + 12px); min-height:0; padding:4px 6px; gap:2px 6px; }
+ .phase-hud b,.boss-hud b { font-size:10px; line-height:12px; }
+ .phase-hud>span,.boss-hud>span { font-size:8px; }
+ .phase-hud>small,.boss-hud p,.boss-hud #bossHint,.boss-hud .boss-threat { font-size:8px; line-height:10px; min-height:0; }
+ .phase-hud>div:first-child,.boss-hud>div:first-child { gap:0; min-width:0; }
+ .phase-track,.boss-track { height:3px; }
+ .tactical-feedback { font-size:8px; line-height:10px; }
+ .game-bottomline { font-size:7px; gap:12px; }
+}
+@media(max-height:420px) and (min-aspect-ratio:1/1) {
+ #bossHint,#quantumStatus { position:fixed; left:12px; right:12px; bottom:64px; padding:3px 6px; border-radius:4px; background:#091522e8; text-align:center; }
+ .boss-hud #bossHint,.phase-hud #quantumStatus { font-size:9px; line-height:12px; }
+}
+
+/* Consulta curta durante a pausa; nenhuma instrução avança o confronto. */
+#pauseOverlay { overflow:auto; padding:16px; box-sizing:border-box; }
+.pause-card { box-sizing:border-box; width:min(620px,100%); margin:auto; padding:24px; }
+.pause-card h2 { font-size:25px; margin:6px 0 10px; }
+.pause-guide { text-align:left; width:100%; border-top:1px solid var(--line); padding:12px 0 18px; }
+.pause-guide h3 { color:#d9e7ed; font-size:16px; margin:0 0 8px; }
+.pause-card .pause-guide p { margin:0 0 12px; line-height:1.5; }
+.pause-guide ol { padding-left:22px; margin:0 0 14px; color:#c6d8e1; font-size:13px; line-height:1.55; }
+.pause-guide li+li { margin-top:8px; }
+.pause-guide small { display:block; color:#91b3c3; font-size:11px; line-height:1.5; }
+.pause-card #pauseGuideState { color:#a4dfd1; font-size:12px; }
+.boss-track.has-coherence { height:8px; background:transparent; overflow:visible; }
+.boss-track.has-coherence>#bossFill { height:3px; }
+#bossCoherence { display:block; width:100%; height:4px; margin-top:1px; appearance:none; border:0; background:#213444; }
+#bossCoherence::-webkit-meter-bar { background:#213444; border:0; border-radius:2px; }
+#bossCoherence::-webkit-meter-optimum-value,#bossCoherence::-webkit-meter-suboptimum-value { background:#6ce8cd; }
+#bossCoherence::-webkit-meter-even-less-good-value { background:#ef7976; }
+#bossCoherence::-moz-meter-bar { background:#6ce8cd; }
+#bossCoherence[data-low="true"]::-moz-meter-bar { background:#ef7976; }
+#bossCoherence[hidden] { display:none; }
+.hero-actions { flex-wrap:wrap; }
+#title #titleContinue { background:#6ce8cd; color:#09242c; padding:15px 20px; font:600 11px var(--mono); border:1px solid #6ce8cd; border-radius:5px; }
+#titleContinue[hidden],#continueSummary[hidden],#saveNotice[hidden],#campaignBadge[hidden],#campaignResult[hidden] { display:none!important; }
+.continue-summary,.save-notice { max-width:500px; font:12px/1.6 var(--font); color:#9bc9ca; margin:12px 0; }
+.save-notice { color:#e6c491; }
+.journey-badge { font:9px var(--mono); color:#f3acaa; border:1px solid #ef797655; border-radius:4px; padding:2px 5px; }
+.game-topline:has(.journey-badge:not([hidden])) .game-sector { display:none; }
+.campaign-result { font:11px/1.6 var(--mono); color:#e6c491; margin:0 0 14px; }
+.pause-save-status { font:11px/1.5 var(--font); color:#a5b9c6; margin:0 0 12px; }
+#pauseMenu { font-size:10px; margin-bottom:12px; background:transparent; color:#accbd2; border-color:#47636b; }
+.quick-help { position:fixed; inset:0; z-index:50; background:#06111beF; backdrop-filter:blur(10px); overflow:auto; padding:20px; box-sizing:border-box; display:grid; }
+.quick-help[hidden] { display:none; }
+.quick-help-card { box-sizing:border-box; width:min(640px,100%); margin:auto; padding:25px; border:1px solid #4c6f7a; background:#102131; border-radius:12px; }
+.quick-help h2 { font-size:25px; margin:0 0 18px; }
+.quick-help ol { padding-left:22px; font:14px/1.65 var(--font); color:#c1d7e0; }
+.quick-help li+li { margin-top:12px; }.quick-help p { font:13px/1.6 var(--font); color:#9fb9c6; }
+#helpClose { margin-top:12px; background:#6ce8cd; color:#09242c; padding:12px 18px; font:600 11px var(--mono); border:0; border-radius:5px; }
+.optional-goal { color:#a8d7c5!important; font-size:12px!important; line-height:1.5; }
+.phase-debrief { margin:8px 0; padding:9px 12px; border:1px solid #6ce8cd33; border-radius:6px; color:#a8c4cc; text-align:left; }
+.phase-debrief summary { cursor:pointer; font:11px var(--mono); }.phase-debrief p { font:12px/1.6 var(--font); margin:10px 0 0; }
+.phase-final-report { color:#a8d7c5; font:12px/1.6 var(--font); }
+#phaseDebrief[hidden],#phaseOptional[hidden],#phaseFinalReport[hidden] { display:none; }
+.science-consult { width:100%; text-align:left; border-top:1px solid #6ce8cd33; margin:10px 0 16px; padding-top:10px; }
+.science-consult>summary { cursor:pointer; font:11px/1.5 var(--mono); color:#a5d9cf; }
+.science-lab { margin-top:12px; padding:12px; background:#0a1925; border:1px solid #456373; border-radius:7px; font:12px/1.55 var(--font); color:#bbd2db; overflow-wrap:anywhere; }
+.science-lab label { display:block; font:10px/1.6 var(--mono); }
+.science-lab select { display:block; width:100%; margin-top:5px; padding:8px; color:#d3e9eb; background:#142d3a; border:1px solid #61828a; border-radius:4px; font:12px var(--font); }
+#arcade .science-lab p { font:12px/1.6 var(--font); margin:10px 0; color:#aec9d3; }
+.science-circuit { font:13px/1.8 var(--mono); padding:10px; border:1px solid #5b8a854d; border-radius:5px; margin:10px 0; color:#b6e9dd; }
+.science-bars>div { display:grid; grid-template-columns:45px 1fr 40px; gap:8px; align-items:center; font:12px var(--mono); margin:5px 0; }
+.science-bars meter { width:100%; height:12px; }.science-bars b { font-weight:400; text-align:right; }
+.science-actions { display:flex; flex-wrap:wrap; gap:7px; margin:12px 0; }.science-actions>span { flex-basis:100%; font-size:11px; }
+#arcade .science-actions button { min-width:0; margin:0; padding:9px 10px; font:10px var(--mono); background:#173c42; color:#bcf2e2; border:1px solid #68aa9e; border-radius:4px; }
+.science-samples { display:grid; gap:6px; padding:10px; background:#142b36; border-radius:5px; font:12px var(--mono); }
+.science-flow { padding:8px; border:1px solid #91c7ff44; border-radius:5px; font-size:12px; }
+#arcade .science-lab .science-result { color:#b6e9dd; border-left:2px solid #6ce8cd; padding-left:8px; }
+#arcade .science-lab .science-limit { font-size:11px; color:#a7b5ce; }
+.science-lab small { display:block; font:10px/1.5 var(--font); color:#92aebe; }
+.science-option { margin-top:10px; display:flex!important; align-items:flex-start; gap:8px; }.science-option input { flex:0 0 auto; margin-top:3px; }
+[data-priority="-1"] { color:#94c7bd!important; }
+@media(max-height:420px) { .pause-card { padding:16px; }.pause-card h2 { font-size:20px; }.pause-guide { padding:8px 0 12px; }.pause-guide ol { font-size:12px; } }
+.access-overlay{position:fixed;inset:0;z-index:1000;background:#020813ed;display:grid;place-items:center;padding:18px;overflow:auto}
+.access-overlay[hidden]{display:none}
+.access-card{width:min(100%,540px);max-height:calc(100dvh - 36px);overflow:auto;background:#102333;border:1px solid #7fb8b6;border-radius:12px;padding:24px;color:#e2f1f6;font:15px/1.6 var(--font)}
+.access-card h2{font-size:25px;margin:0 0 18px}.access-card label{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:12px 0}.access-card input{width:22px;height:22px}.access-card select{min-width:90px;max-width:75%;padding:9px;background:#061621;color:#edfffa;border:1px solid #829eac;border-radius:5px;font:inherit}.access-card p,.access-card small{font-size:13px;color:#bacfd8}.access-card fieldset{border:1px solid #7799a5;padding:8px 14px}.access-card button{padding:12px 16px;margin:8px 10px 12px 0;background:#99efda;color:#09251f;border:0;border-radius:5px;font-weight:700}.access-card small{display:block}
+:is(button,a,input,select,summary,canvas):focus-visible{outline:3px solid #ffe19c!important;outline-offset:3px}
+.hero-actions{flex-wrap:wrap}.inversion-cue{font:10px/1.5 var(--mono);color:#ffe19c;border:1px solid currentColor;padding:3px;margin:3px 0}
+html[data-effects="reduced"] *,html[data-effects="reduced"] *::before,html[data-effects="reduced"] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html[data-reading="large"] :is(.training-brief p,.story-conversation p,.training-feedback,.phase-card p,.boss-instructions li,.pause-guide p,.pause-guide li,.quick-help p,.quick-help li,.science-lab p,#ui .desc,#ui .science-details p){font-size:17px!important;line-height:1.65!important}
+html[data-reading="large"] :is(.phase-card small,.pause-card small,.science-lab small,.hint,.training-science p){font-size:14px!important;line-height:1.5!important}
+html[data-reading="large"] :is(#bossHint,#bossThreat,#bossFeedback,#quantumStatus,#phaseFeedback){font-size:13px!important;line-height:1.35!important}
+html[data-reading="large"] :is(#linkStatus,#keyStatus,.hud-metrics,.impact-display,.resource-strip){font-size:12px!important;line-height:1.4!important}
+html[data-reading="large"] :is(.panel-label,#phaseName,#bossName,#bossHealth){font-size:11px!important;line-height:1.3!important}
+@media(max-height:420px){html[data-reading="large"] :is(#bossHint,#bossThreat,#bossFeedback,#quantumStatus,#phaseFeedback){font-size:11px!important}html[data-reading="large"] :is(#linkStatus,#keyStatus,.hud-metrics,.impact-display,.resource-strip,.panel-label,#phaseName,#bossName,#bossHealth){font-size:10px!important;line-height:1.2!important}.inversion-cue{font-size:9px;line-height:1.1}}
+@media(max-height:620px) and (orientation:portrait){
+ html[data-reading="large"] :is(.qhud,#hudDisplay){padding:6px 9px;min-height:90px}
+ html[data-reading="large"] .qhud h2{margin:2px 0}
+ html[data-reading="large"] :is(.qber-value b,.score-display){font-size:23px;line-height:26px;margin:0}
+ html[data-reading="large"] .impact-display{margin-top:3px;padding:0}
+ html[data-reading="large"] :is(#bossHint,#bossThreat,#bossFeedback,#quantumStatus,#phaseFeedback){font-size:12px!important;line-height:1.25!important}
+ html[data-reading="large"] :is(.boss-hud,.phase-hud){padding:6px 9px;gap:3px 7px}
+}
+@media(max-height:380px) and (orientation:landscape){
+ html[data-reading="large"] :is(.boss-hud,.phase-hud){padding:3px 6px;gap:2px 5px}
+ html[data-reading="large"] :is(#bossThreat,#bossFeedback,#phaseFeedback){font-size:10px!important;line-height:1.15!important}
+}

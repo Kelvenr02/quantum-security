@@ -12,20 +12,20 @@ const tutorial = (() => {
     { name: 'O canal', title: 'Uma chave. Dois lados seguros.', story: 'Quantum Security · Central de gestão e monitoramento das chaves.',
       lines: [['Tenente', 'E como vamos perceber uma tentativa de roubar a chave?'], ['Íris', 'Espionar as partículas pode alterar suas correlações. Verificamos os erros pelo QBER, a taxa de erro dos bits comparados. Ruído e decoerência — perda de propriedades quânticas pela interação com o ambiente — também geram erros. Um alerta não prova espionagem.'], ['Íris', 'O Quantum Security monitora o canal e gerencia as chaves produzidas pelos equipamentos QKD. Se as verificações falham, descartamos aquela chave. A chave validada protege seus comandos, que continuam viajando pelo rádio.']],
       task: 'Ative o Quantum Security para liberar a conexão com o Q-07.', science: '', next: 'TESTAR A NAVE →' },
-    { name: 'Decolagem', title: 'A última checagem é sua.', story: 'Simulador conectado · Um único alvo antes de assumir a defesa real.',
-      lines: [['Íris', 'Mova nas nove trilhas com ← → ou A / D; segure para continuar. A nave atira sozinha. Desvie das nuvens roxas e dos pulsos espiões amarelos: eles elevam o QBER e não podem ser destruídos.'], ['Tenente', 'E, se o canal piorar, uso R para renovar a chave. Preciso escolher um momento seguro.'], ['Íris', 'Exato: por 2 s você fica parado e sem disparar; a recarga leva 10 s. No protocolo fictício do jogo, passar de 11% de QBER inverte os controles por até 4 s; R pode interromper se estiver disponível. Intercepte o alvo e teste uma renovação.']],
+    { name: 'Decolagem', title: 'A última checagem é sua.', story: 'Simulador conectado · Intercepte, desvie e renove antes de assumir a defesa.',
+      lines: [['Íris', 'Mova nas nove trilhas com ← → ou A / D; segure para continuar. A nave atira sozinha. Desvie das nuvens roxas e dos pulsos espiões amarelos: eles elevam o QBER e não podem ser destruídos.'], ['Tenente', 'E, se o canal piorar, uso R para renovar a chave. Preciso escolher um momento seguro.'], ['Íris', 'Sim: R prende a nave e suspende os tiros por 2 s; recarrega em 10 s e não protege de ataques. Intercepte o alvo, saia das faixas A e renove numa posição livre ou no RESPIRO. Acima de 11% de QBER, os comandos invertem por até 4 s; R disponível pode interromper.']],
       task: '', science: 'Na missão: três encontros por fase, carga de 1.000 e 8 guardiões. O escudo absorve um golpe; outro sem escudo encerra a defesa, assim como 12 impactos na Terra. Esc pausa. Após uma derrota, você pode repetir a fase.', next: 'INICIAR DEFESA →' }
   ];
   const flightStep = steps.length - 1;
   let step = 0, frame = 0, last = 0, simulation = null;
-  let activated = false, measured = null, feedback = '', backdrop = null, manualPause = false;
-  function say(text) { feedback = text; el('trainingFeedback').textContent = text; }
+  let activated = false, measured = null, feedback = '', backdrop = null, manualPause = false, flightFocused=false;
+  function say(text) { feedback = text; el('trainingFeedback').textContent = controlText(text); }
   function completed() { return step === 0 || (step === 1 ? measured !== null : step === 2 ? activated : !!simulation?.complete); }
   function sync() {
     const complete = completed();
     el('trainingNext').disabled = !complete || manualPause;
     el('trainingNext').textContent = steps[step].next;
-    el('trainingObjective').textContent = simulation ? simulation.objective : steps[step].task;
+    el('trainingObjective').textContent = controlText(simulation ? simulation.objective : steps[step].task);
     el('trainingProgress').value = step + (complete ? 1 : 0);
     el('trainingPause').hidden = step !== flightStep;
     el('trainingPause').textContent = manualPause ? '▶ Retomar' : 'Ⅱ Pausar';
@@ -33,7 +33,7 @@ const tutorial = (() => {
     if (simulation) {
       el('trainingQber').textContent = simulation.qber.toFixed(1) + '%';
       el('trainingScore').textContent = simulation.score + ' pts';
-      el('trainingChannel').textContent = simulation.regenerating ? 'RENOVANDO CHAVE · ' + ((simulation.regenEnd - simulation.time) / 1000).toFixed(1) + ' s' : simulation.qber > 0 ? 'RUÍDO DETECTADO' : 'CANAL SEGURO';
+      el('trainingChannel').textContent = simulation.regenerating ? 'RENOVANDO · ' + ((simulation.regenEnd - simulation.time) / 1000).toFixed(1) + ' s' : simulation.pulse&&!simulation.pulse.fired?'A FIXA · '+Math.max(0,(simulation.pulse.at-simulation.time)/1000).toFixed(1)+' s':simulation.qber>0?'RESPIRO · '+keyLabel('regen')+' PRONTA':'CANAL SEGURO';
       el('trainingRegen').disabled = simulation.score === 0 || simulation.regenerating || manualPause || complete;
       if (simulation.message !== feedback) say(simulation.message);
     }
@@ -48,7 +48,7 @@ const tutorial = (() => {
       const turn = document.createElement('div');
       turn.className = 'story-turn' + (speaker === 'Tenente' ? ' story-pilot' : '');
       const name = document.createElement('b'), line = document.createElement('p');
-      name.textContent = speaker === 'Tenente' ? 'TENENTE / VOCÊ' : 'DR. ÍRIS / COMANDO'; line.textContent = text;
+      name.textContent = speaker === 'Tenente' ? 'TENENTE / VOCÊ' : 'DR. ÍRIS / COMANDO'; line.textContent = controlText(text);
       turn.append(name, line); conversation.append(turn);
     }
     el('trainingProgress').max = steps.length;
@@ -65,10 +65,11 @@ const tutorial = (() => {
     sync();
   }
   function enter(index) {
-    step = index; last = 0; manualPause = false; feedback = ''; activated = false; measured = null;
+    step = index; last = 0; manualPause = false; feedback = ''; activated = false; measured = null;flightFocused=false;
     gameAudio.stopEffects(); gameAudio.setPaused('training', false); gameAudio.setScene(index === flightStep ? 'tutorial' : 'story');
     simulation = index === flightStep ? new TrainingSimulation((name, options) => {
       if (name === 'regenStart') gameAudio.startLoop('regen');
+      else if(name==='regenCancel'){gameAudio.stopLoop('regen');gameAudio.sfx('shieldHit');}
       else { if (name === 'regenReady') gameAudio.stopLoop('regen'); gameAudio.sfx(name, options); }
     }) : null;
     el('trainingPauseNotice').hidden = true;
@@ -96,6 +97,9 @@ const tutorial = (() => {
     if (!backdrop) backdrop = makeSpaceBackdrop(w, 400);
     g.drawImage(backdrop, 0, 0, w, 400); g.strokeStyle = '#7895a825'; g.lineWidth = 1;
     for (let i = 0; i < simulation.lanes; i++) { g.beginPath(); g.moveTo(i * laneW, 35); g.lineTo(i * laneW, 360); g.stroke(); g.fillStyle = '#7d99ac'; g.font = '11px Consolas, monospace'; g.textAlign = 'center'; g.fillText(String(i + 1), (i + .5) * laneW, 25); }
+    if(simulation.pulse&&!simulation.pulse.fired){
+      for(const lane of simulation.pulse.lanes){g.fillStyle='#ef79762a';g.fillRect(lane*laneW+3,45,laneW-6,315);g.strokeStyle='#ef7976';g.strokeRect(lane*laneW+3,45,laneW-6,315);g.fillStyle='#efaaa2';g.font='12px Consolas,monospace';g.fillText('A FIXA',(lane+.5)*laneW,65);}
+    }
     g.fillStyle = '#163746'; g.fillRect(0, 365, w, 35); g.strokeStyle = '#83ddcb'; g.beginPath(); g.moveTo(0, 365); g.lineTo(w, 365); g.stroke();
     g.fillStyle = '#b4cecc'; g.font = '10px Consolas, monospace'; g.fillText('TERRA / SIMULAÇÃO · TENTATIVAS LIVRES', w / 2, 388);
     for (const laser of simulation.lasers) { g.fillStyle = '#95ffe2'; g.fillRect((laser.lane + .5) * laneW - 2, laser.y - 10, 4, 20); }
@@ -115,6 +119,9 @@ const tutorial = (() => {
   }
   function pause() { if (!introActive || !simulation) return; manualPause = !manualPause; simulation.clearInput();simulation.paused = manualPause; gameAudio.setPaused('training', manualPause); last = 0; el('trainingPauseNotice').hidden = !manualPause; sync(); }
   function move(direction) { if (simulation && introActive) { simulation.move(direction); sync(); draw(); } }
+  function revealFlight(){
+    if(!flightFocused&&!manualPause&&window.innerWidth<=700){el('trainingFlight').scrollIntoView({block:'center'});flightFocused=true;}
+  }
   function next() { if (!introActive || !completed() || manualPause) return; if (step < steps.length - 1) { enter(step + 1); gameAudio.sfx('ui'); } else { stop(); startDefense(); startGame(); } }
   function stop() { simulation?.clearInput();introActive = false; cancelAnimationFrame(frame); frame = 0; last = 0; gameAudio.stopEffects(); gameAudio.setPaused('training', false); }
   function start() {
@@ -140,17 +147,20 @@ const tutorial = (() => {
   }
   el('trainingRegen').addEventListener('click', () => { if (simulation) { simulation.regenerate(); sync(); } });
   document.addEventListener('keydown', event => {
+    if(typeof settingsOpen!=='undefined'&&settingsOpen)return;
+    if(event.ctrlKey||event.metaKey||event.altKey||event.target.closest('input,select,textarea'))return;
+    if(typeof quickGuideOpen!=='undefined'&&quickGuideOpen)return;
     if (!introActive) { if (event.code === 'Enter' && el('title').style.display !== 'none' && !event.defaultPrevented && !event.target.closest('button, a')) { event.preventDefault(); start(); } return; }
     if (event.target.closest('button, a') && (event.code === 'Enter' || event.code === 'Space')) return;
-    if (event.code === 'Escape') { event.preventDefault(); pause(); }
-    if (['ArrowLeft', 'KeyA', 'ArrowRight', 'KeyD'].includes(event.code) && simulation) { event.preventDefault(); simulation.press('key:'+event.code,['ArrowLeft', 'KeyA'].includes(event.code) ? -1 : 1); }
-    if (event.code === 'KeyR' && simulation) { event.preventDefault(); simulation.regenerate(); sync(); }
+    if (event.code === 'Escape' && !event.repeat) { event.preventDefault(); pause(); }
+    if (movementDirection(event.code) && simulation) { event.preventDefault();revealFlight();simulation.press('key:'+event.code,movementDirection(event.code)); }
+    if (regenerationKey(event.code) && simulation) { event.preventDefault();revealFlight();simulation.regenerate(); sync(); }
     if (event.code === 'Enter' && !event.repeat) { event.preventDefault(); next(); }
   });
   document.addEventListener('keyup',event=>simulation?.release('key:'+event.code));
   window.addEventListener('blur', () => { if (introActive && simulation && !manualPause) pause(); });
   document.addEventListener('visibilitychange', () => { last = 0; if (document.hidden && introActive && simulation && !manualPause) pause(); });
-  return { start, stop };
+  return { start, stop, refreshControls(){render();el('trainingFeedback').textContent=controlText(feedback);}, suspendForSettings(){const resume=!!(introActive&&simulation&&!manualPause);if(resume)pause();return resume;},resumeFromSettings(){if(introActive&&simulation&&manualPause)pause();} };
 })();
 function startIntro() { tutorial.start(); }
 function restartStory() { startIntro(); }
